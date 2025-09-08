@@ -9,24 +9,12 @@ app.use(express.json());
 app.use(cors());
 
 
-app.get("/student",async (req,res)=> {
-    try{
-    const [rows] = await db.query("SELECT * FROM student");
-    res.json(rows);
-  } catch (err) {
-    console.error(":x: SQL error:", err);
-    res.status(500).json(err);
-  }
-});
-app.get("/",(req,res) => {
-    res.json("Hello this is Backend")
 
-});
 
 app.get("/", (req, res) => res.json("Hello, this is Backend"));
 
 
-app.use("/students", studentRoutes);
+app.use("/student", studentRoutes);
 
 
 app.listen(5000 ,() =>{

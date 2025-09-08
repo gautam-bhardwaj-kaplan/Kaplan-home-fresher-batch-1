@@ -3,12 +3,10 @@ import db from "../db.js";
 
 const router = express.Router();
 
-
-// Student list
-
+// fetch students
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT stud_id, name FROM student");
+    const [rows] = await db.query("SELECT stud_id, name, email FROM student");
     res.json(rows);
   } catch (err) {
     console.error("DB error (students):", err);
