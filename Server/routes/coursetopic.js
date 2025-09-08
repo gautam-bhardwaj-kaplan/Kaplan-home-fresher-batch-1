@@ -4,7 +4,6 @@ import db from "../db.js";
 
 const router = express.Router();
 
-
 router.get("/courses", async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM course ORDER BY course_name");

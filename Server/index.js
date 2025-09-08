@@ -3,6 +3,7 @@ import db from './db.js';
 import cors from "cors"
 import studentRoutes from "./routes/crud.js";
 import courseTopicRoutes from "./routes/coursetopic.js";
+import progressRoutes from "./routes/line_chart.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(cors());
 
 app.use("/students", studentRoutes);
 app.use("/", courseTopicRoutes);
+app.use("/progress", progressRoutes);
 
 app.get("/student",async (req,res)=> {
     try{
