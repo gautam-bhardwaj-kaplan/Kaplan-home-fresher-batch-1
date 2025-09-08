@@ -1,0 +1,25 @@
+import mysql from 'mysql2/promise'; // Use the promise version
+
+const db = mysql.createPool({
+  host: 'studentdata-kaplan-daf0.d.aivencloud.com',
+  user: 'avnadmin',
+  password: 'AVNS_OrUpl4vULHbGZTRloMs',
+  database: 'student_dashboard',
+  port: '14049',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+
+// Test the connection
+(async () => {
+    try {
+        const connection = await db.getConnection();
+        console.log('Connected to DB!');
+        connection.release();
+    } catch (err) {
+        console.error('DB connection failed:', err);
+    }
+})();
+
+export default db; // Export the pool for use in other modules
