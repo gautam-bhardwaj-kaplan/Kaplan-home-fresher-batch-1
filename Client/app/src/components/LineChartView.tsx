@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent, Typography } from "@mui/material";
+import "./styling/linechart.css"; // import CSS
 
 interface LineChartViewProps {
   studentId: string | null;
@@ -24,39 +25,50 @@ const LineChartView: React.FC<LineChartViewProps> = ({
   topicId,
   timeframe,
 }) => {
-  // ✅ Dummy data
-  const dummyData =
-    timeframe === "daily"
-      ? [
-          { day: "Mon", hours: 2 },
-          { day: "Tue", hours: 3 },
-          { day: "Wed", hours: 1.5 },
-          { day: "Thu", hours: 4 },
-          { day: "Fri", hours: 2.5 },
-          { day: "Sat", hours: 3 },
-          { day: "Sun", hours: 1 },
-        ]
-      : [
-          { week: "Week 1", hours: 12 },
-          { week: "Week 2", hours: 15 },
-          { week: "Week 3", hours: 10 },
-          { week: "Week 4", hours: 18 },
-        ];
+  const dailyData = [
+    { date: "2025-09-01", hours: 2 },
+    { date: "2025-09-02", hours: 3 },
+    { date: "2025-09-03", hours: 1.5 },
+    { date: "2025-09-04", hours: 4 },
+    { date: "2025-09-05", hours: 2.5 },
+    { date: "2025-09-06", hours: 3 },
+    { date: "2025-09-07", hours: 1 },
+  ];
+
+  const weeklyData = [
+    { date: "2025-08-04", hours: 12 },
+    { date: "2025-08-11", hours: 15 },
+    { date: "2025-08-18", hours: 10 },
+    { date: "2025-08-25", hours: 18 },
+  ];
+
+  const data = timeframe === "daily" ? dailyData : weeklyData;
 
   return (
-    <Card sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
+    <Card className="linechart-card">
       <CardContent>
-        <Typography variant="h6" gutterBottom>
+        <Typography className="linechart-title" variant="h6">
           {studentId ? `Study Progress (Student ${studentId})` : "Study Progress"}
         </Typography>
+
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={dummyData}
-            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-          >
+          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey={timeframe === "daily" ? "day" : "week"} />
-            <YAxis />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 10 }}
+              angle={-20} // optional tilt to avoid overlapping
+              textAnchor="end"
+              interval={0}
+              label={{
+                value: timeframe === "daily" ? "Days" : "Weeks",
+                position: "insideBottom",
+                offset: 20,
+                fontSize: 12,
+                fill: "#555",
+              }}
+            />
+            <YAxis label={{ value: "Hours", angle: -90, position: "insideLeft" }} />
             <Tooltip />
             <Legend />
             <Line type="monotone" dataKey="hours" stroke="#1976d2" strokeWidth={3} />

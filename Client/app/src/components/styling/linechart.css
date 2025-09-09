@@ -1,0 +1,17 @@
+/* LineChartView.css */
+
+.linechart-card {
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.linechart-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #1976d2;
+}

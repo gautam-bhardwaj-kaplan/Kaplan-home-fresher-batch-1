@@ -1,7 +1,10 @@
 import React from "react";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import "./styling/filters.css";
 
 interface FiltersProps {
+  courses: string[];
+  topics: string[];
   selectedCourse: string | null;
   setSelectedCourse: (course: string | null) => void;
   selectedTopic: string | null;
@@ -11,6 +14,8 @@ interface FiltersProps {
 }
 
 const Filters: React.FC<FiltersProps> = ({
+  courses,
+  topics,
   selectedCourse,
   setSelectedCourse,
   selectedTopic,
@@ -19,36 +24,44 @@ const Filters: React.FC<FiltersProps> = ({
   setTimeframe,
 }) => {
   return (
-    <Box sx={{ display: "flex", gap: 2 }}>
+    <Box className="filters-container">
       {/* Course Filter */}
-      <FormControl sx={{ minWidth: 200 }}>
-        <InputLabel>Course</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined">
+        <InputLabel shrink>Course</InputLabel>
         <Select
           value={selectedCourse || ""}
           onChange={(e) => setSelectedCourse(e.target.value || null)}
+          displayEmpty
         >
           <MenuItem value="">All Courses</MenuItem>
-          <MenuItem value="course1">Course 1</MenuItem>
-          <MenuItem value="course2">Course 2</MenuItem>
+          {courses.map((course) => (
+            <MenuItem key={course} value={course}>
+              {course}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
       {/* Topic Filter */}
-      <FormControl sx={{ minWidth: 200 }}>
-        <InputLabel>Topic</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined">
+        <InputLabel shrink>Topic</InputLabel>
         <Select
           value={selectedTopic || ""}
           onChange={(e) => setSelectedTopic(e.target.value || null)}
+          displayEmpty
         >
           <MenuItem value="">All Topics</MenuItem>
-          <MenuItem value="topic1">Topic 1</MenuItem>
-          <MenuItem value="topic2">Topic 2</MenuItem>
+          {topics.map((topic) => (
+            <MenuItem key={topic} value={topic}>
+              {topic}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
       {/* Timeframe Filter */}
-      <FormControl sx={{ minWidth: 200 }}>
-        <InputLabel>Timeframe</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined">
+        <InputLabel shrink>Timeframe</InputLabel>
         <Select
           value={timeframe}
           onChange={(e) => setTimeframe(e.target.value as "daily" | "weekly")}

@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
-  Typography,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import { List, ListItem, ListItemText, Typography, CircularProgress, Alert } from "@mui/material";
 import axios from "axios";
+import "./styling/sidebar.css";
 
 interface Student {
   stud_id: string;
@@ -23,11 +16,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onStudentSelect }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/student"); // backend API
+        const response = await axios.get("http://localhost:5000/student");
         setStudents(response.data);
       } catch (err) {
         console.error("Failed to fetch students", err);
@@ -36,34 +30,30 @@ const Sidebar: React.FC<SidebarProps> = ({ onStudentSelect }) => {
         setLoading(false);
       }
     };
-
     fetchStudents();
   }, []);
 
-  return (
-    <div
-      style={{
-        width: "250px",
-        padding: "16px",
-        borderRight: "1px solid #ccc",
-        height: "100%",
-        overflowY: "auto",
-      }}
-    >
-      <Typography variant="h6" gutterBottom>
-        Students
-      </Typography>
+  const handleSelect = (id: string) => {
+    setSelectedStudent(id);
+    onStudentSelect(id);
+  };
 
-      {loading && <CircularProgress />}
-      {error && <Alert severity="error">{error}</Alert>}
+  return (
+    <div className="sidebar-container">
+      <Typography className="sidebar-heading">Students</Typography>
+
+      {loading && <CircularProgress sx={{ m: 2 }} />}
+      {error && <Alert severity="error" sx={{ m: 2 }}>{error}</Alert>}
 
       {!loading && !error && (
-        <List>
+        <List className="student-list">
           {students.map((student) => (
-            <ListItem key={student.stud_id} disablePadding>
-              <ListItemButton onClick={() => onStudentSelect(student.stud_id)}>
-                <ListItemText primary={student.name} />
-              </ListItemButton>
+            <ListItem
+              key={student.stud_id}
+              onClick={() => handleSelect(student.stud_id)}
+              className={`student-item ${selectedStudent === student.stud_id ? "selected" : ""}`}
+            >
+              <ListItemText primary={student.name} />
             </ListItem>
           ))}
         </List>

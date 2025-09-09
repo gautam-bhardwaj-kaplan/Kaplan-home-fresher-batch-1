@@ -1,0 +1,12 @@
+
+
+.filters-container {
+  display: flex;
+  gap: 24px; 
+  align-items: center;
+  margin-top: 16px; 
+}
+
+.filters-formcontrol {
+  min-width: 200px;
+}

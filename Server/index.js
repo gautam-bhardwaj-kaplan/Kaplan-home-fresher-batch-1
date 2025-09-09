@@ -10,6 +10,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+app.use("/api/coursetopic", courseTopicRoutes);
+app.use("/api/linechart", progressRoutes);
+
+
 app.use("/students", studentRoutes);
 app.use("/", courseTopicRoutes);
 app.use("/progress", progressRoutes);
