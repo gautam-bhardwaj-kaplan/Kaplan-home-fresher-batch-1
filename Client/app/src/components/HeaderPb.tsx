@@ -1,29 +1,16 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
+import "./HeaderPb.css";
 
 const HeaderPb = () => {
   return (
-    <AppBar
-      position="static"
-      sx={{ background: "linear-gradient(to right, #0033A0, #0033A0)" }}
-    >
+    <AppBar position="static" className="header-appbar">
       <Toolbar>
         <img
           src="/kaplan-logo1.svg"
           alt="Kaplan Logo"
-          style={{ width: 50, marginRight: 16 }}
+          className="header-logo"
         />
-
-        <Typography
-          variant="h5"
-          sx={{
-            flexGrow: 1,
-            textAlign: "center",
-            fontFamily: "'Montserrat', sans-serif",
-            fontWeight: 700,
-            letterSpacing: 1.2,
-            color: "#fff",
-          }}
-        >
+        <Typography variant="h5" className="header-title">
           Course Progress
         </Typography>
       </Toolbar>
