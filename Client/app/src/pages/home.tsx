@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Box, Table, TableBody, TableCell, 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Student {
   stud_id: number;
@@ -12,6 +13,7 @@ interface Student {
 
 const Home: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get<Student[]>("http://localhost:5000/student")
@@ -22,10 +24,10 @@ const Home: React.FC = () => {
   return (
  <div>
       {/* Header */}
-      <AppBar position="static" sx={{ background: "linear-gradient(to right, #4a90e2, #357ABD)" }}>
+      <AppBar position="static" sx={{ background: "linear-gradient(to right, #0033A0, #0033A0)" }}>
         <Toolbar>
           <img
-            src="/kaplan-logo.svg"
+            src="/kaplan-logo1.svg"
             alt="Kaplan Logo"
             style={{ width: 50, marginRight: 16 }}
           />
@@ -50,29 +52,35 @@ const Home: React.FC = () => {
 
         {/* Stylish Buttons */}
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4, gap: 2 }}>
-            {["Line Chart", "Bar Chart", "Course Progress", "Add Student"].map((label) => (
-            <Button
-            key={label}
-            sx={{
-                background: "linear-gradient(to right, #4a90e2, #357ABD)", // header matching gradient
-                color: "#fff",
-                fontWeight: 600,
-                borderRadius: 2,
-                paddingX: 3,
-                paddingY: 1.5,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                background: "#fff",
-                color: "#357ABD",
-                transform: "scale(1.05)",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-                },
-                }}
-            >
-                {label}
-                </Button>
-            ))}
-        </Box>
+  {["Line Chart", "Bar Chart", "Course Progress", "Add Student"].map((label) => (
+    <Button
+      key={label}
+      onClick={() => {
+        if (label === "Course Progress") {
+          navigate("/progress"); // ✅ link to progress_bar.tsx
+        }
+      }}
+      sx={{
+        background: "linear-gradient(to right, #4a90e2, #357ABD)",
+        color: "#fff",
+        fontWeight: 600,
+        borderRadius: 2,
+        paddingX: 3,
+        paddingY: 1.5,
+        transition: "all 0.3s ease",
+        "&:hover": {
+          background: "#fff",
+          color: "#357ABD",
+          transform: "scale(1.05)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+        },
+      }}
+    >
+      {label}
+    </Button>
+  ))}
+</Box>
+
 
 
 
