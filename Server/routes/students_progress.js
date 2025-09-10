@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../db.js";
+import { validateParams } from "../Validate Parameter/ValidateParameters.js";
 
 const router = express.Router();
 
@@ -19,6 +20,11 @@ router.get("/", async (req, res) => {
 
 router.get("/:id/courses", async (req, res) => {
   try {
+    const validation = validateParams(["id"], req.params);
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.message });
+    }
+
     const { id } = req.params;
     const { progress_gt, status } = req.query; 
 
@@ -68,6 +74,12 @@ router.get("/:id/courses", async (req, res) => {
 
 router.get("/:id/course/:courseId/topics", async (req, res) => {
   try {
+    
+    const validation = validateParams(["id", "courseId"], req.params);
+    if (!validation.valid) {
+      return res.status(400).json({ error: validation.message });
+    }
+
     const { id, courseId } = req.params;
     const [rows] = await db.query(`
       SELECT 
