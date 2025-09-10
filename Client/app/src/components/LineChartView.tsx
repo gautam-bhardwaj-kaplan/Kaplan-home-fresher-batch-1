@@ -1,4 +1,6 @@
-import React from "react";
+
+
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent, Typography } from "@mui/material";
-import "./styling/linechart.css"; // import CSS
+import axios from "axios";
 
 interface LineChartViewProps {
   studentId: string | null;
@@ -19,59 +21,78 @@ interface LineChartViewProps {
   timeframe: "daily" | "weekly";
 }
 
+interface ChartData {
+  date?: string;
+  week?: string;
+  total_hours: number;
+}
+
 const LineChartView: React.FC<LineChartViewProps> = ({
   studentId,
   courseId,
   topicId,
   timeframe,
 }) => {
-  const dailyData = [
-    { date: "2025-09-01", hours: 2 },
-    { date: "2025-09-02", hours: 3 },
-    { date: "2025-09-03", hours: 1.5 },
-    { date: "2025-09-04", hours: 4 },
-    { date: "2025-09-05", hours: 2.5 },
-    { date: "2025-09-06", hours: 3 },
-    { date: "2025-09-07", hours: 1 },
-  ];
+  const [data, setData] = useState<ChartData[]>([]);
 
-  const weeklyData = [
-    { date: "2025-08-04", hours: 12 },
-    { date: "2025-08-11", hours: 15 },
-    { date: "2025-08-18", hours: 10 },
-    { date: "2025-08-25", hours: 18 },
-  ];
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (!studentId) return;
 
-  const data = timeframe === "daily" ? dailyData : weeklyData;
+      try {
+        const params: any = { student_id: studentId };
+        if (courseId !== null) params.course_id = courseId;
+        if (topicId !== null) params.topic_id = topicId;
+
+        const endpoint = `http://localhost:5000/linechart/${timeframe}`;
+        const res = await axios.get(endpoint, { params });
+
+        setData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch chart data:", err);
+        setData([]);
+      }
+    };
+
+    fetchChartData();
+  }, [studentId, courseId, topicId, timeframe]);
 
   return (
-    <Card className="linechart-card">
+    <Card>
       <CardContent>
-        <Typography className="linechart-title" variant="h6">
+        <Typography variant="h6">
           {studentId ? `Study Progress (Student ${studentId})` : "Study Progress"}
         </Typography>
-
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="date"
-              tick={{ fontSize: 10 }}
-              angle={-20} // optional tilt to avoid overlapping
-              textAnchor="end"
-              interval={0}
+              dataKey={timeframe === "daily" ? "date" : "week"}
+              tick={{ fontSize: 12 }}
               label={{
                 value: timeframe === "daily" ? "Days" : "Weeks",
                 position: "insideBottom",
-                offset: 20,
-                fontSize: 12,
-                fill: "#555",
+                offset: -5,
+                fontSize: 14,
               }}
             />
-            <YAxis label={{ value: "Hours", angle: -90, position: "insideLeft" }} />
+            <YAxis
+              label={{
+                value: "Hours",
+                angle: -90,
+                position: "insideLeft",
+                fontSize: 14,
+              }}
+            />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="hours" stroke="#1976d2" strokeWidth={3} />
+            <Line
+              type="monotone"
+              dataKey="total_hours"
+              stroke="#1976d2"
+              strokeWidth={3}
+              activeDot={{ r: 6 }}
+            />
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

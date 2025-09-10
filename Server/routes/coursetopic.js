@@ -58,3 +58,30 @@ router.get("/students/:student_id/courses/:course_id/topics", async (req, res) =
     res.status(500).json({ error: "Failed to fetch topics", details: err.message });
   }
 });
+
+router.get("/students/:studentName/courses", async (req, res) => {
+  const { studentName } = req.params;
+  console.log("🔎 Request path:", req.path);
+  console.log("➡️ Student name received from API:", studentName);
+
+  try {
+    const [rows] = await db.query(
+      `
+      SELECT DISTINCT c.course_id, c.course_name
+      FROM student s
+      JOIN activity a ON s.stud_id = a.student_id
+      JOIN topic t ON a.topic_id = t.topic_id
+      JOIN course c ON t.course_id = c.course_id
+      WHERE LOWER(s.name) = LOWER(?)
+      `,
+      [studentName.trim()] // trim spaces before passing
+    );
+
+    console.log("➡️ Query result:", rows);
+    res.json(rows);
+  } catch (err) {
+    console.error("❌ Error fetching courses:", err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+

@@ -3,13 +3,16 @@ import db from './db.js';
 import cors from "cors"
 import studentRoutes from "./routes/crud.js";
 import courseTopicRoutes from "./routes/coursetopic.js";
+import courseTopicRoutess from "./routes/coursetop.js";
 import progressRoutes from "./routes/line_chart.js";
+
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
+app.use("/", courseTopicRoutess);
 
 app.use("/api/coursetopic", courseTopicRoutes);
 app.use("/api/linechart", progressRoutes);

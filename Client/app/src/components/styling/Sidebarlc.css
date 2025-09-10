@@ -1,0 +1,40 @@
+.sidebar {
+  width: 250px;
+  height: calc(100vh - 64px);
+  background: linear-gradient(180deg, #357ABD, #357ABD);
+  color: #EFEFEF;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+.sidebar-title {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+}
+.sidebar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sidebar-item {
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+.sidebar-item:hover {
+  background:whitesmoke;
+  color: #0033A0;
+}
+.sidebar-item.active {
+  background: white;
+  color: #357ABD;
+  font-weight: 600;
+}
