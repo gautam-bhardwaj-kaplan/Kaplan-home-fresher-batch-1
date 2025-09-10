@@ -85,7 +85,14 @@ const Home: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.map((student) => (
+                {students.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} align="center" style={{ padding: "20px" }}>
+                      No users found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+              students.map((student) => (
                 <TableRow key={student.stud_id} className="student-row">
                   <TableCell>{student.stud_id}</TableCell>
                   <TableCell>{student.name}</TableCell>
@@ -101,7 +108,8 @@ const Home: React.FC = () => {
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
             </TableBody>
           </Table>
         </TableContainer>
