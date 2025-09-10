@@ -1,21 +1,9 @@
-
-function validateParams(params = {}, query = {}, rules = {}) {
-  const errors = [];
-
-  Object.entries(rules).forEach(([key, type]) => {
-    const value = params[key] ?? query[key];
-    if (value !== undefined) {
-      if (type === "number" && isNaN(Number(value))) {
-        errors.push(`${key} should be a number`);
-      }
-      if (type === "string" && typeof value !== "string") {
-        errors.push(`${key} should be a string`);
-      }
+export function validateParams(requiredKeys, source) {
+  for (const key of requiredKeys) {
+    if (!(key in source)) { 
+      return { valid: false, message: `${key} is required` };
     }
-  });
-
-  return errors;
+  }
+  return { valid: true };
 }
-
-module.exports = { validateParams };
 
