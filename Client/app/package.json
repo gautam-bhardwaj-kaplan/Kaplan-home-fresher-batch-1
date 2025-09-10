@@ -7,6 +7,10 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
+<<<<<<< HEAD
+=======
+    "@mui/x-data-grid": "^8.11.1",
+>>>>>>> 375ef334c27f8da314f1155897aea6df41e0e61e
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
@@ -14,8 +18,13 @@
     "axios": "^1.11.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+<<<<<<< HEAD
     "react-scripts": "^5.0.1",
     "recharts": "^3.1.2",
+=======
+    "react-router-dom": "^6.30.1",
+    "react-scripts": "^5.0.1",
+>>>>>>> 375ef334c27f8da314f1155897aea6df41e0e61e
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -41,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.3.3"
   }
 }
