@@ -1,5 +1,9 @@
+
+
+
 import React from "react";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import "./styling/filters.css";
 
 interface FiltersProps {
   courses: string[];
@@ -9,7 +13,7 @@ interface FiltersProps {
   selectedTopic: string | null;
   setSelectedTopic: (topic: string | null) => void;
   timeframe: "daily" | "weekly";
-  setTimeframe: (tf: "daily" | "weekly") => void;
+  setTimeframe: (timeframe: "daily" | "weekly") => void;
 }
 
 const Filters: React.FC<FiltersProps> = ({
@@ -23,13 +27,14 @@ const Filters: React.FC<FiltersProps> = ({
   setTimeframe,
 }) => {
   return (
-    <Box display="flex" gap={2} mb={2}>
+    <Box className="filters-container">
       {/* Course Filter */}
-      <FormControl fullWidth>
-        <InputLabel>Course</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined">
+        <InputLabel shrink>Course</InputLabel>
         <Select
           value={selectedCourse || ""}
           onChange={(e) => setSelectedCourse(e.target.value || null)}
+          displayEmpty
         >
           <MenuItem value="">All Courses</MenuItem>
           {courses.map((course) => (
@@ -41,11 +46,12 @@ const Filters: React.FC<FiltersProps> = ({
       </FormControl>
 
       {/* Topic Filter */}
-      <FormControl fullWidth>
-        <InputLabel>Topic</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined">
+        <InputLabel shrink>Topic</InputLabel>
         <Select
           value={selectedTopic || ""}
           onChange={(e) => setSelectedTopic(e.target.value || null)}
+          displayEmpty
         >
           <MenuItem value="">All Topics</MenuItem>
           {topics.map((topic) => (
@@ -57,8 +63,8 @@ const Filters: React.FC<FiltersProps> = ({
       </FormControl>
 
       {/* Timeframe Filter */}
-      <FormControl fullWidth>
-        <InputLabel>Timeframe</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined">
+        <InputLabel shrink>Timeframe</InputLabel>
         <Select
           value={timeframe}
           onChange={(e) => setTimeframe(e.target.value as "daily" | "weekly")}
