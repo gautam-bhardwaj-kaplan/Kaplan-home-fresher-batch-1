@@ -1,25 +1,29 @@
-import mysql from 'mysql2/promise'; // Use the promise version
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const db = mysql.createPool({
-  host: 'studentdata-kaplan-daf0.d.aivencloud.com',
-  user: 'avnadmin',
-  password: 'AVNS_OrUpl4vULHbGZTRloMs',
-  database: 'student_dashboard',
-  port: '14049',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 // Test the connection
 (async () => {
-    try {
-        const connection = await db.getConnection();
-        console.log('Connected to DB!');
-        connection.release();
-    } catch (err) {
-        console.error('DB connection failed:', err);
-    }
+  try {
+    const connection = await db.getConnection();
+    console.log('Connected to DB!');
+    connection.release();
+  } catch (err) {
+    console.error('DB connection failed:', err.message);
+  }
 })();
 
-export default db; // Export the pool for use in other modules
+export default db;

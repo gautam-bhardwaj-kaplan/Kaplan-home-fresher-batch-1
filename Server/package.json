@@ -6,14 +6,17 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "script": "nodemon index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
-    "mysql2": "^3.14.4"
+    "mysql2": "^3.14.4",
+    "nodemon": "^3.1.10",
+    "react-router-dom": "^7.8.2"
   }
 }
