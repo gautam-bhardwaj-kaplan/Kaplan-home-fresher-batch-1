@@ -1,0 +1,19 @@
+.progressbar-container {
+  display: flex;
+  height: calc(100vh - 64px); 
+}
+
+.progressbar-content {
+  flex: 1; 
+  background: #fff;
+  height: 100%;
+}
+.courses-frame {
+  margin-top: 16px;
+  flex-direction: column;
+  gap: 16px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+

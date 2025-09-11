@@ -1,0 +1,52 @@
+.course-table-frame {
+  max-height: 80vh; 
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+  background: #f7f9fc;
+}
+
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.course-table th, .course-table td {
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.course-table th {
+  background: linear-gradient(to right, #357ABD, #357ABD);
+  color: white;
+  position: sticky;
+  top: 0;
+}
+
+.row-even {
+  background: #f1f5f9;
+}
+
+.row-odd {
+  background: #e2e8f0;
+}
+
+.progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.linear-bar-small {
+  width: 90px;
+  height: 10px !important;
+  border-radius: 5px;
+}
+
+.progress-text-small {
+  font-size: 10px;
+  min-width: 30px;
+  text-align: right;
+}
