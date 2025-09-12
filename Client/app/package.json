@@ -51,9 +51,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "@types/react-router-dom": "^5.3.3"
-  },
+ 
   "devDependencies": {
     "@types/react-router-dom": "^5.3.3"
   }

@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get('/:studentId', async (req, res) => {
     try {
+        
         const { studentId } = req.params;
 
         const sql = `

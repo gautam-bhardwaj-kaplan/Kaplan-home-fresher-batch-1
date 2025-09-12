@@ -16,10 +16,13 @@ import {
   Typography,
   Select,
   MenuItem,
-  
+  Card,
+  CardContent,
+  InputLabel,
 } from '@mui/material';
 
 import Sidebar from '../components/sidebar_quiz.tsx';
+import Header from '../components/Header_quiz.tsx';
 
 import { QuizScore } from '../types.ts';
 
@@ -28,7 +31,9 @@ import '../components/styles/quiz_page.css';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const QuizScorePage: React.FC = () => {
-  const { studentId } = useParams<{ studentId: string }>();
+ const { studentId: paramId } = useParams<{ studentId?: string }>();
+const studentId = paramId && paramId !== ":studentId" ? paramId : "101";
+
   const [chartData, setChartData] = useState<any>(null);
   const [allData, setAllData] = useState<QuizScore[]>([]);
   const [error, setError] = useState<string>('');
@@ -109,6 +114,13 @@ const QuizScorePage: React.FC = () => {
         ? `hsl(${(i * 360) / allTopics.length}, 70%, 60%)`
         : 'transparent'
     );
+    
+    /*const colors = scores.map((score) =>
+  score !== null
+    ? `hsl(210, ${Math.floor(40 + Math.random() * 60)}%, ${Math.floor(30 + Math.random() * 40)}%)`
+    : 'transparent'
+);
+*/
 
     setChartData({
       labels: allTopics,
@@ -135,10 +147,7 @@ const QuizScorePage: React.FC = () => {
       title: { display: true, text: `${studentName}'s Quiz Scores for ${selectedCourse}` },
     },
     scales: {
-      x: { title: { display: true, text: 'Topics' } ,
-          ticks: {
-        display: false, 
-      },},
+      x: { title: { display: true, text: 'Topics' }, ticks: { display: false } },
       y: {
         title: { display: true, text: 'Scores' },
         beginAtZero: true,
@@ -149,68 +158,64 @@ const QuizScorePage: React.FC = () => {
     },
   };
 
-  const drawerWidth = 240; 
-
   return (
-    <Box sx={{ display: 'flex' }}>
-      <div>
+    <>
+      {/* <div className='main-cont'> */}
+        <Header />
+        <div className ="quiz-container">
+        <div className="main-content">
+          <Sidebar />
+          {loading ? (
+            <div className="loading-container">
+              <CircularProgress />
+            </div >
+          ) : error ? (
+            <div  className="error-container">
+              <Typography color="error">{error}</Typography>
+              <Link to="/">Go Back (to select student)</Link>
+            </div>
+          ) : (
+            <>
+            
+              {courses.length > 0 && (
+                <div className="course-select">
+                    
+                    <InputLabel>Course</InputLabel>
+                  <Select
+                    value={selectedCourse}
+                    onChange={(e) => handleCourseChange(e.target.value as string)}
+                    className="course-dropdown"
+                  >
+                    {courses.map((course) => (
+                      <MenuItem key={course} value={course}>
+                        {course}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  </div>
+                
+              )}
+             
+
+              {chartData && (
+                <Card className="chart-container">
+                  <CardContent sx={{ width: '100%', height: '100%' }}>
+                    <Bar options={options} data={chartData} />
+                  </CardContent>
+                </Card>
+              )}
+              {!chartData && !error && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  No data available for the selected course or student.
+                </Typography>
+              )}
+            </>
+          )}
+        </div>
+        </div>
+      {/* </div> */}
       
-      <Sidebar />
-      </div>
-
-      
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: `calc(100% - ${drawerWidth}px)`, 
-          ml: `${drawerWidth}px`, 
-        }}
-      >
-       
-
-        {!studentId ? (
-          <Typography variant="h4" sx={{ mt: 2 }}>Select a student from the sidebar to view scores.</Typography>
-        ) : loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-            <CircularProgress />
-          </Box>
-        ) : error ? (
-          <Box sx={{ mt: 2 }}>
-            <Typography color="error">{error}</Typography>
-            <Link to="/">Go Back (to select student)</Link>
-          </Box>
-        ) : (
-          <>
-            {courses.length > 0 && (
-              <Box className="course-select" sx={{ mb: 2 }}>
-                <Select
-                  value={selectedCourse}
-                  onChange={(e) => handleCourseChange(e.target.value as string)}
-                  className="course-dropdown"
-                >
-                  {courses.map((course) => (
-                    <MenuItem key={course} value={course}>
-                      {course}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Box>
-            )}
-
-            {chartData && (
-              <Box className="chart-container" sx={{ height: 'calc(100vh - 200px)' }}>
-                <Bar options={options} data={chartData} />
-              </Box>
-            )}
-            {!chartData && !error && (
-              <Typography variant="h6" sx={{ mt: 2 }}>No data available for the selected course or student.</Typography>
-            )}
-          </>
-        )}
-      </Box>
-    </Box>
+    </>
   );
 };
 

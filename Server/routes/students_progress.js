@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 
-// Courses with progress (with filters)
+
 
 router.get("/:id/courses", async (req, res) => {
   try {

@@ -10,3 +10,9 @@ export interface Student {
   name: string;
 }
 
+export interface SidebarProps{
+    student: Student[];
+    onSelect : (student : Student) => void;
+    selectedStudent : Student | null;
+}
+
