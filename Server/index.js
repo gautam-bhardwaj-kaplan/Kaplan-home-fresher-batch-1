@@ -1,6 +1,8 @@
 import express from 'express';
 import db from './db.js';
-import cors from 'cors';
+import cors from "cors"
+import studentRoutes from "./routes/students_progress.js";
+
 import quizRoutes from './routes/quiz.js';
 import studentsRoutes from './routes/student_list.js'
 
@@ -13,7 +15,17 @@ app.use(cors());
 app.use('/quiz', quizRoutes);
 app.use('/students', studentsRoutes); 
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+
+
+
+app.get("/", (req, res) => res.json("Hello, this is Backend"));
+
+
+app.use("/student", studentRoutes);
+
+
+app.listen(5000 ,() =>{
+    console.log("COnnected to backend on port 5000");
+
 });
 
