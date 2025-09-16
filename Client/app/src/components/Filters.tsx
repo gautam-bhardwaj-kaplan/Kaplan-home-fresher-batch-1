@@ -1,8 +1,14 @@
-
-
-
-import React from "react";
-import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import React, {useState,useEffect} from "react";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListItemText,
+  Checkbox,
+  Button
+} from "@mui/material";
 import "./styling/filters.css";
 
 interface FiltersProps {
@@ -10,8 +16,8 @@ interface FiltersProps {
   topics: string[];
   selectedCourse: string | null;
   setSelectedCourse: (course: string | null) => void;
-  selectedTopic: string | null;
-  setSelectedTopic: (topic: string | null) => void;
+  selectedTopic: string[];
+  setSelectedTopic: (topic: string[]) => void;
   timeframe: "daily" | "weekly";
   setTimeframe: (timeframe: "daily" | "weekly") => void;
 }
@@ -26,17 +32,48 @@ const Filters: React.FC<FiltersProps> = ({
   timeframe,
   setTimeframe,
 }) => {
+
+  const [tempSelected, setTempSelected] = useState<string[]>(selectedTopic);
+
+  useEffect(() => {
+  setTempSelected([]);
+  setSelectedTopic([]);
+}, [selectedCourse]);
+
+  const handleTempChange = (event: any) => {
+    const value = event.target.value as string[];
+    setTempSelected(value);
+  };
+
+  const handleApply = () => {
+    setSelectedTopic(tempSelected);
+  };
+
+  const handleCancel = () => {
+    setTempSelected(selectedTopic); 
+  };
+
   return (
     <Box className="filters-container">
-      {/* Course Filter */}
-      <FormControl className="filters-formcontrol" variant="outlined">
-        <InputLabel shrink>Course</InputLabel>
+      <FormControl
+        className="filters-formcontrol"
+        variant="outlined"
+        fullWidth
+        margin="dense"
+      >
+        <InputLabel>Course</InputLabel>
         <Select
-          value={selectedCourse || ""}
-          onChange={(e) => setSelectedCourse(e.target.value || null)}
-          displayEmpty
+    value={selectedCourse === null ? "All Courses" : selectedCourse}
+    label="Course"
+    onChange={(e) => {
+      const valStr = e.target.value;
+      const val = valStr === "All Courses" ? null : valStr;
+      setSelectedCourse(val);
+    }}
         >
-          <MenuItem value="">All Courses</MenuItem>
+          <MenuItem value="All Courses">
+            All Courses
+          </MenuItem>
           {courses.map((course) => (
             <MenuItem key={course} value={course}>
               {course}
@@ -46,26 +83,49 @@ const Filters: React.FC<FiltersProps> = ({
       </FormControl>
 
       {/* Topic Filter */}
-      <FormControl className="filters-formcontrol" variant="outlined">
-        <InputLabel shrink>Topic</InputLabel>
-        <Select
-          value={selectedTopic || ""}
-          onChange={(e) => setSelectedTopic(e.target.value || null)}
-          displayEmpty
-        >
-          <MenuItem value="">All Topics</MenuItem>
-          {topics.map((topic) => (
-            <MenuItem key={topic} value={topic}>
-              {topic}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+  <FormControl
+    className="filters-formcontrol"
+    variant="outlined"
+    fullWidth
+    margin="dense"
+    disabled={!selectedCourse} 
+  >
+    <InputLabel>Topic</InputLabel>
+    <Select
+      multiple
+      label="Topic"
+      value={tempSelected}
+      onChange={(e) => {
+      const value = e.target.value as string[];
+      setTempSelected(value);
+    }}
+    renderValue={(selected) =>
+      selected.length === 0 ? "All Topics" : selected.join(", ")
+    }
+    >
+      {topics.map((topic) => (
+        <MenuItem key={topic} value={topic}>
+          <Checkbox checked={tempSelected.includes(topic)} />
+          <ListItemText primary={topic} />
+        </MenuItem>
+      ))}
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", p: 1 }}>
+        <Button size="small" onClick={handleCancel} color="secondary">
+          Cancel
+        </Button>
+        <Button size="small" onClick={handleApply} variant="contained" color="primary">
+          Apply
+        </Button>
+      </Box>
+    </Select>
+  </FormControl>
 
       {/* Timeframe Filter */}
-      <FormControl className="filters-formcontrol" variant="outlined">
-        <InputLabel shrink>Timeframe</InputLabel>
+      <FormControl className="filters-formcontrol" variant="outlined" fullWidth margin="dense">
+        <InputLabel>Timeframe</InputLabel>
         <Select
+        label = "Timeframe"
           value={timeframe}
           onChange={(e) => setTimeframe(e.target.value as "daily" | "weekly")}
         >

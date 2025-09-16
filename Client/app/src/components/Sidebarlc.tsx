@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import "./styling/Sidebarlc.css";
 
 interface Student {
-  stud_id: string;   // id from API
-  name: string;      // student name
+  stud_id: string;
+  name: string;
 }
 
 interface SidebarPbProps {
@@ -14,37 +15,65 @@ interface SidebarPbProps {
 const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [activeStudent, setActiveStudent] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
 
-  // fetch students from API
   useEffect(() => {
     axios
       .get<Student[]>("http://localhost:5000/student")
-      .then((res) => setStudents(res.data))
+      .then((res) => {
+        setStudents(res.data);
+
+        if (res.data.length > 0) {
+          setActiveStudent(res.data[0].stud_id);
+          onStudentSelect(res.data[0].name);
+        }
+      })
       .catch((err) => console.error("Error fetching students:", err));
-  }, []);
+  }, [onStudentSelect]);
 
   const handleSelect = (student: Student) => {
     setActiveStudent(student.stud_id);
-    onStudentSelect(student.name); // return ID to Dashboard
+    onStudentSelect(student.name);
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="sidebar">
-      <h3 className="sidebar-title">Students</h3>
-      <div className="sidebar-list">
-        {students.map((student) => (
-          <div
-            key={student.stud_id}
-            className={`sidebar-item ${
-              activeStudent === student.stud_id ? "active" : ""
-            }`}
-            onClick={() => handleSelect(student)}
-          >
-            {student.name}
+    <div className={`sidebar ${isOpen ? "isOpen" : "closed"}`}>
+
+        <div className="sidebar-content">
+          {isOpen &&<h3 className="sidebar-title">Students</h3>}
+          <div className="menu-btn" onClick={() => setIsOpen(!isOpen)}>
+          <MenuRoundedIcon  />
+        </div>
+         </div>
+
+          <div className="sidebar-list">
+            {students.map((student) => (
+              <div
+                key={student.stud_id}
+                className={`sidebar-item ${
+                  activeStudent === student.stud_id ? "active" : ""
+                }`}
+                onClick={() => handleSelect(student)}
+              >
+                {isOpen ? student.name : student.name.charAt(0)}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      
   );
 };
 

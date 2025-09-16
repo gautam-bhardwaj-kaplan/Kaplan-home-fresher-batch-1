@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from "react";
 import {
   LineChart,
@@ -13,11 +11,13 @@ import {
 } from "recharts";
 import { Card, CardContent, Typography } from "@mui/material";
 import axios from "axios";
+import "./styling/linechart.css";
 
 interface LineChartViewProps {
-  studentId: string | null;
-  courseId: string | null;
-  topicId: string | null;
+  studentName: string | null;
+  courseName: string | null;
+  //topicName: string | null;
+  selectedTopic: string[];
   timeframe: "daily" | "weekly";
 }
 
@@ -28,51 +28,59 @@ interface ChartData {
 }
 
 const LineChartView: React.FC<LineChartViewProps> = ({
-  studentId,
-  courseId,
-  topicId,
+  studentName,
+  courseName,
+  selectedTopic,
   timeframe,
 }) => {
   const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     const fetchChartData = async () => {
-      if (!studentId) return;
+      console.log("Student:", studentName, "Course:", courseName, "Topic:", selectedTopic, "Timeframe:", timeframe);
+
+      if (!studentName) {
+        setData([]);
+        return;
+      }
 
       try {
-        const params: any = { student_id: studentId };
-        if (courseId !== null) params.course_id = courseId;
-        if (topicId !== null) params.topic_id = topicId;
+        const params: any = { student_name: studentName };
+        if (courseName) params.course_name = courseName;
+        if (selectedTopic.length > 0) params.topic_name = selectedTopic.join(",");
 
-        const endpoint = `http://localhost:5000/linechart/${timeframe}`;
+        const endpoint = `http://localhost:5000/${timeframe}`;
+
         const res = await axios.get(endpoint, { params });
 
         setData(res.data);
       } catch (err) {
-        console.error("Failed to fetch chart data:", err);
         setData([]);
       }
     };
 
     fetchChartData();
-  }, [studentId, courseId, topicId, timeframe]);
+  }, [studentName, courseName, selectedTopic, timeframe]);
 
   return (
-    <Card>
+    <Card className="linechart-card">
       <CardContent>
-        <Typography variant="h6">
-          {studentId ? `Study Progress (Student ${studentId})` : "Study Progress"}
+        <Typography variant="h6" className="linechart-title">
+          {studentName ? `Study Progress (${studentName})` : "Study Progress"}
         </Typography>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 20 }}>
+          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey={timeframe === "daily" ? "date" : "week"}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12,dy: 5}}
+              textAnchor="middle"
+              angle = {-15}
+              height={30}
               label={{
                 value: timeframe === "daily" ? "Days" : "Weeks",
                 position: "insideBottom",
-                offset: -5,
+                offset: -17,
                 fontSize: 14,
               }}
             />
@@ -85,7 +93,11 @@ const LineChartView: React.FC<LineChartViewProps> = ({
               }}
             />
             <Tooltip />
-            <Legend />
+            <Legend
+            verticalAlign = "bottom"
+            align = "center"
+            wrapperStyle ={{paddingTop: "20px" }} 
+            />
             <Line
               type="monotone"
               dataKey="total_hours"

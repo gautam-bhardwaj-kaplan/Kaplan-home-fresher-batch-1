@@ -1,4 +1,4 @@
-import mysql from 'mysql2/promise'; // Use the promise version
+import mysql from 'mysql2/promise'; 
 
 const db = mysql.createPool({
   host: 'studentdata-kaplan-daf0.d.aivencloud.com',
@@ -22,4 +22,4 @@ const db = mysql.createPool({
     }
 })();
 
-export default db; // Export the pool for use in other modules
+export default db; 
