@@ -1,0 +1,83 @@
+.topics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.4rem; 
+  table-layout: fixed; 
+}
+
+.custom-dialog-title {
+  font-weight: 600;
+  font-size: 1rem; 
+  text-align: left; 
+  color: #357ABD;
+  font-family: 'Montserrat', sans-serif !important;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+
+.topics-table th,
+.topics-table td {
+  padding: 6px 8px; 
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+  font-size: 0.75rem;
+}
+
+
+.topics-table th {
+  background: linear-gradient(to right, #357ABD, #357ABD);
+  color: white;
+  position: sticky;
+  top: 0;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+
+.col-topic {
+  width: 35%;
+}
+.col-score {
+  width: 20%;
+}
+.col-status {
+  width: 20%;
+}
+
+
+.row-even {
+  background: #f1f5f9;
+}
+.row-odd {
+  background: #e2e8f0;
+}
+
+.no-topics {
+  text-align: center;
+  padding: 20px;
+  color: #555;
+}
+
+
+.custom-dialog-actions {
+  padding: 12px;
+  justify-content: center;
+}
+.dialog-title-bar {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%;
+}
+
+.dialog-title-text {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #357ABD;
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+

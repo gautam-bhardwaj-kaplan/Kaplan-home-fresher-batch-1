@@ -5,9 +5,11 @@
   margin: 1rem 0;
   padding: 0.5rem 1rem;
   border-bottom: 2px solid #e0e0e0;
+  justify-content: flex-start;
 }
 
 .filter-item {
-  min-width: 180px; 
+  min-width: 180px;
+  flex: 0 0 180px;
 }
 

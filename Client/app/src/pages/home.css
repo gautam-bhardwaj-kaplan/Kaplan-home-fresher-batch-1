@@ -1,11 +1,13 @@
 
 .header {
   background: linear-gradient(to right, #0033A0, #0033A0) !important;
+  
 }
 
 .logo {
   width: 50px;
   margin-right: 16px;
+  cursor: pointer !important;
 }
 
 .header-title {
@@ -86,3 +88,11 @@
   background-color: #e1eaff;
   cursor: pointer;
 }
+
+.main-content {
+  padding-top: 64px; 
+}
+
+
+
+
