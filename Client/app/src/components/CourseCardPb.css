@@ -11,6 +11,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .course-table th, .course-table td {
@@ -50,3 +51,4 @@
   min-width: 30px;
   text-align: right;
 }
+

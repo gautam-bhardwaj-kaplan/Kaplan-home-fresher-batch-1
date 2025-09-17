@@ -140,11 +140,11 @@ router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch topics" });
   }
 });
-
+// fetch students for sidebar
 router.get("/all", async (req, res) => {
   try {
     
-    const [rows] = await db.query("SELECT stud_id, name FROM student ORDER BY stud_id ASC");
+    const [rows] = await db.query("SELECT stud_id, name FROM student ORDER BY name ASC");
     res.json(rows); 
   } catch (err) {
     console.error("DB error (fetch students):", err);
