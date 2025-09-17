@@ -11,8 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import {
-  Box,
-  CircularProgress,
+ 
   Typography,
   Select,
   MenuItem,
@@ -32,7 +31,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const QuizScorePage: React.FC = () => {
  const { studentId: paramId } = useParams<{ studentId?: string }>();
-const studentId = paramId && paramId !== ":studentId" ? paramId : "101";
+const studentId = paramId && paramId !== ":studentId" ? paramId : "114";
 
   const [chartData, setChartData] = useState<any>(null);
   const [allData, setAllData] = useState<QuizScore[]>([]);
@@ -41,6 +40,13 @@ const studentId = paramId && paramId !== ":studentId" ? paramId : "101";
   const [studentName, setStudentName] = useState<string>('Select a student');
   const [courses, setCourses] = useState<string[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string>('');
+  useEffect(() => {
+  document.body.classList.add("no-scroll");
+  return () => {
+    document.body.classList.remove("no-scroll");
+  };
+}, []);
+
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -114,13 +120,7 @@ const studentId = paramId && paramId !== ":studentId" ? paramId : "101";
         ? `hsl(${(i * 360) / allTopics.length}, 70%, 60%)`
         : 'transparent'
     );
-    
-    /*const colors = scores.map((score) =>
-  score !== null
-    ? `hsl(210, ${Math.floor(40 + Math.random() * 60)}%, ${Math.floor(30 + Math.random() * 40)}%)`
-    : 'transparent'
-);
-*/
+
 
     setChartData({
       labels: allTopics,
@@ -147,74 +147,62 @@ const studentId = paramId && paramId !== ":studentId" ? paramId : "101";
       title: { display: true, text: `${studentName}'s Quiz Scores for ${selectedCourse}` },
     },
     scales: {
-      x: { title: { display: true, text: 'Topics' }, ticks: { display: false } },
+      x: { title: { display: true, text: 'Topics' }, ticks: { display: false },grid: { display: false } },
       y: {
         title: { display: true, text: 'Scores' },
         beginAtZero: true,
         min: 0,
         max: 10,
         ticks: { stepSize: 1 },
+        grid: { display: false }
       },
     },
   };
 
-  return (
+  
+    return (
     <>
-      {/* <div className='main-cont'> */}
+    <div className='header-bar'>
         <Header />
-        <div className ="quiz-container">
-        <div className="main-content">
-          <Sidebar />
-          {loading ? (
-            <div className="loading-container">
-              <CircularProgress />
-            </div >
-          ) : error ? (
-            <div  className="error-container">
-              <Typography color="error">{error}</Typography>
-              <Link to="/">Go Back (to select student)</Link>
-            </div>
-          ) : (
-            <>
-            
-              {courses.length > 0 && (
-                <div className="course-select">
-                    
-                    <InputLabel>Course</InputLabel>
-                  <Select
-                    value={selectedCourse}
-                    onChange={(e) => handleCourseChange(e.target.value as string)}
-                    className="course-dropdown"
-                  >
-                    {courses.map((course) => (
-                      <MenuItem key={course} value={course}>
-                        {course}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  </div>
-                
-              )}
-             
+      <div className ="quiz-container">
+        <Sidebar />
+      <div className="main-content">
+        {courses.length > 0 && (
+          <div className="course-select">
+            <InputLabel>Course</InputLabel>
+            <Select
+              value={selectedCourse}
+              onChange={(e) => handleCourseChange(e.target.value as string)}
+              className="course-dropdown"
+            >
+              {courses.map((course) => (
+                <MenuItem key={course} value={course}>
+                  {course}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
 
-              {chartData && (
-                <Card className="chart-container">
-                  <CardContent sx={{ width: '100%', height: '100%' }}>
-                    <Bar options={options} data={chartData} />
-                  </CardContent>
-                </Card>
-              )}
-              {!chartData && !error && (
-                <Typography variant="h6" sx={{ mt: 2 }}>
-                  No data available for the selected course or student.
-                </Typography>
-              )}
-            </>
-          )}
+        )}
+
+        
+
+        {chartData && (
+          <Card className="chart-container">
+            <CardContent sx={{ width: '100%', height: '100%' }}>
+              <Bar options={options} data={chartData} />
+            </CardContent>
+          </Card>
+        )}
+        {!chartData && !error && ( 
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            No data available for the selected course or student.
+          </Typography>
+        )}
+        
+      </div>
+      </div>
         </div>
-        </div>
-      {/* </div> */}
-      
     </>
   );
 };

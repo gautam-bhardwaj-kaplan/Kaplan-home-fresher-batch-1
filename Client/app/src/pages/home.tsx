@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
+import StudentDialog from "../components/create.tsx";
 
 interface Student {
   stud_id: number;
@@ -28,13 +29,18 @@ interface Student {
 
 const Home: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchStudents = () => {
     axios
       .get<Student[]>("http://localhost:5000/student")
       .then((res) => setStudents(res.data))
       .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    fetchStudents();
   }, []);
 
   return (
@@ -56,11 +62,11 @@ const Home: React.FC = () => {
           (label) => (
             <Button
               key={label}
-              onClick={() =>{
-
-             if (label === "Course Progress") navigate("/progress");
-             if (label === "Bar Chart") navigate("/quiz/:studentId?");
-            }}
+              onClick={() => {
+                if (label === "Course Progress") navigate("/progress");
+                if (label === "Bar Chart") navigate("/quiz/:studentId?");
+                if (label === "Add Student") setDialogOpen(true);
+              }}
               className="styled-button"
             >
               {label}
@@ -89,35 +95,46 @@ const Home: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-                {students.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} align="center" style={{ padding: "20px" }}>
-                      No users found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-              students.map((student) => (
-                <TableRow key={student.stud_id} className="student-row">
-                  <TableCell>{student.stud_id}</TableCell>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.email}</TableCell>
-                  <TableCell align="center">
-                    <IconButton color="primary">
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton color="error">
-                      <DeleteIcon />
-                    </IconButton>
+              {students.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    align="center"
+                    style={{ padding: "20px" }}
+                  >
+                    No users found
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ) : (
+                students.map((student) => (
+                  <TableRow key={student.stud_id} className="student-row">
+                    <TableCell>{student.stud_id}</TableCell>
+                    <TableCell>{student.name}</TableCell>
+                    <TableCell>{student.email}</TableCell>
+                    <TableCell align="center">
+                      <IconButton color="primary">
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Box>
+
+      
+      <StudentDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onStudentAdded={fetchStudents}
+      />
     </div>
   );
 };

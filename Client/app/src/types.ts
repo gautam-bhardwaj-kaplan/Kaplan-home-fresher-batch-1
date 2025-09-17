@@ -16,3 +16,25 @@ export interface SidebarProps{
     selectedStudent : Student | null;
 }
 
+ export interface Course {
+  course_id: number;
+  course_name: string;
+}
+
+export interface Topic {
+  topic_id: number;
+  topic_name: string;
+}
+
+export interface TopicSelection extends Topic {
+  selected: boolean;
+  hours_studied: string;
+  quiz_score: string;
+  completion_date: string;
+}
+
+export interface Props {
+  open: boolean;
+  onClose: () => void;
+  onStudentAdded: () => void; 
+}

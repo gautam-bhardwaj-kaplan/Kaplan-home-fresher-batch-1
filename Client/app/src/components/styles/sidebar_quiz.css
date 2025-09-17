@@ -1,14 +1,13 @@
 
-.MuiDrawer-paper.sidebar {
+.sidebar {
   width: 250px;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 64px);  
   background: linear-gradient(180deg, #357ABD, #357ABD);
   color: #EFEFEF;
   display: flex;
   flex-direction: column;
   padding: 16px;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
 }
 
 .sidebar-title {
@@ -16,14 +15,52 @@
   font-weight: 700;
   font-size: 20px;
   margin-bottom: 16px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.893);
   padding-bottom: 8px;
-}
 
+}
 .sidebar-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y:scroll;
+}
+
+.sidebar.closed {
+  width: 60px; 
+}
+
+.sidebar-list::-webkit-scrollbar {
+  width: 6px;  
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.sidebar-list::-webkit-scrollbar-thumb {
+  background-color: rgba(245, 235, 235, 0.575); 
+  border-radius: 3px;                    
+}
+
+.sidebar-list::-webkit-scrollbar-track {
+  background: transparent;              
+}
+
+.menu-btn {
+  color: #333 !important;
+  width:36px;
+  height:36px;
+  align-items:center;
+  justify-content: center;
+  border-radius: 50%;
+  display: flex;
+  background-color: #efefef !important;
+
+
 }
 
 .sidebar-item {
@@ -31,17 +68,28 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-weight: 500;
- 
+  font-weight: 500!important;
+  font-family: "Montserrat", sans-serif !important;
 }
 
 .sidebar-item:hover {
-  background: whitesmoke;
+  background: whitesmoke !important;
   color: #0033A0 !important;
+  
 }
 
 .sidebar-item.active {
   background: white !important;
   color: #357ABD !important;
+  border-radius : 8px !important;
   font-weight: 600;
 }
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
+  .sidebar.open {
+    width: 200px;
+  }
+}
+

@@ -1,38 +1,45 @@
 .quiz-container {
   display: flex;
-  flex-direction: column;
-  height :"100vh"
+  flex-direction: row;
+  height :100vh;
+  overflow:hidden;
+  margin-top: 64px;
 }
 
 .main-cont{
     display: flex !important;
     flex-direction: column;
+    overflow: hidden;    
 }
 
 
 .main-content {
- margin-left: 250px; 
-  margin-top: 15px;
-  padding: 24px;
-  flex-grow: 1;
 
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   align-items: center;
-
+  overflow: hidden;
+ 
 }
-
-
-
+ 
 .course-select {
   align-self: flex-start;
-  margin-left :5%;
+  margin-left:3%;
+  margin-top:1%;
   margin-bottom: 16px;
+ 
 }
 
 .course-dropdown {
   min-width: 200px;
+}
+.line{
+    height :0.5px;
+    background:black;
+    width:100%;
+    margin: 0 0 20px 0;
 }
 
 
@@ -46,15 +53,12 @@
   justify-content: center;
   align-items: center;
 }
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
+.header-bar{
+    overflow: hidden;
+}
+body.no-scroll {
+  overflow: hidden;
 }
 
-.error-container {
-  margin-top: 20px;
-  text-align: center;
-}
+
+

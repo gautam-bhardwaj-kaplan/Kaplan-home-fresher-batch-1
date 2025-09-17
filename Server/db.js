@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import path from "path";
 
 
 dotenv.config();
@@ -15,7 +16,7 @@ const db = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
     ssl: {
-    ca: fs.readFileSync("./ca.pem"),  // use downloaded cert
+    ca: fs.readFileSync(path.resolve("ca.pem")),  
   },
 });
 
