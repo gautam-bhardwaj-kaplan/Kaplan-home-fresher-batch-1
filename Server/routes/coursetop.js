@@ -138,7 +138,7 @@ router.delete("/student/:stud_id", async (req, res) => {
   }
 });
 
-router.post("/students/:stud_id", async (req, res) => {
+router.put("/students/:stud_id", async (req, res) => {
   try {
     const {stud_id} = req.params;
     const { email } = req.body;
@@ -148,7 +148,7 @@ router.post("/students/:stud_id", async (req, res) => {
     }
 
     await db.query(
-      "UPDATE students SET email = ? WHERE stud_id = ?",
+      "UPDATE student SET email = ? WHERE stud_id = ?",
       [email, stud_id]
     );
 
