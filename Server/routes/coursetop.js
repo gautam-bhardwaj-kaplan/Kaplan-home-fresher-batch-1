@@ -26,8 +26,8 @@ router.get("/students/:studentName/courses", async (req, res) => {
 });
 
 // for the topics filter
-router.get("/students/:studentName/courses/:courseId/topics", async (req, res) => {
-  const { studentName, courseId } = req.params;
+router.get("/students/:studentName/courses/:coursename/topics", async (req, res) => {
+  const { studentName, coursename } = req.params;
   try {
     const [rows] = await db.query(
       `
@@ -38,7 +38,7 @@ router.get("/students/:studentName/courses/:courseId/topics", async (req, res) =
       JOIN course c ON t.course_id = c.course_id
       WHERE LOWER(s.name) = LOWER(?) AND Lower(c.course_name) = Lower(?)
       `,
-      [studentName, courseId]
+      [studentName, coursename]
     );
     res.json(rows);
   } catch (err) {
@@ -158,5 +158,6 @@ router.put("/students/:stud_id", async (req, res) => {
     res.status(500).json({ error: "Failed to update student email", details: err.message });
   }
 });
+
 
 export default router;

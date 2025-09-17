@@ -16,7 +16,6 @@ import "./styling/linechart.css";
 interface LineChartViewProps {
   studentName: string | null;
   courseName: string | null;
-  //topicName: string | null;
   selectedTopic: string[];
   timeframe: "daily" | "weekly";
 }
@@ -73,9 +72,9 @@ const LineChartView: React.FC<LineChartViewProps> = ({
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey={timeframe === "daily" ? "date" : "week"}
-              tick={{ fontSize: 12,dy: 5}}
+              tick={{ fontSize: 12,dy: 8}}
               textAnchor="middle"
-              angle = {-15}
+              
               height={30}
               label={{
                 value: timeframe === "daily" ? "Days" : "Weeks",

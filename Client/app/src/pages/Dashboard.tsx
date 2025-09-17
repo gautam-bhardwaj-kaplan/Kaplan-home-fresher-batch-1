@@ -7,14 +7,23 @@ import LineChartView from "../components/LineChartView.tsx";
 import "./dashboard.css";
 import axios from "axios";
 
+interface Course {
+  course_id: string;
+  course_name: string;
+}
+
+interface Topic {
+  topic_id: string;
+  topic_name: string;
+}
+
 const Dashboard: React.FC = () => {
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
   const [timeframe, setTimeframe] = useState<"daily" | "weekly">("daily");
-
-  const [courses, setCourses] = useState<string[]>([]);
-  const [topics, setTopics] = useState<string[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
   
   const handleStudentSelect = useCallback((studentName: string) => {
     setSelectedStudent(studentName);
@@ -29,7 +38,7 @@ const Dashboard: React.FC = () => {
         const courseRes = await axios.get(
           `http://localhost:5000/students/${selectedStudent}/courses`
         );
-        setCourses(courseRes.data.map((c: any) => c.course_name));
+        setCourses(courseRes.data);
         setSelectedCourse(null);
         setSelectedTopic([]);
       } catch (err) {
@@ -51,7 +60,7 @@ const Dashboard: React.FC = () => {
         const topicRes = await axios.get(
           `http://localhost:5000/students/${selectedStudent}/courses/${selectedCourse}/topics`
         );
-        setTopics(topicRes.data.map((t: any) => t.topic_name));
+        setTopics(topicRes.data);
         setSelectedTopic([]);
       } catch (err) {
         console.error("Failed to fetch topics", err);
@@ -61,12 +70,12 @@ const Dashboard: React.FC = () => {
   }, [selectedCourse, selectedStudent]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <Box className="dashboard-container">
       <Header />
-<div className="dashboard-main">
+    <div className="dashboard-main">
       <Box sx={{ display: "flex", flexGrow: 1 }}>
         <Sidebar onStudentSelect={handleStudentSelect} />
-        <Box sx={{ flexGrow: 1, p: 3 }}>
+        <Box className="dashboard-content">
           <Container maxWidth="lg">
             <Filters
               selectedCourse={selectedCourse}
@@ -79,7 +88,7 @@ const Dashboard: React.FC = () => {
               topics={topics}
             />
 
-            <Box sx={{ mt: 4 }}>
+            <Box className="linechart-container">
               <LineChartView
                 studentName={selectedStudent}
                 courseName={selectedCourse}

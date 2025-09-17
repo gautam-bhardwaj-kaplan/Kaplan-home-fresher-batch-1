@@ -106,7 +106,7 @@ router.get("/weekly", async (req, res) => {
 
       const options = { month: "short", day: "numeric" };
       return {
-        week: `${isoWeekStart.toLocaleDateString("en-US", options)} - ${isoWeekEnd.toLocaleDateString("en-US", options)}, ${year}`,
+        week: `${isoWeekStart.getDate()}-${isoWeekEnd.getDate()} ${isoWeekStart.toLocaleString("en-US", { month: "short" })}`,
         total_hours: r.total_hours
       };
     });

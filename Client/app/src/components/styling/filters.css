@@ -18,3 +18,9 @@
   left: -4px !important;
   font-weight: 500;
 }
+
+.filters-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px; 
+}

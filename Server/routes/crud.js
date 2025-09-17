@@ -3,9 +3,7 @@ import db from "../db.js";
 
 const router = express.Router();
 
-/**
- * CREATE complete student
- */
+
 router.post("/", async (req, res) => {
   try {
     const { name, email, course_id, topic_id, quiz_score, hours_studied, completion_date_topic } = req.body;
@@ -38,33 +36,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * UPDATE complete student 
- */
-router.put("/:id", async (req, res) => {
-  try {
-    const stud_id = req.params.id;
-    const { email, course_id, topic_id, quiz_score, hours_studied, completion_date_topic } = req.body;
 
-    await db.query(
-      "UPDATE student SET email = ?, course_id = ? WHERE stud_id = ?",
-      [email, course_id, stud_id]
-    );
 
-    await db.query(
-      "UPDATE activity SET topic_id = ?, quiz_score = ?, hours_studied = ?, completion_date_topic = ? WHERE student_id = ?",
-      [topic_id, quiz_score, hours_studied, completion_date_topic, stud_id]
-    );
-
-    res.json({ message: "Student complete data updated" });
-  } catch (err) {
-    res.status(500).json({ error: "Update failed ", details: err.message });
-  }
-});
-
-/**
- * DELETE student
- */
 router.delete("/:id", async (req, res) => {
   try {
     const stud_id = req.params.id;
@@ -78,5 +51,7 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Delete failed ", details: err.message });
   }
 });
+
+
 
 export default router;

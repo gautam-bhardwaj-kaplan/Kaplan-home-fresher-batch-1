@@ -7,14 +7,13 @@ const router = express.Router();
 // fetch students
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT stud_id, name, email FROM student");
+    const [rows] = await db.query("SELECT stud_id, name, email FROM student order by name");
     res.json(rows);
   } catch (err) {
     console.error("DB error (students):", err);
     res.status(500).json({ error: "Failed to fetch students" });
   }
 });
-
 
 // Courses with progress (with filters)
 

@@ -86,3 +86,41 @@
   background-color: #e1eaff;
   cursor: pointer;
 }
+
+.delete-dialog {
+  text-align: center;
+}
+
+.delete-dialog .MuiTypography-root {
+  font-weight: 500;
+  color: #333;
+}
+
+.delete-dialog .MuiButton-root {
+  min-width: 90px;
+  font-weight: bold;
+}
+
+.delete-dialog .MuiButton-containedSuccess {
+  background-color: #4caf50;
+}
+
+.delete-dialog .MuiButton-containedError {
+  background-color: #f44336;
+}
+
+.edit-dialog {
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.delete-dialog-box {
+  padding: 24px; 
+}
+
+.delete-dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px; 
+  margin-top: 16px; 
+}
