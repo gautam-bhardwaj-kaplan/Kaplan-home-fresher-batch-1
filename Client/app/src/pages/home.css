@@ -57,6 +57,7 @@
   padding: 16px;
   background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
 }
 
 .student-table-title {
@@ -68,11 +69,16 @@
 
 .student-table-paper {
   border-radius: 8px !important;
-  overflow: hidden;
+  max-height: 400px;
+  
 }
 
 .student-table-head {
   background-color: #0033A0;
+  position: sticky;
+  z-index: 1000;
+  top: 0px;
+  
 }
 
 .table-header {
@@ -92,6 +98,12 @@
 .main-content {
   padding-top: 64px; 
 }
+
+.home{
+  overflow: hidden;
+  height: 100vh;
+}
+
 
 
 

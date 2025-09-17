@@ -70,7 +70,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="home">
       <AppBar position="fixed" className="header">
         <Toolbar>
           <img src="/kaplan-logo1.svg" 
@@ -106,8 +106,9 @@ const Home: React.FC = () => {
         <Typography variant="h6" className="student-table-title">
           Students List
         </Typography>
-        <TableContainer component={Paper} className="student-table-paper">
-          <Table>
+        
+        <TableContainer component={Paper}  className="student-table-paper" >
+          <Table >
             <TableHead className="student-table-head">
               <TableRow>
                 <TableCell className="table-header">ID</TableCell>
@@ -121,6 +122,7 @@ const Home: React.FC = () => {
                 </TableCell>
               </TableRow>
             </TableHead>
+            
             <TableBody>
                 {students.length === 0 ? (
                   <TableRow>
