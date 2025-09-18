@@ -18,25 +18,27 @@ interface Topic {
 }
 
 const Dashboard: React.FC = () => {
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+  const [selectedStudentName, setSelectedStudentName] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
   const [timeframe, setTimeframe] = useState<"daily" | "weekly">("daily");
   const [courses, setCourses] = useState<Course[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   
-  const handleStudentSelect = useCallback((studentName: string) => {
-    setSelectedStudent(studentName);
+  const handleStudentSelect = useCallback((studentId: string, studentName: string) => {
+    setSelectedStudentId(studentId);
+    setSelectedStudentName(studentName);
   }, []);
 
 
   useEffect(() => {
     const fetchCourses = async () => {
-      if (!selectedStudent) return;
+      if (!selectedStudentId) return;
 
       try {
         const courseRes = await axios.get(
-          `http://localhost:5000/students/${selectedStudent}/courses`
+          `http://localhost:5000/students/${selectedStudentId}/courses`
         );
         setCourses(courseRes.data);
         setSelectedCourse(null);
@@ -46,11 +48,11 @@ const Dashboard: React.FC = () => {
       }
     };
     fetchCourses();
-  }, [selectedStudent]);
+  }, [selectedStudentId]);
 
   useEffect(() => {
     const fetchTopics = async () => {
-      if (!selectedStudent || !selectedCourse) {
+      if (!selectedStudentId || !selectedCourse) {
         setTopics([]);
         setSelectedTopic([]);
         return;
@@ -58,7 +60,7 @@ const Dashboard: React.FC = () => {
 
       try {
         const topicRes = await axios.get(
-          `http://localhost:5000/students/${selectedStudent}/courses/${selectedCourse}/topics`
+          `http://localhost:5000/students/${selectedStudentId}/courses/${selectedCourse}/topics`
         );
         setTopics(topicRes.data);
         setSelectedTopic([]);
@@ -67,7 +69,7 @@ const Dashboard: React.FC = () => {
       }
     };
     fetchTopics();
-  }, [selectedCourse, selectedStudent]);
+  }, [selectedCourse, selectedStudentId]);
 
   return (
     <Box className="dashboard-container">
@@ -90,9 +92,10 @@ const Dashboard: React.FC = () => {
 
             <Box className="linechart-container">
               <LineChartView
-                studentName={selectedStudent}
-                courseName={selectedCourse}
-                selectedTopic={selectedTopic}
+                studentId={selectedStudentId}
+                studentName={selectedStudentName}
+                courseId={selectedCourse}
+                TopicId={selectedTopic}
                 timeframe={timeframe}
               />
             </Box>

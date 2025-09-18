@@ -14,9 +14,10 @@ import axios from "axios";
 import "./styling/linechart.css";
 
 interface LineChartViewProps {
+  studentId: string | null;
   studentName: string | null;
-  courseName: string | null;
-  selectedTopic: string[];
+  courseId: string | null;
+  TopicId: string[];
   timeframe: "daily" | "weekly";
 }
 
@@ -27,26 +28,27 @@ interface ChartData {
 }
 
 const LineChartView: React.FC<LineChartViewProps> = ({
+  studentId,
   studentName,
-  courseName,
-  selectedTopic,
+  courseId,
+  TopicId,
   timeframe,
 }) => {
   const [data, setData] = useState<ChartData[]>([]);
 
   useEffect(() => {
     const fetchChartData = async () => {
-      console.log("Student:", studentName, "Course:", courseName, "Topic:", selectedTopic, "Timeframe:", timeframe);
+      console.log("Student:", studentId, "Course:", courseId, "Topic:", TopicId, "Timeframe:", timeframe);
 
-      if (!studentName) {
+      if (!studentId) {
         setData([]);
         return;
       }
 
       try {
-        const params: any = { student_name: studentName };
-        if (courseName) params.course_name = courseName;
-        if (selectedTopic.length > 0) params.topic_name = selectedTopic.join(",");
+        const params: any = { student_id: studentId };
+        if (courseId) params.course_id = courseId;
+        if (TopicId.length > 0) params.topic_id = TopicId.join(",");
 
         const endpoint = `http://localhost:5000/${timeframe}`;
 
@@ -59,7 +61,7 @@ const LineChartView: React.FC<LineChartViewProps> = ({
     };
 
     fetchChartData();
-  }, [studentName, courseName, selectedTopic, timeframe]);
+  }, [studentId, courseId, TopicId, timeframe]);
 
   return (
     <Card className="linechart-card">

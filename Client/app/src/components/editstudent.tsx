@@ -145,6 +145,17 @@ useEffect(() => {
       
       <DialogTitle className="custom-dialog-title">Edit Student</DialogTitle>
       <DialogContent dividers>
+
+        <TextField
+          margin="dense"
+          label="Name"
+          name="name"
+          value={formData?.name || ""}
+          onChange={handleChange}
+          fullWidth
+          error={!!errors.name}
+          helperText={errors.name}
+        />
         
         <TextField
           margin="dense"
@@ -153,6 +164,8 @@ useEffect(() => {
           value={formData?.email || ""}
           onChange={handleChange}
           fullWidth
+          error={!!errors.email}
+          helperText={errors.email}
         />
 
         {/*  Course dropdown */}

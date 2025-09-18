@@ -4,8 +4,8 @@ import db from "../db.js";
 const router = express.Router();
 
 // For the course filter
-router.get("/students/:studentName/courses", async (req, res) => {
-  const { studentName } = req.params;
+router.get("/students/:studentId/courses", async (req, res) => {
+  const { studentId } = req.params;
   try {
     const [rows] = await db.query(
       `
@@ -14,9 +14,9 @@ router.get("/students/:studentName/courses", async (req, res) => {
       JOIN activity a ON s.stud_id = a.student_id
       JOIN topic t ON a.topic_id = t.topic_id
       JOIN course c ON t.course_id = c.course_id
-      WHERE LOWER(s.name) = LOWER(?)
+      WHERE s.stud_id = ?
       `,
-      [studentName]
+      [studentId]
     );
     res.json(rows);
   } catch (err) {
@@ -26,8 +26,8 @@ router.get("/students/:studentName/courses", async (req, res) => {
 });
 
 // for the topics filter
-router.get("/students/:studentName/courses/:coursename/topics", async (req, res) => {
-  const { studentName, coursename } = req.params;
+router.get("/students/:studentId/courses/:courseId/topics", async (req, res) => {
+  const { studentId, courseId } = req.params;
   try {
     const [rows] = await db.query(
       `
@@ -36,9 +36,9 @@ router.get("/students/:studentName/courses/:coursename/topics", async (req, res)
       JOIN activity a ON s.stud_id = a.student_id
       JOIN topic t ON a.topic_id = t.topic_id
       JOIN course c ON t.course_id = c.course_id
-      WHERE LOWER(s.name) = LOWER(?) AND Lower(c.course_name) = Lower(?)
+      WHERE s.stud_id = ? AND c.course_id = ?
       `,
-      [studentName, coursename]
+      [studentId, courseId]
     );
     res.json(rows);
   } catch (err) {
@@ -141,21 +141,21 @@ router.delete("/student/:stud_id", async (req, res) => {
 router.put("/students/:stud_id", async (req, res) => {
   try {
     const {stud_id} = req.params;
-    const { email } = req.body;
+    const { name, email } = req.body;
 
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
     }
 
     await db.query(
-      "UPDATE student SET email = ? WHERE stud_id = ?",
-      [email, stud_id]
+      "UPDATE student SET name = ? ,email = ? WHERE stud_id = ?",
+      [name,email, stud_id]
     );
 
-    res.json({ message: "Student email updated successfully" });
+    res.json({ message: "Student name and email updated successfully" });
   } catch (err) {
-    console.error("Error updating student email:", err);
-    res.status(500).json({ error: "Failed to update student email", details: err.message });
+    console.error("Error updating student name & email:", err);
+    res.status(500).json({ error: "Failed to update student name & email", details: err.message });
   }
 });
 

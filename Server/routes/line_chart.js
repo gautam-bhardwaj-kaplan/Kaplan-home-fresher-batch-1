@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get("/daily", async (req, res) => {
   try {
-    const { student_name, course_name, topic_name } = req.query;
+    const { student_id, course_id, topic_id } = req.query;
 
-    if (!student_name) {
-        return res.status(400).json({ error: "student_name required" });
+    if (!student_id) {
+        return res.status(400).json({ error: "student_id required" });
     }
 
     let query = `
@@ -17,17 +17,17 @@ router.get("/daily", async (req, res) => {
       JOIN activity a ON s.stud_id = a.student_id
       JOIN topic t ON a.topic_id = t.topic_id
       JOIN course c ON t.course_id = c.course_id
-      WHERE LOWER(s.name) = LOWER(?)
+      WHERE s.stud_id = ?
     `;
-    const params = [student_name];
+    const params = [student_id];
 
-    if (course_name) {     
-      query += " AND LOWER(c.course_name) = LOWER(?)";
-      params.push(course_name);
+    if (course_id) {
+      query += " AND c.course_id = ?";
+      params.push(course_id);
     }
-    if (topic_name) {
-      const topicList = topic_name.split(",").map(t => t.trim().toLowerCase());
-      query += ` AND LOWER(t.topic_name) IN (${topicList.map(() => "?").join(",")})`;
+    if (topic_id) {
+      const topicList = topic_id.split(",").map((t) => t.trim());
+      query += ` AND t.topic_id IN (${topicList.map(() => "?").join(",")})`;
       params.push(...topicList);
     }
 
@@ -53,8 +53,8 @@ router.get("/daily", async (req, res) => {
 
 router.get("/weekly", async (req, res) => {
   try {
-    const { student_name, course_name, topic_name } = req.query;
-    if (!student_name) return res.status(400).json({ error: "student_name required" });
+    const { student_id, course_id, topic_id } = req.query;
+    if (!student_id) return res.status(400).json({ error: "student_id required" });
 
     let query = `
       SELECT 
@@ -66,17 +66,17 @@ router.get("/weekly", async (req, res) => {
       JOIN activity a ON s.stud_id = a.student_id
       JOIN topic t ON a.topic_id = t.topic_id
       JOIN course c ON t.course_id = c.course_id
-      WHERE LOWER(s.name) = LOWER(?)
+      WHERE s.stud_id = ?
     `;
-    const params = [student_name];
+    const params = [student_id];
 
-    if (course_name) {
-      query += " AND LOWER(c.course_name) = LOWER(?)";
-      params.push(course_name);
+    if (course_id) {
+      query += " AND c.course_id = ?";
+      params.push(course_id);
     }
-    if (topic_name) {
-      const topicList = topic_name.split(",").map(t => t.trim().toLowerCase());
-      query += ` AND LOWER(t.topic_name) IN (${topicList.map(() => "?").join(",")})`;
+    if (topic_id) {
+      const topicList = topic_id.split(",").map((t) => t.trim());
+      query += ` AND t.topic_id IN (${topicList.map(() => "?").join(",")})`;
       params.push(...topicList);
     }
 
@@ -104,10 +104,12 @@ router.get("/weekly", async (req, res) => {
       const isoWeekEnd = new Date(isoWeekStart);
       isoWeekEnd.setDate(isoWeekStart.getDate() + 6);
 
-      const options = { month: "short", day: "numeric" };
       return {
-        week: `${isoWeekStart.getDate()}-${isoWeekEnd.getDate()} ${isoWeekStart.toLocaleString("en-US", { month: "short" })}`,
-        total_hours: r.total_hours
+        week: `${isoWeekStart.getDate()}-${isoWeekEnd.getDate()} ${isoWeekStart.toLocaleString(
+          "en-US",
+          { month: "short" }
+        )}`,
+        total_hours: r.total_hours,
       };
     });
 

@@ -76,6 +76,15 @@ const Home: React.FC = () => {
     
     try {
       const newerrors: {[key: string] : string} = {};
+      
+      if (!updatedStudent.name) {
+      newerrors.name = "Name is required.";
+      }
+
+      if (!updatedStudent.email) {
+      newerrors.email = "Email is required.";
+      }
+          
       if (!updatedStudent.topic) {
         newerrors.topic = "Please select a Topic before saving.";
       }
@@ -119,6 +128,7 @@ const Home: React.FC = () => {
     });
 
     await axios.put(`http://localhost:5000/students/${updatedStudent.stud_id}`, {
+      name: updatedStudent.name,
       email: updatedStudent.email,
     });
 
@@ -246,7 +256,7 @@ const handleCancelDelete = () => {
         </TableContainer>
       </Box>
 
-      <Dialog open={openEdit} onClose={handleCloseEdit} maxWidth="sm" fullWidth className="edit-dialog">
+      <Dialog open={openEdit} onClose={handleCloseEdit} maxWidth="md" fullWidth className="edit-dialog">
         {currentStudent && (
           <EditStudent
             open = {openEdit}

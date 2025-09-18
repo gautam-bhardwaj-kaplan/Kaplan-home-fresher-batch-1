@@ -9,7 +9,7 @@ interface Student {
 }
 
 interface SidebarPbProps {
-  onStudentSelect: (studentId: string) => void;
+  onStudentSelect: (studentId: string, studentName: string) => void;
 }
 
 const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
@@ -25,7 +25,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
 
         if (res.data.length > 0) {
           setActiveStudent(res.data[0].stud_id);
-          onStudentSelect(res.data[0].name);
+          onStudentSelect(res.data[0].stud_id, res.data[0].name);
         }
       })
       .catch((err) => console.error("Error fetching students:", err));
@@ -33,7 +33,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
 
   const handleSelect = (student: Student) => {
     setActiveStudent(student.stud_id);
-    onStudentSelect(student.name);
+    onStudentSelect(student.stud_id, student.name);
   };
 
   useEffect(() => {

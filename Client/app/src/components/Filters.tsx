@@ -84,7 +84,7 @@ const Filters: React.FC<FiltersProps> = ({
             All Courses
           </MenuItem>
           {courses.map((course) => (
-            <MenuItem key={course.course_id} value={course.course_name}>
+            <MenuItem key={course.course_id} value={course.course_id}>
               {course.course_name}
             </MenuItem>
           ))}
@@ -107,17 +107,14 @@ const Filters: React.FC<FiltersProps> = ({
       open={topicOpen}
       onOpen={() => setTopicOpen(true)}
       onClose={() => setTopicOpen(false)}
-      onChange={(e) => {
-      const value = e.target.value as string[];
-      setTempSelected(value);
-    }}
-    renderValue={(selected) =>
-      selected.length === 0 ? "All Topics" : selected.join(", ")
-    }
+      onChange={(e) => setTempSelected(e.target.value as string[])}
+          renderValue={(selected) =>
+            selected.length === 0 ? "All Topics" : topics.filter(t => selected.includes(t.topic_id)).map(t => t.topic_name).join(", ")
+          }
     >
       {topics.map((topic) => (
-        <MenuItem key={topic.topic_id} value={topic.topic_name}>
-          <Checkbox checked={tempSelected.includes(topic.topic_name)} />
+        <MenuItem key={topic.topic_id} value={topic.topic_id}>
+          <Checkbox checked={tempSelected.includes(topic.topic_id)} />
           <ListItemText primary={topic.topic_name} />
         </MenuItem>
       ))}
