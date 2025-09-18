@@ -45,7 +45,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ courses,studentId }) => {
                 className={index % 2 === 0 ? "row-even" : "row-odd"}
               >
                 <td
-                  style={{ cursor: "pointer", color: "#1976d2" }}
+                  className="course-name-cell"
                   onClick={() => {
                     setSelectedCourseId(course.course_id);
                     setSelectedCourseName(course.course_name);

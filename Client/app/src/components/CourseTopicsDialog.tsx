@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -41,7 +41,7 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
   courseName,
 }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
+  
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = React.useState<string | null>("all");
 
@@ -56,7 +56,7 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
             `http://localhost:5000/student/${studentId}/course/${courseId}/topics/details`
           );
           setTopics(res.data);
-          setFilteredTopics(res.data);
+          
         } catch (err) {
           console.error("Failed to fetch topics:", err);
         } finally {
@@ -68,11 +68,13 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
     fetchTopics();
   }, [open, studentId, courseId]);
 
-  const visibleTopics = topics.filter((topic) => {
+  const visibleTopics  = useMemo(() => {
+    return topics.filter((topic) => {
     if (!status || status === "all") return true;
     if (status === "Pending") return topic.status  !== "Completed";
     return topic.status === status;
-  });
+    });
+    }, [topics, status]);
 
   return (
     <Dialog
@@ -93,10 +95,8 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
       
 
       <DialogContent className="custom-dialog-content">
-        {loading ? (
-          <Box display="flex" justifyContent="left" alignItems="center" p={3}>
+        {loading ? ( 
             <CircularProgress />
-          </Box>
         ) : topics.length === 0 ? (
           <p className="no-topics">No topics found for this course.</p>
           ) : visibleTopics.length === 0 ? (

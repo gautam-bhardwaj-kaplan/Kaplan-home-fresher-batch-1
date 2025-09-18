@@ -4,6 +4,8 @@ import { Box, FormControl, InputLabel, Select, MenuItem, Button,TextField,InputA
 import "./FiltersPb.css";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+
 
 interface FiltersPbProps {
   completionFilter: number | null; 
@@ -67,6 +69,7 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
         size="small"
         className="filter-item"
         onClick={onClearFilters}
+        startIcon={<RestartAltIcon fontSize="small" />}
       >
         Clear Filters
       </Button>

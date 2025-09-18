@@ -5,7 +5,7 @@ import FiltersPb from "../components/FiltersPb.tsx";
 import CourseCard from "../components/CourseCardPb.tsx";
 import axios from "axios";
 import "./ProgressBar.css";
-import EnrollmentChartDialog from "../components/EnrollmentChartDialog.tsx";
+import { CircularProgress } from "@mui/material";
 
 interface Student {
   stud_id: number;
@@ -27,16 +27,7 @@ const ProgressBar: React.FC = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  
-  
-
-const handleClearFilters = () => {
-  setCompletionFilter(null);
-  setSortFilter(null);
-  localStorage.removeItem("completionFilter");
-  localStorage.removeItem("sortFilter");
-};
-
+  const [loadingCourses, setLoadingCourses] = useState(false);
 
   // filter states
 const [completionFilter, setCompletionFilter] = useState<number | null>(() => {
@@ -59,37 +50,58 @@ const handleSortFilter = (val: string | null) => {
   localStorage.setItem("sortFilter", val || "");
 };
 
-
+const handleClearFilters = () => {
+  setCompletionFilter(null);
+  setSortFilter(null);
+  localStorage.removeItem("completionFilter");
+  localStorage.removeItem("sortFilter");
+};
 
   // Fetch students
 useEffect(() => {
-  axios
+  const fetchStudentsAndCourses = async () => {
+    try{
+  const res= await axios
     .get<Student[]>("http://localhost:5000/student/all")
-    .then((res) => {
       setStudents(res.data);
 
       if (res.data.length > 0) {
         const firstStudent = res.data[0];
         setSelectedStudent(firstStudent);
+        setLoadingCourses(true);
 
         // Fetch that student's courses
-        axios
-          .get<Course[]>(`http://localhost:5000/student/${firstStudent.stud_id}/courses`)
-          .then((res2) => setCourses(res2.data))
-          .catch((err) => console.error("Error fetching courses:", err));
+        try{
+         const res2 =await axios
+          .get<Course[]>(`http://localhost:5000/student/${firstStudent.stud_id}/courses`);
+           setCourses(res2.data);
+        }catch(err) {
+          console.error("Error fetching courses:", err);
+        } finally {
+          setLoadingCourses(false); 
+        }
       }
-    })
-    .catch((err) => console.error("Error fetching students:", err));
+    }catch(err){
+      console.error("Error fetching students:", err);
+    }
+ };
+ fetchStudentsAndCourses();
 }, []);
 
 
   // Fetch courses for selected student
-  const handleStudentSelect = (student: Student) => {
+  const handleStudentSelect = async (student: Student) => {
     setSelectedStudent(student);
-    axios
-      .get<Course[]>(`http://localhost:5000/student/${student.stud_id}/courses`)
-      .then((res) => setCourses(res.data))
-      .catch((err) => console.error("Error fetching courses:", err));
+    setLoadingCourses(true);
+    try{
+    const res = await axios
+      .get<Course[]>(`http://localhost:5000/student/${student.stud_id}/courses`);
+      setCourses(res.data);
+    }catch(err){
+      console.error("Error fetching courses:", err);
+    }finally {
+    setLoadingCourses(false);
+  }
   };
 
   // apply filters
@@ -145,10 +157,15 @@ useEffect(() => {
           />
 
           <div className="courses-frame">
-            {selectedStudent === null ? (
-              <p>Select a student to view courses</p>
+
+            {(!selectedStudent ||loadingCourses )? (
+            <div className="loader-container">
+              <CircularProgress />
+            </div>
             ) : filteredCourses.length === 0 ? (
-              <p>No courses found for {selectedStudent.name}</p>
+              <div className="no-courses-container">
+              <p>No courses found for {selectedStudent.name} !</p>
+              </div>
             ) : (
               <CourseCard courses={filteredCourses} studentId={selectedStudent!.stud_id} />
             )}

@@ -7,8 +7,11 @@ const router = express.Router();
 // fetch students for home
 router.get("/", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) ;      
-    const limit = parseInt(req.query.limit);    
+    let page = parseInt(req.query.page ,10) ;      
+    let limit = parseInt(req.query.limit,10); 
+    if (isNaN(page) || page < 0) page = 0;
+    if (isNaN(limit) || limit <= 0 || limit > 100) limit = 10;
+
     const offset = page * limit;
     const [countRows] = await db.query("SELECT COUNT(*) AS total FROM student");
     const total = countRows[0].total;
@@ -172,9 +175,6 @@ router.get("/courses/enrollment", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch course enrollment" });
   }
 });
-
-
-
 export default router;
 
    

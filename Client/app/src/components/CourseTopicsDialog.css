@@ -79,5 +79,22 @@
   color: #357ABD;
   font-family: 'Montserrat', sans-serif !important;
 }
+.custom-dialog-content {
+  min-height: 180px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  padding: 1rem;
+  flex-direction: column;  
+}
+.custom-dialog-paper {
+  width: 600px;        
+  min-width: 600px;    
+  max-width: 600px;    
+}
+
+
+
+
 
 
