@@ -25,6 +25,15 @@ const ProgressBar: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
+  const [initialLoad, setInitialLoad] = useState(true);
+
+const handleClearFilters = () => {
+  setCompletionFilter(null);
+  setSortFilter(null);
+  localStorage.removeItem("completionFilter");
+  localStorage.removeItem("sortFilter");
+};
+
 
   // filter states
 const [completionFilter, setCompletionFilter] = useState<number | null>(() => {
@@ -121,6 +130,7 @@ useEffect(() => {
             onCompletionFilter={handleCompletionFilter}
             onSortFilter={handleSortFilter}
             onNavigate={(page) => console.log("Navigate to:", page)}
+            onClearFilters={handleClearFilters}
           />
 
           <div className="courses-frame">

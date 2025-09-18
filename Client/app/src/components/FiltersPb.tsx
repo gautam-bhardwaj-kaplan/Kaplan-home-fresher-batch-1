@@ -1,6 +1,6 @@
 import React from "react";
 import type { SelectChangeEvent } from "@mui/material/Select";
-import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Box, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
 import "./FiltersPb.css";
 
 interface FiltersPbProps {
@@ -9,6 +9,7 @@ interface FiltersPbProps {
   onCompletionFilter: (val: number | null) => void;
   onSortFilter: (val: string | null) => void;
   onNavigate: (page: string) => void;
+  onClearFilters: () => void;
 }
 
 const FiltersPb: React.FC<FiltersPbProps> = ({
@@ -17,6 +18,7 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
   onCompletionFilter,
   onSortFilter,
   onNavigate,
+  onClearFilters,
 }) => {
   return (
     <Box className="filters-toolbar">
@@ -52,6 +54,14 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
           <MenuItem value="progress">Progress</MenuItem>
         </Select>
       </FormControl>
+      <Button
+        variant="outlined"
+        size="small"
+        className="filter-item"
+        onClick={onClearFilters}
+      >
+        Clear Filters
+      </Button>
     </Box>
   );
 };

@@ -12,4 +12,28 @@
   min-width: 180px;
   flex: 0 0 180px;
 }
+.filter-item.MuiButton-root {
+  min-width: 180px;          
+  height: 40px;              
+  border: 1px solid #bebaba; 
+  border-radius: 6px;
+  color: #1976d2;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: none;      
+  transition: all 0.2s ease;
+}
+
+.filter-item.MuiButton-root:hover {
+  background-color:#357ABD;
+  color:#fff;
+  border-color: #fff;
+}
+
+.filter-item.MuiButton-root:active {
+  background-color: #1565c0;
+  border-color: #0d3c7a;
+  color: white;
+}
+
 
