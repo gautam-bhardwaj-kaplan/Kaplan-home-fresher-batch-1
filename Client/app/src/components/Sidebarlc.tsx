@@ -38,11 +38,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setIsOpen(false);
-      } else {
-        setIsOpen(true);
-      }
+      setIsOpen(window.innerWidth > 768);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -51,29 +47,27 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
 
   return (
     <div className={`sidebar ${isOpen ? "isOpen" : "closed"}`}>
-
-        <div className="sidebar-content">
-          {isOpen &&<h3 className="sidebar-title">Students</h3>}
-          <div className="menu-btn" onClick={() => setIsOpen(!isOpen)}>
-          <MenuRoundedIcon  />
+      <div className="sidebar-content">
+        {isOpen && <h3 className="sidebar-title">Students</h3>}
+        <div className="menu-btn" onClick={() => setIsOpen(!isOpen)}>
+          <MenuRoundedIcon />
         </div>
-         </div>
+      </div>
 
-          <div className="sidebar-list">
-            {students.map((student) => (
-              <div
-                key={student.stud_id}
-                className={`sidebar-item ${
-                  activeStudent === student.stud_id ? "active" : ""
-                }`}
-                onClick={() => handleSelect(student)}
-              >
-                {isOpen ? student.name : student.name.charAt(0)}
-              </div>
-            ))}
+      <div className="sidebar-list">
+        {students.map((student) => (
+          <div
+            key={student.stud_id}
+            className={`sidebar-item ${
+              activeStudent === student.stud_id ? "active" : ""
+            }`}
+            onClick={() => handleSelect(student)}
+          >
+            {isOpen ? student.name : student.name.charAt(0)}
           </div>
-        </div>
-      
+        ))}
+      </div>
+    </div>
   );
 };
 

@@ -1,26 +1,35 @@
-
-
 .filters-container {
   display: flex;
-  gap: 24px; 
+  gap: 24px;
   align-items: center;
-  margin-top: 16px; 
+  margin-top: 16px;
 }
 
 .filters-formcontrol {
-  flex : 1;
+  flex: 1;
   min-width: 200px;
-  margin: 0 10px; 
-}
-
-.filters-label {
-  top: -8px !important;
-  left: -4px !important;
-  font-weight: 500;
+  margin: 0 10px;
 }
 
 .filters-actions {
   display: flex;
   justify-content: space-between;
-  padding: 8px; 
+  padding: 8px;
+}
+
+.clear-filters-btn {
+  height: 40px;
+  text-transform: none !important;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--mui-palette-text-primary, #000);
+  border-radius: 8px;
+}
+
+.clear-filters-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.clear-filters-btn:active {
+  background-color: #e0e0e0;
 }

@@ -1,6 +1,6 @@
 .dashboard-main {
-    margin-top: 64px;
-    overflow: hidden;
+  margin-top: 64px;
+  overflow: hidden;
 }
 
 .dashboard-container {
@@ -11,10 +11,9 @@
 
 .dashboard-content {
   flex-grow: 1;
-  padding: 24px; 
+  padding: 24px;
 }
 
 .linechart-container {
   margin-top: 32px;
 }
-

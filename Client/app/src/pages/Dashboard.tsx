@@ -3,7 +3,7 @@ import { Box, Container } from "@mui/material";
 import Header from "../components/Header.tsx";
 import Sidebar from "../components/Sidebarlc.tsx";
 import Filters from "../components/Filters.tsx";
-import LineChartView from "../components/LineChartView.tsx"; 
+import LineChartView from "../components/LineChartView.tsx";
 import "./dashboard.css";
 import axios from "axios";
 
@@ -18,19 +18,25 @@ interface Topic {
 }
 
 const Dashboard: React.FC = () => {
-  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
-  const [selectedStudentName, setSelectedStudentName] = useState<string | null>(null);
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
+    null
+  );
+  const [selectedStudentName, setSelectedStudentName] = useState<string | null>(
+    null
+  );
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
   const [timeframe, setTimeframe] = useState<"daily" | "weekly">("daily");
   const [courses, setCourses] = useState<Course[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
-  
-  const handleStudentSelect = useCallback((studentId: string, studentName: string) => {
-    setSelectedStudentId(studentId);
-    setSelectedStudentName(studentName);
-  }, []);
 
+  const handleStudentSelect = useCallback(
+    (studentId: string, studentName: string) => {
+      setSelectedStudentId(studentId);
+      setSelectedStudentName(studentName);
+    },
+    []
+  );
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -74,37 +80,36 @@ const Dashboard: React.FC = () => {
   return (
     <Box className="dashboard-container">
       <Header />
-    <div className="dashboard-main">
-      <Box sx={{ display: "flex", flexGrow: 1 }}>
-        <Sidebar onStudentSelect={handleStudentSelect} />
-        <Box className="dashboard-content">
-          <Container maxWidth="lg">
-            <Filters
-              selectedCourse={selectedCourse}
-              setSelectedCourse={setSelectedCourse}
-              selectedTopic={selectedTopic}
-              setSelectedTopic={setSelectedTopic}
-              timeframe={timeframe}
-              setTimeframe={setTimeframe}
-              courses={courses}
-              topics={topics}
-            />
-
-            <Box className="linechart-container">
-              <LineChartView
-                studentId={selectedStudentId}
-                studentName={selectedStudentName}
-                courseId={selectedCourse}
-                TopicId={selectedTopic}
+      <div className="dashboard-main">
+        <Box sx={{ display: "flex", flexGrow: 1 }}>
+          <Sidebar onStudentSelect={handleStudentSelect} />
+          <Box className="dashboard-content">
+            <Container maxWidth="lg">
+              <Filters
+                selectedCourse={selectedCourse}
+                setSelectedCourse={setSelectedCourse}
+                selectedTopic={selectedTopic}
+                setSelectedTopic={setSelectedTopic}
                 timeframe={timeframe}
+                setTimeframe={setTimeframe}
+                courses={courses}
+                topics={topics}
               />
-            </Box>
-          </Container>
+
+              <Box className="linechart-container">
+                <LineChartView
+                  studentId={selectedStudentId}
+                  studentName={selectedStudentName}
+                  courseId={selectedCourse}
+                  TopicId={selectedTopic}
+                  timeframe={timeframe}
+                />
+              </Box>
+            </Container>
+          </Box>
         </Box>
-      </Box>
       </div>
     </Box>
-    
   );
 };
 

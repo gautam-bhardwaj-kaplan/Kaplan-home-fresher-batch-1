@@ -8,7 +8,7 @@ router.get("/daily", async (req, res) => {
     const { student_id, course_id, topic_id } = req.query;
 
     if (!student_id) {
-        return res.status(400).json({ error: "student_id required" });
+      return res.status(400).json({ error: "student_id required" });
     }
 
     let query = `
@@ -31,30 +31,32 @@ router.get("/daily", async (req, res) => {
       params.push(...topicList);
     }
 
-    query += " GROUP BY DATE(a.completion_date_topic) ORDER BY DATE(a.completion_date_topic) ASC";
+    query +=
+      " GROUP BY DATE(a.completion_date_topic) ORDER BY DATE(a.completion_date_topic) ASC";
 
     const [rows] = await db.query(query, params);
 
     const formatted = rows.map((r) => {
       const localDate = new Date(r.date);
-      const formattedDate = localDate.toLocaleDateString("en-CA");  
+      const formattedDate = localDate.toLocaleDateString("en-CA");
       return {
         date: formattedDate,
-        total_hours: r.total_hours
+        total_hours: r.total_hours,
       };
     });
     res.json(formatted);
   } catch (err) {
-    console.error(" Daily fetch failed:", err);
-    res.status(500).json({ error: "Daily data fetch failed", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Daily data fetch failed", details: err.message });
   }
 });
-
 
 router.get("/weekly", async (req, res) => {
   try {
     const { student_id, course_id, topic_id } = req.query;
-    if (!student_id) return res.status(400).json({ error: "student_id required" });
+    if (!student_id)
+      return res.status(400).json({ error: "student_id required" });
 
     let query = `
       SELECT 
@@ -87,7 +89,7 @@ router.get("/weekly", async (req, res) => {
 
     const [rows] = await db.query(query, params);
 
-    const formatted = rows.map(r => {
+    const formatted = rows.map((r) => {
       const yearWeek = r.year_week.toString();
       const year = parseInt(yearWeek.slice(0, 4));
       const week = parseInt(yearWeek.slice(4));
@@ -96,9 +98,9 @@ router.get("/weekly", async (req, res) => {
       const dayOfWeek = simple.getDay();
       const isoWeekStart = new Date(simple);
       if (dayOfWeek <= 4) {
-        isoWeekStart.setDate(simple.getDate() - simple.getDay() + 1); 
+        isoWeekStart.setDate(simple.getDate() - simple.getDay() + 1);
       } else {
-        isoWeekStart.setDate(simple.getDate() + 8 - simple.getDay()); 
+        isoWeekStart.setDate(simple.getDate() + 8 - simple.getDay());
       }
 
       const isoWeekEnd = new Date(isoWeekStart);
@@ -115,8 +117,9 @@ router.get("/weekly", async (req, res) => {
 
     res.json(formatted);
   } catch (err) {
-    console.error(" Weekly fetch failed:", err);
-    res.status(500).json({ error: "Weekly data fetch failed", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Weekly data fetch failed", details: err.message });
   }
 });
 

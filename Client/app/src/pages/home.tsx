@@ -21,6 +21,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
+import { Snackbar, Alert } from "@mui/material";
 
 interface Student {
   stud_id: number;
@@ -53,124 +54,156 @@ const Home: React.FC = () => {
   const handleEditClick = (student: Student) => {
     setCurrentStudent(student);
     setOpenEdit(true);
-    setErrors({}); 
+    setErrors({});
     setFormMessage({ type: null, text: "" });
   };
 
   const handleCloseEdit = () => {
     setOpenEdit(false);
     setCurrentStudent(null);
-    setErrors({}); 
+    setErrors({});
     setFormMessage({ type: null, text: "" });
   };
 
-
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [formMessage, setFormMessage] = useState<{ type: "success" | "error" | null; text: string }>({
+  const [formMessage, setFormMessage] = useState<{
+    type: "success" | "error" | null;
+    text: string;
+  }>({
     type: null,
-    text: ""
+    text: "",
   });
 
-
   const handleSaveStudent = async (updatedStudent: Student) => {
-    
     try {
-      const newerrors: {[key: string] : string} = {};
-      
-      if (!updatedStudent.name) {
-      newerrors.name = "Name is required.";
+      type Validator = {
+        field: keyof Student;
+        validate: (value: any) => string | null;
+      };
+
+      const validators: Validator[] = [
+        {
+          field: "name",
+          validate: (val) => (!val?.trim() ? "Name is required." : null),
+        },
+        {
+          field: "email",
+          validate: (val) => {
+            if (!val?.trim()) return "Email is required.";
+            if (!/^\S+@\S+\.\S+$/.test(val)) return "Invalid email format.";
+            return null;
+          },
+        },
+        {
+          field: "topic",
+          validate: (val) =>
+            !val ? "Please select a Topic before saving." : null,
+        },
+        {
+          field: "quiz_score",
+          validate: (val) =>
+            val !== undefined && val > 10
+              ? "Quiz Score cannot be more than 10."
+              : null,
+        },
+        {
+          field: "hours_studied",
+          validate: (val) =>
+            val !== undefined && val > 24
+              ? "Hours Studied cannot be more than 24."
+              : null,
+        },
+        {
+          field: "completion_date_topic",
+          validate: (val) =>
+            val && new Date(val) > new Date()
+              ? "Completion date cannot be in the future."
+              : null,
+        },
+      ];
+
+      const newErrors: { [key: string]: string } = {};
+      validators.forEach(({ field, validate }) => {
+        const error = validate(updatedStudent[field]);
+        if (error) newErrors[field as string] = error;
+      });
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
       }
 
-      if (!updatedStudent.email) {
-      newerrors.email = "Email is required.";
-      }
-          
-      if (!updatedStudent.topic) {
-        newerrors.topic = "Please select a Topic before saving.";
-      }
+      setErrors({});
+      setFormMessage({ type: null, text: "" });
+      await axios.post("http://localhost:5000/activity", {
+        student_id: updatedStudent.stud_id,
+        topic_id: updatedStudent.topic,
+        hours_studied: updatedStudent.hours_studied,
+        quiz_score: updatedStudent.quiz_score,
+        completion_date_topic: updatedStudent.completion_date_topic,
+      });
 
-      if (
-        updatedStudent.quiz_score !== undefined &&
-        updatedStudent.quiz_score > 10
-        ) {
-        newerrors.quiz_score = "Quiz Score cannot be more than 10.";
+      await axios.put(
+        `http://localhost:5000/students/${updatedStudent.stud_id}`,
+        {
+          name: updatedStudent.name,
+          email: updatedStudent.email,
         }
+      );
 
-      if (
-         updatedStudent.hours_studied !== undefined &&
-         updatedStudent.hours_studied > 24
-        ) {
-          newerrors.hours_studied = "Hours Studied cannot be more than 24.";
-          }
+      setFormMessage({ type: "success", text: "Activity Saved Successfully." });
 
-      if (
-         updatedStudent.completion_date_topic &&
-         new Date(updatedStudent.completion_date_topic) > new Date()
-         ) {
-          newerrors.completion_date_topic = "Completion date cannot be in the future.";
-          }
-
-      if (Object.keys(newerrors).length > 0) {
-      setErrors(newerrors);
-      return;
-    }
-
-    setErrors({});
-    setFormMessage({ type: null, text: "" });    
-    console.log("Saving student activity:", updatedStudent);
-
-    await axios.post("http://localhost:5000/activity", {
-      student_id: updatedStudent.stud_id,
-      topic_id: updatedStudent.topic,
-      hours_studied: updatedStudent.hours_studied,
-      quiz_score: updatedStudent.quiz_score,
-      completion_date_topic: updatedStudent.completion_date_topic,
-    });
-
-    await axios.put(`http://localhost:5000/students/${updatedStudent.stud_id}`, {
-      name: updatedStudent.name,
-      email: updatedStudent.email,
-    });
-
-    setFormMessage({ type: "success", text: "Activity Saved Successfully." });
-    
-    setTimeout(() => {
-     handleCloseEdit();
-    fetchStudents(); 
-  }, 1000);
-  } catch (error) {
+      setTimeout(() => {
+        handleCloseEdit();
+        fetchStudents();
+      }, 1000);
+    } catch (error) {
       console.error("Failed to save activity:", error);
-      setFormMessage({ type: "error", text: "Please give the correct details." });
-  }
-};
+      setFormMessage({
+        type: "error",
+        text: "Please give the correct details.",
+      });
+    }
+  };
 
   const handleDeleteClick = (student: Student) => {
-  setStudentToDelete(student);
-  setDeleteDialogOpen(true);
-};
+    setStudentToDelete(student);
+    setDeleteDialogOpen(true);
+  };
 
-const handleConfirmDelete = async () => {
-  if (!studentToDelete) return;
+  const handleConfirmDelete = async () => {
+    if (!studentToDelete) return;
 
-  try {
-    await axios.delete(`http://localhost:5000/student/${studentToDelete.stud_id}`);
-    alert("Student deleted successfully");
-    fetchStudents(); 
-  } catch (err) {
-    console.error("Failed to delete student:", err);
-    alert("Failed to delete");
-  } finally {
+    try {
+      await axios.delete(
+        `http://localhost:5000/student/${studentToDelete.stud_id}`
+      );
+
+      setFormMessage({
+        type: "success",
+        text: "Student deleted successfully.",
+      });
+      fetchStudents();
+    } catch (err) {
+      console.error("Failed to delete student:", err);
+      setFormMessage({
+        type: "error",
+        text: "Failed to delete student. Please try again.",
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setStudentToDelete(null);
+
+      setTimeout(() => {
+        setFormMessage({ type: null, text: "" });
+      }, 1000);
+    }
+  };
+
+  const handleCancelDelete = () => {
     setDeleteDialogOpen(false);
     setStudentToDelete(null);
-  }
-};
-
-const handleCancelDelete = () => {
-  setDeleteDialogOpen(false);
-  setStudentToDelete(null);
-};
-
-
+  };
 
   return (
     <div>
@@ -192,8 +225,8 @@ const handleCancelDelete = () => {
             <Button
               key={label}
               onClick={() => {
-               if (label === "Line Chart") navigate("/dashboard");
-               if(label === "Course Progress") navigate("/progress");
+                if (label === "Line Chart") navigate("/dashboard");
+                if (label === "Course Progress") navigate("/progress");
               }}
               className="styled-button"
             >
@@ -207,6 +240,7 @@ const handleCancelDelete = () => {
         <Typography variant="h6" className="student-table-title">
           Students List
         </Typography>
+
         <TableContainer component={Paper} className="student-table-paper">
           <Table>
             <TableHead className="student-table-head">
@@ -223,78 +257,109 @@ const handleCancelDelete = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-                {students.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} align="center" style={{ padding: "20px" }}>
-                      No users found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-              students.map((student) => (
-                <TableRow key={student.stud_id} className="student-row">
-                  <TableCell>{student.stud_id}</TableCell>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.email}</TableCell>
-                  <TableCell align="center">
-                    <IconButton 
-                    color="primary"
-                    onClick={() => handleEditClick(student)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton color="error" onClick={() => handleDeleteClick(student)}>
-                      <DeleteIcon />
-                    </IconButton>
+              {students.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    align="center"
+                    style={{ padding: "20px" }}
+                  >
+                    No users found
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ) : (
+                students.map((student) => (
+                  <TableRow key={student.stud_id} className="student-row">
+                    <TableCell>{student.stud_id}</TableCell>
+                    <TableCell>{student.name}</TableCell>
+                    <TableCell>{student.email}</TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEditClick(student)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDeleteClick(student)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Box>
 
-      <Dialog open={openEdit} onClose={handleCloseEdit} maxWidth="md" fullWidth className="edit-dialog">
+      <Dialog
+        open={openEdit}
+        onClose={handleCloseEdit}
+        maxWidth="md"
+        fullWidth
+        className="edit-dialog"
+      >
         {currentStudent && (
           <EditStudent
-            open = {openEdit}
+            open={openEdit}
             student={currentStudent}
             onClose={handleCloseEdit}
             onSave={handleSaveStudent}
-            errors={errors} 
+            errors={errors}
             formMessage={formMessage}
           />
         )}
       </Dialog>
 
-      <Dialog open={deleteDialogOpen} onClose={handleCancelDelete} className="delete-dialog">
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+        className="delete-dialog"
+      >
         <Box className="delete-dialog-box">
-        <Typography variant="h6" gutterBottom>
-          Are you sure you want to delete{" "}
-          <strong>{studentToDelete?.name}</strong>?
-        </Typography>
-        <Box className="delete-dialog-actions">
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleConfirmDelete}
-        >
-         Yes
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleCancelDelete}
-        >
-         No
-        </Button>
-        </Box>
+          <Typography variant="h6" gutterBottom>
+            Are you sure you want to delete{" "}
+            <strong>{studentToDelete?.name}</strong>?
+          </Typography>
+          <Box className="delete-dialog-actions">
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleConfirmDelete}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCancelDelete}
+            >
+              No
+            </Button>
+          </Box>
         </Box>
       </Dialog>
 
-
+      <Snackbar
+        open={!!formMessage.text}
+        autoHideDuration={3000}
+        onClose={() => setFormMessage({ type: null, text: "" })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setFormMessage({ type: null, text: "" })}
+          severity={formMessage.type === "success" ? "success" : "error"}
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          {formMessage.text}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

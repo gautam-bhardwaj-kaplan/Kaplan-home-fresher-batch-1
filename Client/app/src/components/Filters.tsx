@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -7,10 +7,9 @@ import {
   MenuItem,
   ListItemText,
   Checkbox,
-  Button
+  Button,
 } from "@mui/material";
 import "./styling/filters.css";
-
 
 interface Course {
   course_id: string;
@@ -43,14 +42,13 @@ const Filters: React.FC<FiltersProps> = ({
   timeframe,
   setTimeframe,
 }) => {
-
   const [tempSelected, setTempSelected] = useState<string[]>(selectedTopic);
   const [topicOpen, setTopicOpen] = useState(false);
 
   useEffect(() => {
-  setTempSelected([]);
-  setSelectedTopic([]);
-}, [selectedCourse,setSelectedTopic]);
+    setTempSelected([]);
+    setSelectedTopic([]);
+  }, [selectedCourse, setSelectedTopic]);
 
   const handleApply = () => {
     setSelectedTopic(tempSelected);
@@ -58,10 +56,16 @@ const Filters: React.FC<FiltersProps> = ({
   };
 
   const handleCancel = () => {
-    setTempSelected(selectedTopic); 
+    setTempSelected(selectedTopic);
     setTopicOpen(false);
   };
-  
+
+  const handleClearFilters = () => {
+    setSelectedCourse(null);
+    setSelectedTopic([]);
+    setTimeframe("daily");
+  };
+
   return (
     <Box className="filters-container">
       <FormControl
@@ -72,17 +76,15 @@ const Filters: React.FC<FiltersProps> = ({
       >
         <InputLabel>Course</InputLabel>
         <Select
-    value={selectedCourse === null ? "All Courses" : selectedCourse}
-    label="Course"
-    onChange={(e) => {
-      const valStr = e.target.value;
-      const val = valStr === "All Courses" ? null : valStr;
-      setSelectedCourse(val);
-    }}
+          value={selectedCourse === null ? "All Courses" : selectedCourse}
+          label="Course"
+          onChange={(e) => {
+            const valStr = e.target.value;
+            const val = valStr === "All Courses" ? null : valStr;
+            setSelectedCourse(val);
+          }}
         >
-          <MenuItem value="All Courses">
-            All Courses
-          </MenuItem>
+          <MenuItem value="All Courses">All Courses</MenuItem>
           {courses.map((course) => (
             <MenuItem key={course.course_id} value={course.course_id}>
               {course.course_name}
@@ -92,51 +94,64 @@ const Filters: React.FC<FiltersProps> = ({
       </FormControl>
 
       {/* Topic Filter */}
-  <FormControl
-    className="filters-formcontrol"
-    variant="outlined"
-    fullWidth
-    margin="dense"
-    disabled={!selectedCourse} 
-  >
-    <InputLabel>Topic</InputLabel>
-    <Select
-      multiple
-      label="Topic"
-      value={tempSelected}
-      open={topicOpen}
-      onOpen={() => setTopicOpen(true)}
-      onClose={() => setTopicOpen(false)}
-      onChange={(e) => setTempSelected(e.target.value as string[])}
+      <FormControl
+        className="filters-formcontrol"
+        variant="outlined"
+        fullWidth
+        margin="dense"
+        disabled={!selectedCourse}
+      >
+        <InputLabel>Topic</InputLabel>
+        <Select
+          multiple
+          label="Topic"
+          value={tempSelected}
+          open={topicOpen}
+          onOpen={() => setTopicOpen(true)}
+          onClose={() => setTopicOpen(false)}
+          onChange={(e) => setTempSelected(e.target.value as string[])}
           renderValue={(selected) =>
-            selected.length === 0 ? "All Topics" : topics.filter(t => selected.includes(t.topic_id)).map(t => t.topic_name).join(", ")
+            selected.length === 0
+              ? "All Topics"
+              : topics
+                  .filter((t) => selected.includes(t.topic_id))
+                  .map((t) => t.topic_name)
+                  .join(", ")
           }
-    >
-      {topics.map((topic) => (
-        <MenuItem key={topic.topic_id} value={topic.topic_id}>
-          <Checkbox checked={tempSelected.includes(topic.topic_id)} />
-          <ListItemText primary={topic.topic_name} />
-        </MenuItem>
-      ))}
+        >
+          {topics.map((topic) => (
+            <MenuItem key={topic.topic_id} value={topic.topic_id}>
+              <Checkbox checked={tempSelected.includes(topic.topic_id)} />
+              <ListItemText primary={topic.topic_name} />
+            </MenuItem>
+          ))}
 
-      <Box className="filters-actions">
-        <Button size="small" onClick={handleCancel} color="secondary">
-          Cancel
-        </Button>
-        <Button size="small" onClick={handleApply}
-
-         variant="contained" color="primary">
-          Apply
-        </Button>
-      </Box>
-    </Select>
-  </FormControl>
+          <Box className="filters-actions">
+            <Button size="small" onClick={handleCancel} color="secondary">
+              Cancel
+            </Button>
+            <Button
+              size="small"
+              onClick={handleApply}
+              variant="contained"
+              color="primary"
+            >
+              Apply
+            </Button>
+          </Box>
+        </Select>
+      </FormControl>
 
       {/* Timeframe Filter */}
-      <FormControl className="filters-formcontrol" variant="outlined" fullWidth margin="dense">
+      <FormControl
+        className="filters-formcontrol"
+        variant="outlined"
+        fullWidth
+        margin="dense"
+      >
         <InputLabel>Timeframe</InputLabel>
         <Select
-        label = "Timeframe"
+          label="Timeframe"
           value={timeframe}
           onChange={(e) => setTimeframe(e.target.value as "daily" | "weekly")}
         >
@@ -144,6 +159,15 @@ const Filters: React.FC<FiltersProps> = ({
           <MenuItem value="weekly">Weekly</MenuItem>
         </Select>
       </FormControl>
+
+      <Button
+        variant="text"
+        size="small"
+        onClick={handleClearFilters}
+        className="clear-filters-btn"
+      >
+        Clear Filters
+      </Button>
     </Box>
   );
 };

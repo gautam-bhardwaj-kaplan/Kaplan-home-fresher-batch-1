@@ -1,6 +1,5 @@
-
 .header-appbar {
-  background: linear-gradient(to right, #0033A0, #0033A0) !important; 
+  background: linear-gradient(to right, #0033a0, #0033a0) !important;
 }
 
 .header-toolbar {
@@ -17,7 +16,7 @@
 .header-title {
   flex-grow: 1;
   text-align: center;
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: "Montserrat", sans-serif !important;
   font-weight: 700;
   letter-spacing: 1.2px;
   color: #fff;

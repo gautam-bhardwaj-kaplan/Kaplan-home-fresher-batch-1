@@ -12,7 +12,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import axios from "axios";
-import { SelectChangeEvent } from "@mui/material";  
+import { SelectChangeEvent } from "@mui/material";
 import "./styling/editstudent.css";
 
 interface Student {
@@ -37,11 +37,11 @@ interface Topic {
 }
 
 interface EditStudentProps {
-  open: boolean; 
+  open: boolean;
   onClose: () => void;
   student: Student | null;
   onSave: (updatedStudent: Student) => void;
-  errors: { [key: string]: string }; 
+  errors: { [key: string]: string };
   formMessage: { type: "success" | "error" | null; text: string };
 }
 
@@ -79,54 +79,55 @@ const EditStudent: React.FC<EditStudentProps> = ({
     }
   }, [formData?.course]);
 
-useEffect(() => {
-  if (formData?.topic && student?.stud_id) {
+  useEffect(() => {
+    if (!formData?.topic || !student?.stud_id) {
+      updateFormData({
+        hours_studied: undefined,
+        quiz_score: undefined,
+        completion_date_topic: "",
+      });
+      return;
+    }
+
     axios
       .get<{
-        hours_studied: number; 
-        quiz_score: number; 
-        completion_date_topic: string }>(
-        `http://localhost:5000/activity/${student.stud_id}/${formData.topic}`
-      )
+        hours_studied: number;
+        quiz_score: number;
+        completion_date_topic: string;
+      }>(`http://localhost:5000/activity/${student.stud_id}/${formData.topic}`)
       .then((res) => {
-        const data = res.data;
-        setFormData((prev) => ({
-          ...prev!,
-          hours_studied: data.hours_studied ?? "",
-          quiz_score: data.quiz_score ?? "",
-          completion_date_topic: data.completion_date_topic
-            ? data.completion_date_topic.split("T")[0] 
+        const { hours_studied, quiz_score, completion_date_topic } = res.data;
+        updateFormData({
+          hours_studied: hours_studied ?? "",
+          quiz_score: quiz_score ?? "",
+          completion_date_topic: completion_date_topic
+            ? completion_date_topic.split("T")[0]
             : "",
-        }));
+        });
       })
-      .catch((err) => console.error(err));
-  } else {
-    
-    setFormData((prev) => ({
-      ...prev!,
-      hours_studied: undefined,
-      quiz_score: undefined,
-      completion_date_topic: "",
-    }));
-  }
-}, [formData?.topic, student]);
+      .catch(console.error);
+  }, [formData?.topic, student]);
+
+  const updateFormData = (updates: Partial<Student>) => {
+    setFormData((prev) => (prev ? { ...prev, ...updates } : prev));
+  };
 
   const handleChange = (
-  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
-) => {
-  const { name, value } = e.target;
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent
+  ) => {
+    const { name, value } = e.target;
+    const numericFields = ["hours_studied", "quiz_score"];
 
-  setFormData((prev) =>
-    prev
-      ? {
-          ...prev,
-          [name]: name === "hours_studied" || name === "quiz_score"
-            ? value === "" ? "" : parseFloat(value) 
-            : value,
-        }
-      : prev
-  );
-};
+    updateFormData({
+      [name]: numericFields.includes(name)
+        ? value === ""
+          ? ""
+          : parseFloat(value)
+        : value,
+    } as Partial<Student>);
+  };
 
   const handleSave = () => {
     if (formData) {
@@ -134,18 +135,16 @@ useEffect(() => {
     }
   };
 
-
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      fullWidth 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
       maxWidth="sm"
-      classes={{ paper: "custom-dialog" }}>
-      
+      classes={{ paper: "custom-dialog" }}
+    >
       <DialogTitle className="custom-dialog-title">Edit Student</DialogTitle>
       <DialogContent dividers>
-
         <TextField
           margin="dense"
           label="Name"
@@ -156,7 +155,7 @@ useEffect(() => {
           error={!!errors.name}
           helperText={errors.name}
         />
-        
+
         <TextField
           margin="dense"
           label="Email"
@@ -172,7 +171,7 @@ useEffect(() => {
         <FormControl fullWidth margin="dense" variant="outlined">
           <InputLabel>Course</InputLabel>
           <Select
-            label = "Course"
+            label="Course"
             name="course"
             value={formData?.course || ""}
             onChange={handleChange}
@@ -186,10 +185,15 @@ useEffect(() => {
         </FormControl>
 
         {/*  Topic dropdown */}
-        <FormControl fullWidth margin="dense" variant="outlined" disabled={!formData?.course}>
+        <FormControl
+          fullWidth
+          margin="dense"
+          variant="outlined"
+          disabled={!formData?.course}
+        >
           <InputLabel>Topic</InputLabel>
           <Select
-            label = "Topic"
+            label="Topic"
             name="topic"
             value={formData?.topic || ""}
             onChange={handleChange}
@@ -201,7 +205,7 @@ useEffect(() => {
             ))}
           </Select>
         </FormControl>
-        
+
         <TextField
           margin="dense"
           label="Hours Studied"
@@ -224,7 +228,7 @@ useEffect(() => {
           value={formData?.quiz_score || ""}
           onChange={handleChange}
           fullWidth
-          inputProps={{ min: 0, max: 10 }} 
+          inputProps={{ min: 0, max: 10 }}
           disabled={!formData?.topic}
           error={!!errors.quiz_score}
           helperText={errors.quiz_score}
@@ -240,17 +244,17 @@ useEffect(() => {
           fullWidth
           InputLabelProps={{ shrink: true }}
           inputProps={{
-            max: new Date().toISOString().split("T")[0], 
-           }}
-          disabled={!formData?.topic} 
+            max: new Date().toISOString().split("T")[0],
+          }}
+          disabled={!formData?.topic}
           error={!!errors.completion_date_topic}
           helperText={errors.completion_date_topic}
         />
         {formMessage.text && (
-        <p style={{ color: formMessage.type === "error" ? "red" : "green" }}>
-          {formMessage.text}
-        </p>
-      )}
+          <p style={{ color: formMessage.type === "error" ? "red" : "green" }}>
+            {formMessage.text}
+          </p>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

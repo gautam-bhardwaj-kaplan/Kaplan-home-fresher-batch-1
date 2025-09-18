@@ -38,8 +38,6 @@ const LineChartView: React.FC<LineChartViewProps> = ({
 
   useEffect(() => {
     const fetchChartData = async () => {
-      console.log("Student:", studentId, "Course:", courseId, "Topic:", TopicId, "Timeframe:", timeframe);
-
       if (!studentId) {
         setData([]);
         return;
@@ -67,16 +65,18 @@ const LineChartView: React.FC<LineChartViewProps> = ({
     <Card className="linechart-card">
       <CardContent>
         <Typography variant="h6" className="linechart-title">
-          {studentName ? `Study Progress (${studentName})` : "Study Progress"}
+          {studentName ? `Study Hours (${studentName})` : "Study Hours"}
         </Typography>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
+          <LineChart
+            data={data}
+            margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey={timeframe === "daily" ? "date" : "week"}
-              tick={{ fontSize: 12,dy: 8}}
+              tick={{ fontSize: 12, dy: 8 }}
               textAnchor="middle"
-              
               height={30}
               label={{
                 value: timeframe === "daily" ? "Days" : "Weeks",
@@ -95,9 +95,9 @@ const LineChartView: React.FC<LineChartViewProps> = ({
             />
             <Tooltip />
             <Legend
-            verticalAlign = "bottom"
-            align = "center"
-            wrapperStyle ={{paddingTop: "20px" }} 
+              verticalAlign="bottom"
+              align="center"
+              wrapperStyle={{ paddingTop: "20px" }}
             />
             <Line
               type="monotone"
