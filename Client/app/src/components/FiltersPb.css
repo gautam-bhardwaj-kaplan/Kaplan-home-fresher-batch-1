@@ -12,6 +12,10 @@
   min-width: 180px;
   flex: 0 0 180px;
 }
+
+.filter-item:hover{
+    border-color: #1976d2;
+}
 .filter-item.MuiButton-root {
   min-width: 180px;          
   height: 40px;              
@@ -30,10 +34,13 @@
   border-color: #fff;
 }
 
-.filter-item.MuiButton-root:active {
-  background-color: #1565c0;
-  border-color: #0d3c7a;
-  color: white;
+.search-bar {
+  min-width: 180px; 
+   margin-left: auto !important;
+   flex: 0 0 auto !important;
 }
+
+
+
 
 

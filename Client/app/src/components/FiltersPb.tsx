@@ -1,24 +1,32 @@
 import React from "react";
 import type { SelectChangeEvent } from "@mui/material/Select";
-import { Box, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material";
+import { Box, FormControl, InputLabel, Select, MenuItem, Button,TextField,InputAdornment,IconButton } from "@mui/material";
 import "./FiltersPb.css";
+import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface FiltersPbProps {
   completionFilter: number | null; 
-  sortFilter: string | null;       
+  sortFilter: string | null; 
+  searchQuery: string;      
   onCompletionFilter: (val: number | null) => void;
   onSortFilter: (val: string | null) => void;
   onNavigate: (page: string) => void;
   onClearFilters: () => void;
+  onSearch: (val: string) => void;
+  
 }
 
 const FiltersPb: React.FC<FiltersPbProps> = ({
   completionFilter,
   sortFilter,
+  searchQuery,
   onCompletionFilter,
   onSortFilter,
   onNavigate,
   onClearFilters,
+  onSearch,
+ 
 }) => {
   return (
     <Box className="filters-toolbar">
@@ -62,6 +70,27 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
       >
         Clear Filters
       </Button>
+      <TextField
+        size="small"
+        className="search-bar"
+        placeholder="Search by course"
+        value={searchQuery}
+        onChange={(e) => onSearch(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon fontSize="small" />
+            </InputAdornment>
+          ),
+          endAdornment: searchQuery && (
+            <InputAdornment position="end">
+              <IconButton size="small" onClick={() => onSearch("")}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
     </Box>
   );
 };

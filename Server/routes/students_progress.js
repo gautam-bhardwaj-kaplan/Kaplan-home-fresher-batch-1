@@ -152,6 +152,27 @@ router.get("/all", async (req, res) => {
   }
 });
 
+router.get("/courses/enrollment", async (req, res) => {
+  try {
+    const [rows] = await db.query(`
+      SELECT
+        c.course_id,
+        c.course_name,
+        COALESCE(COUNT(DISTINCT a.student_id), 0) AS student_count
+      FROM course c
+      LEFT JOIN topic t ON t.course_id = c.course_id
+      LEFT JOIN activity a ON a.topic_id = t.topic_id
+      GROUP BY c.course_id, c.course_name
+      ORDER BY student_count DESC
+    `);
+
+    res.json(rows);
+  } catch (err) {
+    console.error("DB error (courses enrollment):", err);
+    res.status(500).json({ error: "Failed to fetch course enrollment" });
+  }
+});
+
 
 
 export default router;

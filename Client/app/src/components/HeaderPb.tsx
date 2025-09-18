@@ -1,15 +1,19 @@
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import "./HeaderPb.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import EnrollmentChartDialog from "./EnrollmentChartDialog.tsx";
 
 const HeaderPb = () => {
   const navigate=useNavigate();
   const handlelogo=() =>{
     navigate("/");
   };
+  const [openDialog, setOpenDialog] = useState(false);
   return (
+    <>
     <AppBar position="fixed" className="header-appbar">
-      <Toolbar>
+      <Toolbar className="header-toolbar">
         <img
           src="/kaplan-logo1.svg"
           alt="Kaplan Logo"
@@ -17,11 +21,27 @@ const HeaderPb = () => {
           onClick={handlelogo}
           style={{cursor:"pointer"}}
         />
+        <Box className="header-title-container">
         <Typography variant="h5" className="header-title">
           Course Progress
         </Typography>
+        </Box>
+        <Box className="header-btn-container">
+        <Button
+            variant="outlined"
+            className="header-enrollment-btn"
+            onClick={() => setOpenDialog(true)}
+          >
+            Enrollment Chart
+          </Button>
+        </Box>
       </Toolbar>
     </AppBar>
+    <EnrollmentChartDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+      />
+  </>
   );
 };
 

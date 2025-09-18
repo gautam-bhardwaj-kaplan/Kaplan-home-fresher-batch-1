@@ -5,6 +5,7 @@ import FiltersPb from "../components/FiltersPb.tsx";
 import CourseCard from "../components/CourseCardPb.tsx";
 import axios from "axios";
 import "./ProgressBar.css";
+import EnrollmentChartDialog from "../components/EnrollmentChartDialog.tsx";
 
 interface Student {
   stud_id: number;
@@ -25,7 +26,9 @@ const ProgressBar: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  
 
 const handleClearFilters = () => {
   setCompletionFilter(null);
@@ -110,8 +113,14 @@ useEffect(() => {
       result.sort((a, b) => b.progress_percentage - a.progress_percentage);
     }
 
+    if (searchQuery.trim() !== "") {
+    result = result.filter(c =>
+      c.course_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
     return result;
-  }, [courses, completionFilter, sortFilter]);
+  }, [courses, completionFilter, sortFilter,searchQuery]);
 
   return (
     <>
@@ -127,10 +136,12 @@ useEffect(() => {
           <FiltersPb
            completionFilter={completionFilter }  
            sortFilter={sortFilter }
+           searchQuery={searchQuery}
             onCompletionFilter={handleCompletionFilter}
             onSortFilter={handleSortFilter}
             onNavigate={(page) => console.log("Navigate to:", page)}
             onClearFilters={handleClearFilters}
+            onSearch={setSearchQuery}
           />
 
           <div className="courses-frame">
