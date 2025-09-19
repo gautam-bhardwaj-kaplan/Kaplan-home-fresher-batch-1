@@ -1,10 +1,10 @@
 import React from "react";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import "./StatusFilterDialog.css"; 
+import "./StatusFilterDialog.css";
 interface StatusFilterDialogProps {
-  statusFilter: string | null;          
-  onStatusFilterChange: (val: string | null) => void; 
+  statusFilter: string | null;
+  onStatusFilterChange: (val: string | null) => void;
 }
 
 const StatusFilterDialog: React.FC<StatusFilterDialogProps> = ({

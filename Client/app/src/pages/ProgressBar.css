@@ -1,15 +1,15 @@
 .progressbar-container {
   display: flex;
   height: calc(100vh - 64px);
-  margin-top: 64px; 
-  overflow: hidden; 
+  margin-top: 64px;
+  overflow: hidden;
 }
 
 .progressbar-content {
-  flex: 1; 
+  flex: 1;
   background: #fff;
   height: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 .courses-frame {
   margin-top: 16px;
@@ -29,14 +29,12 @@
 
 .no-courses-container {
   display: flex;
-  justify-content: center;   
-  align-items: center;       
-  height: 500px;             
+  justify-content: center;
+  align-items: center;
+  height: 500px;
   width: 100%;
   text-align: center;
   font-weight: bold;
   font-size: x-large;
-  color: #0033A0;
+  color: #0033a0;
 }
-
-

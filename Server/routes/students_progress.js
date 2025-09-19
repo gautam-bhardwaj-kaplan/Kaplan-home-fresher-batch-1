@@ -7,8 +7,8 @@ const router = express.Router();
 // fetch students for home
 router.get("/", async (req, res) => {
   try {
-    let page = parseInt(req.query.page ,10) ;      
-    let limit = parseInt(req.query.limit,10); 
+    let page = parseInt(req.query.page, 10);
+    let limit = parseInt(req.query.limit, 10);
     if (isNaN(page) || page < 0) page = 0;
     if (isNaN(limit) || limit <= 0 || limit > 100) limit = 10;
 
@@ -23,14 +23,13 @@ router.get("/", async (req, res) => {
 
     res.json({
       students: rows,
-      total,       
+      total,
     });
   } catch (err) {
     console.error("DB error (students):", err);
     res.status(500).json({ error: "Failed to fetch students" });
   }
 });
-
 
 // Courses with progress (with filters)
 
@@ -41,7 +40,7 @@ router.get("/:id/courses", async (req, res) => {
       return res.status(400).json({ error: validation.message });
     }
     const { id } = req.params;
-    const { progress_gt, status } = req.query; 
+    const { progress_gt, status } = req.query;
 
     let query = `
   SELECT 
@@ -58,7 +57,6 @@ router.get("/:id/courses", async (req, res) => {
   GROUP BY c.course_id, c.course_name
 `;
 
-
     let params = [id];
 
     // Apply filters
@@ -69,32 +67,36 @@ router.get("/:id/courses", async (req, res) => {
 
     if (status) {
       if (status === "completed") {
-        query += progress_gt ? " AND progress_percentage = 100" : " HAVING progress_percentage = 100";
+        query += progress_gt
+          ? " AND progress_percentage = 100"
+          : " HAVING progress_percentage = 100";
       }
       if (status === "pending") {
-        query += progress_gt ? " AND progress_percentage < 100" : " HAVING progress_percentage < 100";
+        query += progress_gt
+          ? " AND progress_percentage < 100"
+          : " HAVING progress_percentage < 100";
       }
     }
 
     const [rows] = await db.query(query, params);
     res.json(rows);
-
   } catch (err) {
     console.error("DB error (courses):", err);
     res.status(500).json({ error: "Failed to fetch courses" });
   }
 });
 
-
 // Completed / Pending topics
 
 router.get("/:id/course/:courseId/topics", async (req, res) => {
   try {
     const validation = validateParams(["id", "courseId"], req.params);
-    if (!validation.valid) return res.status(400).json({ error: validation.message });
+    if (!validation.valid)
+      return res.status(400).json({ error: validation.message });
 
     const { id, courseId } = req.params;
-    const [rows] = await db.query(`
+    const [rows] = await db.query(
+      `
       SELECT 
           t.topic_id,
           t.topic_name,
@@ -103,7 +105,9 @@ router.get("/:id/course/:courseId/topics", async (req, res) => {
       LEFT JOIN activity a 
           ON t.topic_id = a.topic_id AND a.student_id = ?
       WHERE t.course_id = ?;
-    `, [id, courseId]);
+    `,
+      [id, courseId]
+    );
 
     res.json(rows);
   } catch (err) {
@@ -146,9 +150,10 @@ router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
 // fetch students for sidebar
 router.get("/all", async (req, res) => {
   try {
-    
-    const [rows] = await db.query("SELECT stud_id, name FROM student ORDER BY name ASC");
-    res.json(rows); 
+    const [rows] = await db.query(
+      "SELECT stud_id, name FROM student ORDER BY name ASC"
+    );
+    res.json(rows);
   } catch (err) {
     console.error("DB error (fetch students):", err);
     res.status(500).json({ error: "Failed to fetch students" });
@@ -176,7 +181,3 @@ router.get("/courses/enrollment", async (req, res) => {
   }
 });
 export default router;
-
-   
-
-

@@ -1,4 +1,3 @@
-
 .enrollment-dialog .MuiDialogContent-root {
   display: flex;
   justify-content: center;
@@ -13,7 +12,7 @@
 
 .enrollment-dialog .chart-wrapper {
   width: 100%;
-  max-width: 600px; 
+  max-width: 600px;
   height: 450px;
 }
 
@@ -29,11 +28,11 @@
   position: relative;
 }
 
-.title-header{
-    font-family: 'Montserrat', sans-serif !important;
-    color: #357ABD;
-    font-weight: 600;
-    font-size: 1rem;
+.title-header {
+  font-family: "Montserrat", sans-serif !important;
+  color: #357abd;
+  font-weight: 600;
+  font-size: 1rem;
 }
 .close-btn {
   position: absolute !important;
@@ -46,4 +45,3 @@
 .close-btn:hover {
   color: red !important;
 }
-

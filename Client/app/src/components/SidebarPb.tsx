@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./SidebarPb.css";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
-
 
 interface Student {
   stud_id: number;
@@ -14,10 +13,13 @@ interface SidebarPbProps {
   selectedStudent: Student | null;
 }
 
-
-const SidebarPb: React.FC<SidebarPbProps> = ({ students, onSelect, selectedStudent }) => {
-    const [open, setOpen] = useState(true);
-    useEffect(() => {
+const SidebarPb: React.FC<SidebarPbProps> = ({
+  students,
+  onSelect,
+  selectedStudent,
+}) => {
+  const [open, setOpen] = useState(true);
+  useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         setOpen(false);
@@ -30,30 +32,25 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ students, onSelect, selectedStude
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   return (
     <div className={`sidebar ${open ? "open" : "closed"}`}>
-      
-      
       <div className="sidebar-header">
-       
         {open && <h3 className="sidebar-title">Students</h3>}
 
-        
         <div className="menu-btn" onClick={() => setOpen(!open)}>
-          <MenuRoundedIcon  />
+          <MenuRoundedIcon />
         </div>
       </div>
 
-    
       <div className="sidebar-list">
         {students.map((student) => (
           <div
             key={student.stud_id}
-            className={`sidebar-item ${selectedStudent?.stud_id === student.stud_id ? "active" : ""}`}
+            className={`sidebar-item ${
+              selectedStudent?.stud_id === student.stud_id ? "active" : ""
+            }`}
             onClick={() => onSelect(student)}
           >
-            
             {open ? student.name : student.name.charAt(0)}
           </div>
         ))}

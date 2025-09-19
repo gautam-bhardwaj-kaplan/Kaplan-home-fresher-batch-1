@@ -1,7 +1,5 @@
-
 .header {
-  background: linear-gradient(to right, #0033A0, #0033A0) !important;
-  
+  background: linear-gradient(to right, #0033a0, #0033a0) !important;
 }
 
 .logo {
@@ -23,7 +21,6 @@
   font-weight: bold !important;
 }
 
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -32,7 +29,7 @@
 }
 
 .styled-button {
-  background: linear-gradient(to right, #3067dd, #357ABD);
+  background: linear-gradient(to right, #3067dd, #357abd);
   color: #fff !important;
   font-weight: 600 !important;
   border-radius: 8px !important;
@@ -42,11 +39,10 @@
 
 .styled-button:hover {
   background: #fff !important;
-  color: #357ABD !important;
+  color: #357abd !important;
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
-
 
 .student-table-container {
   margin-top: 32px;
@@ -70,15 +66,13 @@
 .student-table-paper {
   border-radius: 8px !important;
   max-height: 400px;
-  
 }
 
 .student-table-head {
-  background-color: #0033A0;
+  background-color: #0033a0;
   position: sticky;
   z-index: 1000;
   top: 0px;
-  
 }
 
 .table-header {
@@ -96,15 +90,10 @@
 }
 
 .main-content {
-  padding-top: 64px; 
+  padding-top: 64px;
 }
 
-.home{
+.home {
   overflow: hidden;
   height: 100vh;
 }
-
-
-
-
-

@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, CircularProgress,IconButton } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
+  IconButton,
+} from "@mui/material";
 import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -24,27 +30,27 @@ const EnrollmentChartDialog: React.FC<Props> = ({ open, onClose }) => {
   const [data, setData] = useState<EnrollmentData[]>([]);
   const [loading, setLoading] = useState(false);
   const chartOptions: any = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      position: "bottom" as const,
-      labels: {
-        font: { size: 14 },
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+        labels: {
+          font: { size: 14 },
+        },
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: function (context: any) {
+            const label = context.label || "";
+            const value = context.raw || 0;
+            return `${label}: ${value} students`;
+          },
+        },
       },
     },
-    tooltip: {
-      enabled: true, 
-      callbacks: {
-        label: function(context: any) {
-          const label = context.label || '';
-          const value = context.raw || 0;
-          return `${label}: ${value} students`;
-        }
-      }
-    }
-  }
-};
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -63,22 +69,28 @@ const EnrollmentChartDialog: React.FC<Props> = ({ open, onClose }) => {
       }
     };
 
-        fetchEnrollment();
-        }, [open]);
+    fetchEnrollment();
+  }, [open]);
 
-        const chartData = {
-            labels: data.map((d) => d.course_name),
-            datasets: [
-                {
-                label: "Students Enrolled",
-                data: data.map((d) => d.student_count),
-                backgroundColor: chartColors,
-                },
-            ],
-        };
+  const chartData = {
+    labels: data.map((d) => d.course_name),
+    datasets: [
+      {
+        label: "Students Enrolled",
+        data: data.map((d) => d.student_count),
+        backgroundColor: chartColors,
+      },
+    ],
+  };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" className="enrollment-dialog">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      className="enrollment-dialog"
+    >
       <DialogTitle className="title-header">
         Course Enrollments
         <IconButton
@@ -89,17 +101,16 @@ const EnrollmentChartDialog: React.FC<Props> = ({ open, onClose }) => {
         >
           <CloseIcon />
         </IconButton>
-        </DialogTitle>
+      </DialogTitle>
       <DialogContent className="dialog-content">
         {loading ? (
-            <CircularProgress />
+          <CircularProgress />
         ) : (
-            <div className="chart-wrapper">
-            <Doughnut data={chartData} options={chartOptions}/>
-            </div>
+          <div className="chart-wrapper">
+            <Doughnut data={chartData} options={chartOptions} />
+          </div>
         )}
       </DialogContent>
-
     </Dialog>
   );
 };

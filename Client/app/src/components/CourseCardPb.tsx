@@ -2,6 +2,7 @@ import React from "react";
 import { Box, LinearProgress } from "@mui/material";
 import "./CourseCardPb.css";
 import CourseTopicsDialog from "./CourseTopicsDialog.tsx";
+import SegmentedProgressBar from "./SegmentedProgressBar.tsx";
 
 interface Course {
   course_id: number;
@@ -18,11 +19,14 @@ interface CourseCardProps {
   studentId: number;
 }
 
-
-const CourseCard: React.FC<CourseCardProps> = ({ courses,studentId }) => {
+const CourseCard: React.FC<CourseCardProps> = ({ courses, studentId }) => {
   const [open, setOpen] = React.useState(false);
-  const [selectedCourseId, setSelectedCourseId] = React.useState<number | null>(null);
-  const [selectedCourseName, setSelectedCourseName] = React.useState<string | null>(null);
+  const [selectedCourseId, setSelectedCourseId] = React.useState<number | null>(
+    null
+  );
+  const [selectedCourseName, setSelectedCourseName] = React.useState<
+    string | null
+  >(null);
   return (
     <Box className="course-table-frame">
       <table className="course-table">
@@ -57,14 +61,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ courses,studentId }) => {
 
                 <td>
                   <Box className="progress-cell">
-                    <LinearProgress
-                      variant="determinate"
-                      value={course.progress_percentage}
-                      className="linear-bar-small"
-                    />
-                    <span className="progress-text-small">
-                      {course.progress_percentage}%
-                    </span>
+                    <SegmentedProgressBar value={course.progress_percentage} />
                   </Box>
                 </td>
                 <td>{course.avg_quiz_score ?? "N/A"}</td>
@@ -85,7 +82,6 @@ const CourseCard: React.FC<CourseCardProps> = ({ courses,studentId }) => {
           studentId={studentId}
         />
       )}
-
     </Box>
   );
 };

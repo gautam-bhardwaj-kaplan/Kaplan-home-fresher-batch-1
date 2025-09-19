@@ -1,22 +1,30 @@
 import React from "react";
 import type { SelectChangeEvent } from "@mui/material/Select";
-import { Box, FormControl, InputLabel, Select, MenuItem, Button,TextField,InputAdornment,IconButton } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
 import "./FiltersPb.css";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
-
 interface FiltersPbProps {
-  completionFilter: number | null; 
-  sortFilter: string | null; 
-  searchQuery: string;      
+  completionFilter: number | null;
+  sortFilter: string | null;
+  searchQuery: string;
   onCompletionFilter: (val: number | null) => void;
   onSortFilter: (val: string | null) => void;
   onNavigate: (page: string) => void;
   onClearFilters: () => void;
   onSearch: (val: string) => void;
-  
 }
 
 const FiltersPb: React.FC<FiltersPbProps> = ({
@@ -28,21 +36,21 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
   onNavigate,
   onClearFilters,
   onSearch,
- 
 }) => {
   return (
     <Box className="filters-toolbar">
-      
       <FormControl size="small" className="filter-item">
         <InputLabel>Completion</InputLabel>
         <Select
-        value={completionFilter === null ? "all": completionFilter.toString()}
-        label="Completion"
-        onChange={(e: SelectChangeEvent<string>) => {
-            const valStr = e.target.value;            
-            const valNum = valStr === "all" ? null : Number(valStr); 
-            onCompletionFilter(valNum);               
-        }}
+          value={
+            completionFilter === null ? "all" : completionFilter.toString()
+          }
+          label="Completion"
+          onChange={(e: SelectChangeEvent<string>) => {
+            const valStr = e.target.value;
+            const valNum = valStr === "all" ? null : Number(valStr);
+            onCompletionFilter(valNum);
+          }}
         >
           <MenuItem value="all">All</MenuItem>
           <MenuItem value={30}>Above 30%</MenuItem>
@@ -51,7 +59,6 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
         </Select>
       </FormControl>
 
-      
       <FormControl size="small" className="filter-item">
         <InputLabel>Sort By</InputLabel>
         <Select
@@ -99,4 +106,3 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
 };
 
 export default FiltersPb;
-

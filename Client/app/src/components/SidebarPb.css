@@ -1,7 +1,7 @@
 .sidebar {
   width: 250px;
-  height: calc(100vh - 64px); 
-  background: linear-gradient(180deg, #357ABD, #357ABD);
+  height: calc(100vh - 64px);
+  background: linear-gradient(180deg, #357abd, #357abd);
   color: #efefef;
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .sidebar-item {
@@ -31,31 +31,30 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
-  
 }
 
 .sidebar-item:hover {
-  background:whitesmoke;
-  color: #0033A0;
+  background: whitesmoke;
+  color: #0033a0;
 }
 
 .sidebar-item.active {
   background: white;
-  color: #357ABD;
+  color: #357abd;
   font-weight: 600;
 }
 .sidebar-list::-webkit-scrollbar {
-  width: 3px;               
+  width: 3px;
 }
 
 .sidebar-list::-webkit-scrollbar-track {
-  background: transparent;  
+  background: transparent;
 }
 
 .sidebar-list::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.4); 
+  background-color: rgba(255, 255, 255, 0.4);
   border-radius: 4px;
-  border-top: 200px solid transparent;    
+  border-top: 200px solid transparent;
   border-bottom: 200px solid transparent;
 }
 
@@ -63,7 +62,7 @@
   background-color: rgba(255, 255, 255, 0.6);
 }
 .sidebar.closed {
-  width: 40px;  
+  width: 40px;
 }
 
 .sidebar.closed .sidebar-list {
@@ -71,7 +70,7 @@
 }
 .sidebar-header {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
 }
 .menu-btn {
@@ -82,7 +81,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  color:#333;
+  color: #333;
   background-color: #efefef;
 }
 @media (max-width: 768px) {
@@ -93,11 +92,3 @@
     width: 200px;
   }
 }
-
-
-
-
-
-
-
-

@@ -20,9 +20,9 @@ import StatusFilterDialog from "./StatusFilter.tsx";
 interface Topic {
   topic_id: number;
   topic_name: string;
-  quiz_score: string | number; 
+  quiz_score: string | number;
   hours_spent: number;
-  status: string; 
+  status: string;
 }
 
 interface CourseTopicsDialogProps {
@@ -41,10 +41,9 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
   courseName,
 }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
-  
+
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = React.useState<string | null>("all");
-
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -56,7 +55,6 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
             `http://localhost:5000/student/${studentId}/course/${courseId}/topics/details`
           );
           setTopics(res.data);
-          
         } catch (err) {
           console.error("Failed to fetch topics:", err);
         } finally {
@@ -68,13 +66,13 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
     fetchTopics();
   }, [open, studentId, courseId]);
 
-  const visibleTopics  = useMemo(() => {
+  const visibleTopics = useMemo(() => {
     return topics.filter((topic) => {
-    if (!status || status === "all") return true;
-    if (status === "Pending") return topic.status  !== "Completed";
-    return topic.status === status;
+      if (!status || status === "all") return true;
+      if (status === "Pending") return topic.status !== "Completed";
+      return topic.status === status;
     });
-    }, [topics, status]);
+  }, [topics, status]);
 
   return (
     <Dialog
@@ -82,27 +80,27 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
       onClose={onClose}
       PaperProps={{ className: "custom-dialog-paper" }}
     >
-        
       <DialogTitle className="custom-dialog-title">
         <div className="dialog-title-bar">
-        Topics for {courseName}
-         <StatusFilterDialog
-        statusFilter={status}
-        onStatusFilterChange={(val) => setStatus(val)}
-      /> 
-      </div>
+          Topics for {courseName}
+          <StatusFilterDialog
+            statusFilter={status}
+            onStatusFilterChange={(val) => setStatus(val)}
+          />
+        </div>
       </DialogTitle>
-      
 
       <DialogContent className="custom-dialog-content">
-        {loading ? ( 
-            <CircularProgress />
+        {loading ? (
+          <CircularProgress />
         ) : topics.length === 0 ? (
           <p className="no-topics">No topics found for this course.</p>
-          ) : visibleTopics.length === 0 ? (
-            <p className="no-topics">
-            {status === "Pending" ? "No pending topics!" : `No ${status} topics!`}
-            </p>
+        ) : visibleTopics.length === 0 ? (
+          <p className="no-topics">
+            {status === "Pending"
+              ? "No pending topics!"
+              : `No ${status} topics!`}
+          </p>
         ) : (
           <Table className="topics-table">
             <TableHead>

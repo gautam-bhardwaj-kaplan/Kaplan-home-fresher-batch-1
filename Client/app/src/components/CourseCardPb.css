@@ -1,5 +1,5 @@
 .course-table-frame {
-  max-height: 80vh; 
+  max-height: 80vh;
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -13,13 +13,14 @@
   font-size: 12px;
 }
 
-.course-table th, .course-table td {
+.course-table th,
+.course-table td {
   padding: 8px 12px;
   text-align: left;
 }
 
 .course-table th {
-  background: linear-gradient(to right, #357ABD, #357ABD);
+  background: linear-gradient(to right, #357abd, #357abd);
   color: white;
   position: sticky;
   top: 0;
@@ -52,7 +53,6 @@
 }
 
 .course-name-cell {
-  cursor: pointer;     
-  color: #1976d2;     
+  cursor: pointer;
+  color: #1976d2;
 }
-

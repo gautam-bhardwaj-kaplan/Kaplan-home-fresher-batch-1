@@ -13,34 +13,29 @@
   flex: 0 0 180px;
 }
 
-.filter-item:hover{
-    border-color: #1976d2;
+.filter-item:hover {
+  border-color: #1976d2;
 }
 .filter-item.MuiButton-root {
-  min-width: 180px;          
-  height: 40px;              
-  border: 1px solid #bebaba; 
+  min-width: 180px;
+  height: 40px;
+  border: 1px solid #bebaba;
   border-radius: 6px;
   color: #1976d2;
   font-weight: 500;
   font-size: 0.9rem;
-  text-transform: none;      
+  text-transform: none;
   transition: all 0.2s ease;
 }
 
 .filter-item.MuiButton-root:hover {
-  background-color:#357ABD;
-  color:#fff;
+  background-color: #357abd;
+  color: #fff;
   border-color: #fff;
 }
 
 .search-bar {
-  min-width: 180px; 
-   margin-left: auto !important;
-   flex: 0 0 auto !important;
+  min-width: 180px;
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
 }
-
-
-
-
-
