@@ -10,6 +10,8 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import "../components/styles/create.css";
 import { Course, Topic, TopicSelection, Props } from "../types.ts";
@@ -21,7 +23,8 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [topics, setTopics] = useState<TopicSelection[]>([]);
   const [errors, setErrors] = useState<Record<number, Partial<Record<"quiz_score" | "hours_studied" | "completion_date", string>>>>({});
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+    
   useEffect(() => {
     fetch("http://localhost:5000/create/courses")
       .then((res) => res.json())
@@ -73,7 +76,9 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
     topicId: number,
     field: "hours_studied" | "quiz_score" | "completion_date",
     value: string
-  ) => {
+
+  ) => 
+    {
     setTopics((prev) =>
       prev.map((t) =>
         t.topic_id === topicId ? { ...t, [field]: value } : t
@@ -83,6 +88,13 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
       ...prev,
       [topicId]: { ...prev[topicId], [field]: "" },
     })); 
+  };
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
+    setOpenSnackbar(false);
   };
 
   const resetFields = () => {
@@ -100,7 +112,7 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
     for (const t of selectedTopics) {
       const topicErrors: Partial<Record<"quiz_score" | "hours_studied" | "completion_date", string>> = {};
 
-      if (Number(t.quiz_score) > 10) {
+      if (Number(t.quiz_score) > 10 || Number(t.quiz_score) < 1) {
         topicErrors.quiz_score = "Quiz Score cannot be more than 10.";
       }
       if (Number(t.hours_studied) > 24) {
@@ -117,8 +129,10 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+     
       return;
     }
+ 
 
     const payload = {
       student_name: studentName,
@@ -140,10 +154,10 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Success:", data);
         resetFields();
         onClose();
         onStudentAdded();
+        setOpenSnackbar(true);
       })
       .catch((err) => console.error("Error:", err));
   };
@@ -154,6 +168,7 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
   };
 
   return (
+    <>
     <Dialog open={open} onClose={handleCancel} maxWidth="md" fullWidth>
       <div className="custom-dialog"></div>
       <div className="custom-dialog-title">
@@ -266,10 +281,25 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
         </Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
           Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </Button>    
+    </DialogActions>
+  </Dialog>
+  <Snackbar
+        open={openSnackbar}
+        autoHideDuration={2000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="success"
+          variant="filled"
+        >
+          Student added successfully!
+        </Alert>
+      </Snackbar>
+    </>
   );
-};
+}
 
 export default StudentDialog;

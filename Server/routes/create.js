@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
 
     
     for (const { topic_name, quiz_score, hours_studied, completion_date } of topics) {
-      if (!topic_name || !quiz_score || !hours_studied || !completion_date) {
+      if (!topic_name || !completion_date || quiz_score == null || hours_studied == null || typeof quiz_score !== 'number' || typeof hours_studied !== 'number') {
         throw new Error("Each topic must have topic_name, quiz_score, hours_studied, and completion_date");
       }
 

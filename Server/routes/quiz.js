@@ -4,10 +4,7 @@ import { validateParams } from "../Validate Parameter/ValidateParameters.js";
 
 const router = express.Router();
 
-
-
 router.get("/:studentId", async (req, res) => {
-  
   const validation = validateParams(["studentId"], req.params);
   if (!validation.valid) {
     return res.status(400).json({ error: validation.message });
@@ -42,9 +39,7 @@ router.get("/:studentId", async (req, res) => {
     const [rows] = await db.execute(sql, [studentId, studentId]);
 
     if (rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No data found for this student." });
+      return res.status(404).json({ message: "No data found for this student." });
     }
 
     res.json(rows);
@@ -53,6 +48,5 @@ router.get("/:studentId", async (req, res) => {
     res.status(500).json({ message: "Error fetching quiz scores." });
   }
 });
-
 
 export default router;

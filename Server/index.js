@@ -24,7 +24,5 @@ app.use("/student", studentRoutes);
 
 
 app.listen(5000 ,() =>{
-    console.log("COnnected to backend on port 5000");
-
 });
 

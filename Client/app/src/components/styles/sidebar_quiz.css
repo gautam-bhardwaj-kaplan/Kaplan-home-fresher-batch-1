@@ -14,9 +14,9 @@
   font-family: "Montserrat", sans-serif !important;
   font-weight: 700;
   font-size: 20px;
-  margin-bottom: 16px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.893);
-  padding-bottom: 8px;
+  margin: 0;
+  margin-top:12px;
+
 
 }
 .sidebar-list {
@@ -24,6 +24,7 @@
   flex-direction: column;
   gap: 8px;
   overflow-y:scroll;
+  text-transform: capitalize;
 }
 
 .sidebar.closed {
@@ -39,6 +40,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px;
+   border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+   margin-bottom: 12px;
+   padding-bottom:16px;
+   position:relative;
 }
 
 .sidebar-list::-webkit-scrollbar-thumb {
@@ -51,15 +56,10 @@
 }
 
 .menu-btn {
-  color: #333 !important;
-  width:36px;
-  height:36px;
-  align-items:center;
-  justify-content: center;
-  border-radius: 50%;
-  display: flex;
-  background-color: #efefef !important;
-
+  color: #fff!important;
+  position:relative;
+  cursor: pointer;
+  margin-top:13px;
 
 }
 
@@ -83,6 +83,32 @@
   color: #357ABD !important;
   border-radius : 8px !important;
   font-weight: 600;
+}
+.pagination-container {
+  margin-top: auto;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  position: sticky;
+  left:0;
+  bottom:0;
+  background: linear-gradient(180deg, #357ABD, #357ABD);
+}
+.pagination-container .MuiPaginationItem-root {
+  color: #fcfcfc;
+
+}
+
+
+.pagination-container .Mui-selected {
+  background-color: #ffffff !important;
+  color:#357ABD!important;
+}
+
+ .student-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  vertical-align: middle;
 }
 @media (max-width: 768px) {
   .sidebar {
