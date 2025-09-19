@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, LinearProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import "./CourseCardPb.css";
 import CourseTopicsDialog from "./CourseTopicsDialog.tsx";
 import SegmentedProgressBar from "./SegmentedProgressBar.tsx";

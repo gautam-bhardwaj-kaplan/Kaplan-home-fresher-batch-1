@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./SidebarPb.css";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import PersonIcon from "@mui/icons-material/Person";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 
 interface Student {
   stud_id: number;
@@ -19,6 +21,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
   selectedStudent,
 }) => {
   const [open, setOpen] = useState(true);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -38,7 +41,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
         {open && <h3 className="sidebar-title">Students</h3>}
 
         <div className="menu-btn" onClick={() => setOpen(!open)}>
-          <MenuRoundedIcon />
+          {open ? <CloseRoundedIcon /> : <MenuRoundedIcon />}
         </div>
       </div>
 
@@ -51,6 +54,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
             }`}
             onClick={() => onSelect(student)}
           >
+            <PersonIcon className="student-icon" />
             {open ? student.name : student.name.charAt(0)}
           </div>
         ))}

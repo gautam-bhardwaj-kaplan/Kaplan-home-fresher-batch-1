@@ -28,7 +28,6 @@ const ProgressBar: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingCourses, setLoadingCourses] = useState(false);
-
   // filter states
   const [completionFilter, setCompletionFilter] = useState<number | null>(
     () => {

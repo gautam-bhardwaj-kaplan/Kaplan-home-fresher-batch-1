@@ -13,9 +13,8 @@
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 20px;
-  margin-bottom: 16px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.893);
-  padding-bottom: 8px;
+  margin: 0;
+  margin-top: 12px;
 }
 
 .sidebar-list {
@@ -23,6 +22,7 @@
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
+  text-transform: capitalize;
 }
 
 .sidebar-item {
@@ -72,18 +72,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 12px;
+  padding-bottom: 16px;
+  position: relative;
 }
 .menu-btn {
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  color: #333;
-  background-color: #efefef;
+  color: #fff;
+  position: relative;
+  margin-top: 13px;
 }
+.student-icon {
+  margin-right: 8px;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 60px;

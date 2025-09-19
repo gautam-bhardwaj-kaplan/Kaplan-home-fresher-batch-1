@@ -11,7 +11,6 @@ import {
   TableCell,
   TableBody,
   CircularProgress,
-  Box,
 } from "@mui/material";
 import axios from "axios";
 import "./CourseTopicsDialog.css";
