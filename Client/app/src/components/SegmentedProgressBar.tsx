@@ -2,8 +2,8 @@ import React from "react";
 import "./SegmentedProgressBar.css";
 
 interface Props {
-  value: number; // percentage (0-100)
-  segments?: number; // number of total lines, default 20
+  value: number;
+  segments?: number;
 }
 
 const SegmentedProgressBar: React.FC<Props> = ({ value, segments = 20 }) => {
