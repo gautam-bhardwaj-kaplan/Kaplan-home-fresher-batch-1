@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import "./styling/Sidebarlc.css";
+import PersonIcon from "@mui/icons-material/Person";
 
 interface Student {
   stud_id: string;
@@ -50,7 +52,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
       <div className="sidebar-content">
         {isOpen && <h3 className="sidebar-title">Students</h3>}
         <div className="menu-btn" onClick={() => setIsOpen(!isOpen)}>
-          <MenuRoundedIcon />
+          {isOpen ? <CloseRoundedIcon /> : <MenuRoundedIcon />}
         </div>
       </div>
 
@@ -63,6 +65,7 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
             }`}
             onClick={() => handleSelect(student)}
           >
+            <PersonIcon className="student-icon" />
             {isOpen ? student.name : student.name.charAt(0)}
           </div>
         ))}

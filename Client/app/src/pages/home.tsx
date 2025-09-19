@@ -62,7 +62,6 @@ const Home: React.FC = () => {
     setOpenEdit(false);
     setCurrentStudent(null);
     setErrors({});
-    setFormMessage({ type: null, text: "" });
   };
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -78,13 +77,18 @@ const Home: React.FC = () => {
     try {
       type Validator = {
         field: keyof Student;
-        validate: (value: any) => string | null;
+        validate: (value: any, student: Student) => string | null;
       };
 
       const validators: Validator[] = [
         {
           field: "name",
-          validate: (val) => (!val?.trim() ? "Name is required." : null),
+          validate: (val) => {
+            if (!val?.trim()) return "Name is required.";
+            if (!/^[A-Za-z\s]+$/.test(val))
+              return "Name to be in valid format.";
+            return null;
+          },
         },
         {
           field: "email",
@@ -96,8 +100,22 @@ const Home: React.FC = () => {
         },
         {
           field: "topic",
-          validate: (val) =>
-            !val ? "Please select a Topic before saving." : null,
+          validate: (val, student) => {
+            const activityFields: (keyof Student)[] = [
+              "hours_studied",
+              "quiz_score",
+              "completion_date_topic",
+            ];
+            const hasActivityValue = activityFields.some(
+              (field) =>
+                student[field] !== undefined &&
+                student[field] !== null &&
+                student[field] !== ""
+            );
+            return hasActivityValue && !val
+              ? "Please select a Topic before saving."
+              : null;
+          },
         },
         {
           field: "quiz_score",
@@ -115,16 +133,29 @@ const Home: React.FC = () => {
         },
         {
           field: "completion_date_topic",
-          validate: (val) =>
-            val && new Date(val) > new Date()
-              ? "Completion date cannot be in the future."
-              : null,
+          validate: (val, student) => {
+            const activityFields: (keyof Student)[] = [
+              "hours_studied",
+              "quiz_score",
+            ];
+            const hasActivityValue = activityFields.some(
+              (field) =>
+                student[field] !== undefined &&
+                student[field] !== null &&
+                student[field] !== ""
+            );
+            if (!hasActivityValue) return null;
+            if (!val) return "Completion date cannot be empty.";
+            if (new Date(val) > new Date())
+              return "Completion date cannot be in the future.";
+            return null;
+          },
         },
       ];
 
       const newErrors: { [key: string]: string } = {};
       validators.forEach(({ field, validate }) => {
-        const error = validate(updatedStudent[field]);
+        const error = validate(updatedStudent[field], updatedStudent);
         if (error) newErrors[field as string] = error;
       });
 
@@ -135,13 +166,20 @@ const Home: React.FC = () => {
 
       setErrors({});
       setFormMessage({ type: null, text: "" });
-      await axios.post("http://localhost:5000/activity", {
-        student_id: updatedStudent.stud_id,
-        topic_id: updatedStudent.topic,
-        hours_studied: updatedStudent.hours_studied,
-        quiz_score: updatedStudent.quiz_score,
-        completion_date_topic: updatedStudent.completion_date_topic,
-      });
+      const hasActivity =
+        updatedStudent.topic ||
+        updatedStudent.hours_studied ||
+        updatedStudent.quiz_score ||
+        updatedStudent.completion_date_topic;
+      if (hasActivity) {
+        await axios.post("http://localhost:5000/activity", {
+          student_id: updatedStudent.stud_id,
+          topic_id: updatedStudent.topic,
+          hours_studied: updatedStudent.hours_studied,
+          quiz_score: updatedStudent.quiz_score,
+          completion_date_topic: updatedStudent.completion_date_topic,
+        });
+      }
 
       await axios.put(
         `http://localhost:5000/students/${updatedStudent.stud_id}`,
@@ -153,12 +191,9 @@ const Home: React.FC = () => {
 
       setFormMessage({ type: "success", text: "Activity Saved Successfully." });
 
-      setTimeout(() => {
-        handleCloseEdit();
-        fetchStudents();
-      }, 1000);
+      handleCloseEdit();
+      fetchStudents();
     } catch (error) {
-      console.error("Failed to save activity:", error);
       setFormMessage({
         type: "error",
         text: "Please give the correct details.",
@@ -185,7 +220,6 @@ const Home: React.FC = () => {
       });
       fetchStudents();
     } catch (err) {
-      console.error("Failed to delete student:", err);
       setFormMessage({
         type: "error",
         text: "Failed to delete student. Please try again.",
@@ -193,10 +227,6 @@ const Home: React.FC = () => {
     } finally {
       setDeleteDialogOpen(false);
       setStudentToDelete(null);
-
-      setTimeout(() => {
-        setFormMessage({ type: null, text: "" });
-      }, 1000);
     }
   };
 
@@ -347,7 +377,7 @@ const Home: React.FC = () => {
 
       <Snackbar
         open={!!formMessage.text}
-        autoHideDuration={3000}
+        autoHideDuration={2000}
         onClose={() => setFormMessage({ type: null, text: "" })}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >

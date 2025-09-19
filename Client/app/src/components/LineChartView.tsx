@@ -67,10 +67,11 @@ const LineChartView: React.FC<LineChartViewProps> = ({
         <Typography variant="h6" className="linechart-title">
           {studentName ? `Study Hours (${studentName})` : "Study Hours"}
         </Typography>
+
         <ResponsiveContainer width="100%" height={300}>
           <LineChart
             data={data}
-            margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+            margin={{ top: 10, right: 20, left: 0, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
@@ -95,9 +96,13 @@ const LineChartView: React.FC<LineChartViewProps> = ({
             />
             <Tooltip />
             <Legend
-              verticalAlign="bottom"
-              align="center"
-              wrapperStyle={{ paddingTop: "20px" }}
+              layout="horizontal"
+              verticalAlign="top"
+              align="right"
+              wrapperStyle={{
+                top: -10,
+                right: 0,
+              }}
             />
             <Line
               type="monotone"

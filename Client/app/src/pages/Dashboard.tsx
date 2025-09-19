@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box, Container } from "@mui/material";
 import Header from "../components/Header.tsx";
 import Sidebar from "../components/Sidebarlc.tsx";
 import Filters from "../components/Filters.tsx";
@@ -78,38 +77,39 @@ const Dashboard: React.FC = () => {
   }, [selectedCourse, selectedStudentId]);
 
   return (
-    <Box className="dashboard-container">
+    <div className="dashboard-container">
       <Header />
-      <div className="dashboard-main">
-        <Box sx={{ display: "flex", flexGrow: 1 }}>
-          <Sidebar onStudentSelect={handleStudentSelect} />
-          <Box className="dashboard-content">
-            <Container maxWidth="lg">
-              <Filters
-                selectedCourse={selectedCourse}
-                setSelectedCourse={setSelectedCourse}
-                selectedTopic={selectedTopic}
-                setSelectedTopic={setSelectedTopic}
-                timeframe={timeframe}
-                setTimeframe={setTimeframe}
-                courses={courses}
-                topics={topics}
-              />
 
-              <Box className="linechart-container">
-                <LineChartView
-                  studentId={selectedStudentId}
-                  studentName={selectedStudentName}
-                  courseId={selectedCourse}
-                  TopicId={selectedTopic}
-                  timeframe={timeframe}
-                />
-              </Box>
-            </Container>
-          </Box>
-        </Box>
+      <div className="dashboard-main">
+        <div className="sidebar-wrapper">
+          <Sidebar onStudentSelect={handleStudentSelect} />
+        </div>
+        <div className="dashboard-content">
+          <div className="filters-section">
+            <Filters
+              selectedCourse={selectedCourse}
+              setSelectedCourse={setSelectedCourse}
+              selectedTopic={selectedTopic}
+              setSelectedTopic={setSelectedTopic}
+              timeframe={timeframe}
+              setTimeframe={setTimeframe}
+              courses={courses}
+              topics={topics}
+            />
+          </div>
+
+          <div className="linechart-container">
+            <LineChartView
+              studentId={selectedStudentId}
+              studentName={selectedStudentName}
+              courseId={selectedCourse}
+              TopicId={selectedTopic}
+              timeframe={timeframe}
+            />
+          </div>
+        </div>
       </div>
-    </Box>
+    </div>
   );
 };
 

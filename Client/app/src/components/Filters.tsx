@@ -69,7 +69,9 @@ const Filters: React.FC<FiltersProps> = ({
   return (
     <Box className="filters-container">
       <FormControl
-        className="filters-formcontrol"
+        className={`filters-formcontrol ${
+          selectedCourse === null ? "active-filter" : ""
+        }`}
         variant="outlined"
         fullWidth
         margin="dense"
@@ -144,7 +146,9 @@ const Filters: React.FC<FiltersProps> = ({
 
       {/* Timeframe Filter */}
       <FormControl
-        className="filters-formcontrol"
+        className={`filters-formcontrol ${
+          selectedCourse === null ? "active-filter" : ""
+        }`}
         variant="outlined"
         fullWidth
         margin="dense"

@@ -1,5 +1,7 @@
 .dashboard-main {
   margin-top: 64px;
+  display: flex;
+  flex: 1;
   overflow: hidden;
 }
 
@@ -10,10 +12,24 @@
 }
 
 .dashboard-content {
-  flex-grow: 1;
+  flex: 1;
   padding: 24px;
+  min-width: 0;
 }
 
 .linechart-container {
   margin-top: 32px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+  .dashboard-content {
+    margin-left: 0 !important;
+  }
+}
+
+.sidebar-wrapper {
+  flex-shrink: 0;
 }

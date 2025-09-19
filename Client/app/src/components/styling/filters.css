@@ -9,6 +9,51 @@
   flex: 1;
   min-width: 200px;
   margin: 0 10px;
+  border-radius: 8px;
+}
+
+.filters-formcontrol .MuiOutlinedInput-root fieldset {
+  border-color: #000 !important;
+  border-width: 1px;
+}
+
+.filters-formcontrol .MuiOutlinedInput-root:hover fieldset {
+  border-color: #999 !important;
+}
+.filters-formcontrol .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #1a1a1a !important;
+  border-width: 1.5px;
+}
+
+.active-filter .MuiOutlinedInput-root fieldset {
+  border-color: black !important;
+  border-width: 1.5px;
+}
+.active-filter .MuiInputLabel-root {
+  color: #1a1a1a !important;
+  font-weight: 510 !important;
+}
+.active-filter .MuiSelect-select {
+  color: #1a1a1a !important;
+  font-weight: 510 !important;
+}
+
+.filters-formcontrol.Mui-disabled .MuiOutlinedInput-root fieldset {
+  border-color: #dcdcdc !important;
+}
+.filters-formcontrol.Mui-disabled .MuiOutlinedInput-root:hover fieldset,
+.filters-formcontrol.Mui-disabled .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #dcdcdc !important;
+  border-width: 1px !important;
+}
+
+.filters-formcontrol.Mui-disabled .MuiInputLabel-root {
+  color: rgba(0, 0, 0, 0.4) !important;
+  font-weight: 400 !important;
+}
+.filters-formcontrol.Mui-disabled .MuiSelect-select {
+  color: rgba(0, 0, 0, 0.4) !important;
+  font-weight: 400 !important;
 }
 
 .filters-actions {
@@ -25,11 +70,9 @@
   color: var(--mui-palette-text-primary, #000);
   border-radius: 8px;
 }
-
 .clear-filters-btn:hover {
   background-color: rgba(0, 0, 0, 0.04);
 }
-
 .clear-filters-btn:active {
   background-color: #e0e0e0;
 }
