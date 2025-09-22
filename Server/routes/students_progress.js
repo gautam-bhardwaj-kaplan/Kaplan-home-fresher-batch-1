@@ -7,10 +7,6 @@ const router = express.Router();
 // fetch students for home
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT stud_id, name, email FROM student order by name"
-    );
-    res.json(rows);
     let page = parseInt(req.query.page, 10);
     let limit = parseInt(req.query.limit, 10);
     if (isNaN(page) || page < 0) page = 0;
@@ -152,7 +148,7 @@ router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const [rows] = await db.query(
-      "SELECT stud_id, name FROM student ORDER BY name ASC"
+      "SELECT stud_id, name, email FROM student ORDER BY name ASC"
     );
     res.json(rows);
   } catch (err) {

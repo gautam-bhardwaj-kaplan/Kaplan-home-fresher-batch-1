@@ -299,31 +299,30 @@ const Home: React.FC = () => {
           </Button>
         </Toolbar>
       </AppBar>
-
-      <Box className="button-container">
-        {["Line Chart", "Bar Chart", "Course Progress", "Add Student"].map(
-          (label) => (
-            <Button
-              key={label}
-              onClick={() => {
-                if (label === "Line Chart") navigate("/dashboard");
-                if (label === "Course Progress") navigate("/progress");
-              }}
-              className="styled-button"
-            >
-              {label}
-            </Button>
-          )
-        )}
-      </Box>
+      <div className="main-content">
+        <Box className="button-container">
+          {["Line Chart", "Bar Chart", "Course Progress", "Add Student"].map(
+            (label) => (
+              <Button
+                key={label}
+                onClick={() => {
+                  if (label === "Line Chart") navigate("/dashboard");
+                  if (label === "Course Progress") navigate("/progress");
+                }}
+                className="styled-button"
+              >
+                {label}
+              </Button>
+            )
+          )}
+        </Box>
 
         <Box className="student-table-container">
           <Typography variant="h6" className="student-table-title">
             Students List
           </Typography>
 
-  
-        <TableContainer component={Paper} className="student-table-paper">
+          <TableContainer component={Paper} className="student-table-paper">
             <Table>
               <TableHead className="student-table-head">
                 <TableRow>
@@ -340,45 +339,41 @@ const Home: React.FC = () => {
               </TableHead>
 
               <TableBody>
-              {students.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                     
-                    colSpan={5}
-                     
-                    align="center"
-                     
-                    style={{ padding: "20px" }}
-                    
-                  >
-                    No users found
-                  </TableCell>
-                </TableRow>
-              ) : (
-                    students.map((student) => (
-                      <TableRow key={student.stud_id} className="student-row">
-                        <TableCell>{student.stud_id}</TableCell>
-                        <TableCell>{student.name}</TableCell>
-                        <TableCell>{student.email}</TableCell>
-                        <TableCell align="center">
-                          <IconButton
-                        color="primary"
-                        onClick={() => handleEditClick(student)}
-                      >
-                            <EditIcon />
-                          </IconButton>
-                        </TableCell>
-                        <TableCell align="center">
-                          <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick(student)}
-                      >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                {students.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      align="center"
+                      style={{ padding: "20px" }}
+                    >
+                      No users found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  students.map((student) => (
+                    <TableRow key={student.stud_id} className="student-row">
+                      <TableCell>{student.stud_id}</TableCell>
+                      <TableCell>{student.name}</TableCell>
+                      <TableCell>{student.email}</TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          color="primary"
+                          onClick={() => handleEditClick(student)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          color="error"
+                          onClick={() => handleDeleteClick(student)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -392,71 +387,71 @@ const Home: React.FC = () => {
             rowsPerPageOptions={[5, 10, 20]}
           />
         </Box>
-      </div>
 
-      <Dialog
-        open={openEdit}
-        onClose={handleCloseEdit}
-        maxWidth="md"
-        fullWidth
-        className="edit-dialog"
-      >
-        {currentStudent && (
-          <EditStudent
-            open={openEdit}
-            student={currentStudent}
-            onClose={handleCloseEdit}
-            onSave={handleSaveStudent}
-            errors={errors}
-            formMessage={formMessage}
-          />
-        )}
-      </Dialog>
-
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleCancelDelete}
-        className="delete-dialog"
-      >
-        <Box className="delete-dialog-box">
-          <Typography variant="h6" gutterBottom>
-            Are you sure you want to delete{" "}
-            <strong>{studentToDelete?.name}</strong>?
-          </Typography>
-          <Box className="delete-dialog-actions">
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleConfirmDelete}
-            >
-              Yes
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleCancelDelete}
-            >
-              No
-            </Button>
-          </Box>
-        </Box>
-      </Dialog>
-
-      <Snackbar
-        open={!!formMessage.text}
-        autoHideDuration={2000}
-        onClose={() => setFormMessage({ type: null, text: "" })}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setFormMessage({ type: null, text: "" })}
-          severity={formMessage.type === "success" ? "success" : "error"}
-          sx={{ width: "100%" }}
-          variant="filled"
+        <Dialog
+          open={openEdit}
+          onClose={handleCloseEdit}
+          maxWidth="md"
+          fullWidth
+          className="edit-dialog"
         >
-          {formMessage.text}
-        </Alert>
-      </Snackbar>
+          {currentStudent && (
+            <EditStudent
+              open={openEdit}
+              student={currentStudent}
+              onClose={handleCloseEdit}
+              onSave={handleSaveStudent}
+              errors={errors}
+              formMessage={formMessage}
+            />
+          )}
+        </Dialog>
+
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={handleCancelDelete}
+          className="delete-dialog"
+        >
+          <Box className="delete-dialog-box">
+            <Typography variant="h6" gutterBottom>
+              Are you sure you want to delete{" "}
+              <strong>{studentToDelete?.name}</strong>?
+            </Typography>
+            <Box className="delete-dialog-actions">
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleConfirmDelete}
+              >
+                Yes
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleCancelDelete}
+              >
+                No
+              </Button>
+            </Box>
+          </Box>
+        </Dialog>
+
+        <Snackbar
+          open={!!formMessage.text}
+          autoHideDuration={2000}
+          onClose={() => setFormMessage({ type: null, text: "" })}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={() => setFormMessage({ type: null, text: "" })}
+            severity={formMessage.type === "success" ? "success" : "error"}
+            sx={{ width: "100%" }}
+            variant="filled"
+          >
+            {formMessage.text}
+          </Alert>
+        </Snackbar>
+      </div>
     </div>
   );
 };
