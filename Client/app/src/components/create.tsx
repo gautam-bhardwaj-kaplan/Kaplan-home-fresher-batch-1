@@ -113,7 +113,7 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
       const topicErrors: Partial<Record<"quiz_score" | "hours_studied" | "completion_date", string>> = {};
 
       if (Number(t.quiz_score) > 10 || Number(t.quiz_score) < 1) {
-        topicErrors.quiz_score = "Quiz Score cannot be more than 10.";
+        topicErrors.quiz_score = "Quiz Score cannot be less than 1 or more than 10.";
       }
       if (Number(t.hours_studied) > 24) {
         topicErrors.hours_studied = "Hours Studied cannot be more than 24.";

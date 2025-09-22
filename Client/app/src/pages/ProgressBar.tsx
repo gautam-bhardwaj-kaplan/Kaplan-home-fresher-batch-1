@@ -7,6 +7,7 @@ import axios from "axios";
 import "./ProgressBar.css";
 import { CircularProgress } from "@mui/material";
 
+
 interface Student {
   stud_id: number;
   name: string;
@@ -145,7 +146,8 @@ const ProgressBar: React.FC = () => {
           students={students}
           onSelect={handleStudentSelect}
           selectedStudent={selectedStudent}
-        />
+        /> 
+       
 
         <div className="progressbar-content">
           <FiltersPb

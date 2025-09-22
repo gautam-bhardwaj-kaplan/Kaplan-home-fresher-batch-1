@@ -95,7 +95,9 @@ const Sidebar: React.FC = () => {
                     className={`sidebar-item ${isCurrent ? "active" : ""}`}
                   >
                     <PersonIcon className="student-icon" />
-                    <ListItemText primary={student.name} />
+                    <ListItemText 
+                    className="student-name"
+                    primary={student.name} />
                   </ListItemButton>
                 </ListItem>
               );

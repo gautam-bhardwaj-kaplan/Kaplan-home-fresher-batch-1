@@ -206,12 +206,12 @@ const QuizScorePage: React.FC = () => {
 
   return (
     <>
-      <div className="header-bar">
+      <div className="header-bar-quiz">
         <Header />
         <div className="quiz-container">
           <Sidebar />
-          <div className="main-content">
-            
+          <div className="main-content-quiz">
+
             {(redirecting || loading) && !error && (
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300 }}>
                 <CircularProgress />
@@ -256,7 +256,7 @@ const QuizScorePage: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+        </div>
     </>
   );
 };

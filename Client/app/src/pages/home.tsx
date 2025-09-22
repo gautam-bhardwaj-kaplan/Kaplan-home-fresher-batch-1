@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import "./home.css";
 import StudentDialog from "../components/create.tsx";
 
+
 interface Student {
   stud_id: number;
   name: string;
@@ -44,30 +45,31 @@ const Home: React.FC = () => {
     window.location.href = "/";
   };
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const res = await axios.get<StudentApiResponse>(
-          "http://localhost:5000/student",
-          {
-            params: {
-              page: page,
-              limit: rowsPerPage,
-            },
-          }
-        );
-        setStudents(res.data.students);
-        setTotalStudents(res.data.total);
-      } catch (err) {
-        console.error("Failed to fetch students:", err);
-      }
-    };
+  const fetchStudents = async () => {
+    try {
+      const res = await axios.get<StudentApiResponse>(
+        "http://localhost:5000/student",
+        {
+          params: {
+            page: page,
+            limit: rowsPerPage,
+          },
+        }
+      );
+      setStudents(res.data.students);
+      setTotalStudents(res.data.total);
+    } catch (err) {
+      console.error("Failed to fetch students:", err);
+    }
+  };
 
+ useEffect(() => {
     fetchStudents();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage]); 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
+
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -170,6 +172,7 @@ const Home: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
+      
           <TablePagination
             component="div"
             count={totalStudents}
@@ -180,7 +183,13 @@ const Home: React.FC = () => {
             rowsPerPageOptions={[5, 10, 20]}
           />
         </Box>
+        
       </div>
+      <StudentDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onStudentAdded={fetchStudents}
+      />
     </div>
   );
 };
