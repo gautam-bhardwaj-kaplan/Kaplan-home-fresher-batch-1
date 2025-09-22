@@ -26,7 +26,6 @@ router.get("/", async (req, res) => {
       total,
     });
   } catch (err) {
-    console.error("DB error (students):", err);
     res.status(500).json({ error: "Failed to fetch students" });
   }
 });
@@ -81,7 +80,6 @@ router.get("/:id/courses", async (req, res) => {
     const [rows] = await db.query(query, params);
     res.json(rows);
   } catch (err) {
-    console.error("DB error (courses):", err);
     res.status(500).json({ error: "Failed to fetch courses" });
   }
 });
@@ -111,7 +109,6 @@ router.get("/:id/course/:courseId/topics", async (req, res) => {
 
     res.json(rows);
   } catch (err) {
-    console.error("DB error (topics):", err);
     res.status(500).json({ error: "Failed to fetch topics" });
   }
 });
@@ -151,7 +148,7 @@ router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const [rows] = await db.query(
-      "SELECT stud_id, name FROM student ORDER BY name ASC"
+      "SELECT stud_id, name, email FROM student ORDER BY name ASC"
     );
     res.json(rows);
   } catch (err) {
