@@ -14,6 +14,7 @@ app.use("/", courseTopicRoutess);
 app.use("/", progressRoutes);
 app.get("/", (req, res) => res.json("Hello, this is Backend"));
 app.use("/student", studentRoutes);
+  
 
 app.listen(5000, () => {
   console.log("Connected to backend on port 5000");

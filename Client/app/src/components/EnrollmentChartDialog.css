@@ -1,0 +1,47 @@
+.enrollment-dialog .MuiDialogContent-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.enrollment-dialog .MuiCircularProgress-root {
+  margin: auto;
+  display: block;
+}
+
+.enrollment-dialog .chart-wrapper {
+  width: 100%;
+  max-width: 600px;
+  height: 450px;
+}
+
+.enrollment-dialog canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.enrollment-dialog .MuiDialogTitle-root {
+  font-weight: 600;
+  font-size: 1.25rem;
+  text-align: center;
+  position: relative;
+}
+
+.title-header {
+  font-family: "Montserrat", sans-serif !important;
+  color: #357abd;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.close-btn {
+  position: absolute !important;
+  right: 8px;
+  top: 8px;
+  color: #555 !important;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  color: red !important;
+}
