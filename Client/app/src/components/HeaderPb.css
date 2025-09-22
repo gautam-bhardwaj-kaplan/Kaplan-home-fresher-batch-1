@@ -1,9 +1,9 @@
 .header-appbar {
-  background: linear-gradient(to right, #0033A0, #0033A0) !important;
-
+  background: linear-gradient(to right, #0033a0, #0033a0) !important;
 }
 
 .header-logo {
+  cursor: pointer !important;
   width: 50px;
   margin-right: 16px;
 }
@@ -11,8 +11,40 @@
 .header-title {
   flex-grow: 1;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
   letter-spacing: 1.2px;
   color: #fff;
+}
+.header-enrollment-btn {
+  background-color: #0033a0 !important;
+  border-color: #fff !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  padding: 6px 16px !important;
+  margin-left: auto !important;
+  margin-right: 35px !important;
+}
+
+.header-enrollment-btn:hover {
+  background-color: white !important;
+  color: #0033a0 !important;
+}
+
+.header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.header-title-container {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.header-btn-container {
+  margin-left: auto;
 }

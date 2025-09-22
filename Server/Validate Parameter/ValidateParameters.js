@@ -8,4 +8,3 @@ export function validateParams(requiredKeys, source) {
 
   return { valid: true };
 }
-
