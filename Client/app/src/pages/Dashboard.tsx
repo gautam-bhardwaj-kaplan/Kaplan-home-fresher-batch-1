@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Header from "../components/Header.tsx";
+import Header from "../components/HeaderPb.tsx";
 import Sidebar from "../components/Sidebarlc.tsx";
 import Filters from "../components/Filters.tsx";
 import LineChartView from "../components/LineChartView.tsx";
@@ -78,7 +78,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard-container">
-      <Header />
+      <Header title="Line Chart" />
 
       <div className="dashboard-main">
         <div className="sidebar-wrapper">
