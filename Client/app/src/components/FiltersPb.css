@@ -1,0 +1,41 @@
+.filters-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-bottom: 2px solid #e0e0e0;
+  justify-content: flex-start;
+}
+
+.filter-item {
+  min-width: 180px;
+  flex: 0 0 180px;
+}
+
+.filter-item:hover {
+  border-color: #1976d2;
+}
+.filter-item.MuiButton-root {
+  min-width: 180px;
+  height: 40px;
+  border: 1px solid #bebaba;
+  border-radius: 6px;
+  color: #1976d2;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: none;
+  transition: all 0.2s ease;
+}
+
+.filter-item.MuiButton-root:hover {
+  background-color: #357abd;
+  color: #fff;
+  border-color: #fff;
+}
+
+.search-bar {
+  min-width: 180px;
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+}

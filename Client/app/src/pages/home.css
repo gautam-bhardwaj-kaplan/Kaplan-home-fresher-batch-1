@@ -1,11 +1,11 @@
-
 .header {
-  background: linear-gradient(to right, #0033A0, #0033A0) !important;
+  background: linear-gradient(to right, #0033a0, #0033a0) !important;
 }
 
 .logo {
   width: 50px;
   margin-right: 16px;
+  cursor: pointer !important;
 }
 
 .header-title {
@@ -21,7 +21,6 @@
   font-weight: bold !important;
 }
 
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -30,7 +29,7 @@
 }
 
 .styled-button {
-  background: linear-gradient(to right, #3067dd, #357ABD);
+  background: linear-gradient(to right, #3067dd, #357abd);
   color: #fff !important;
   font-weight: 600 !important;
   border-radius: 8px !important;
@@ -40,11 +39,10 @@
 
 .styled-button:hover {
   background: #fff !important;
-  color: #357ABD !important;
+  color: #357abd !important;
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
-
 
 .student-table-container {
   margin-top: 32px;
@@ -55,6 +53,7 @@
   padding: 16px;
   background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
 }
 
 .student-table-title {
@@ -66,11 +65,14 @@
 
 .student-table-paper {
   border-radius: 8px !important;
-  overflow: hidden;
+  max-height: 400px;
 }
 
 .student-table-head {
-  background-color: #0033A0;
+  background-color: #0033a0;
+  position: sticky;
+  z-index: 1000;
+  top: 0px;
 }
 
 .table-header {
@@ -85,4 +87,13 @@
 .student-row:hover {
   background-color: #e1eaff;
   cursor: pointer;
+}
+
+.main-content {
+  padding-top: 64px;
+}
+
+.home {
+  overflow: hidden;
+  height: 100vh;
 }

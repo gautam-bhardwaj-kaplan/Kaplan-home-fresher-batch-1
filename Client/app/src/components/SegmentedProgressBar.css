@@ -1,0 +1,31 @@
+.segmented-bar {
+  display: flex;
+  gap: 1.5px;
+  align-items: center;
+}
+
+.segment {
+  width: 3px;
+  height: 14px;
+  background: #bbb;
+  border-radius: 2px;
+}
+
+.segment.filled {
+  background: #27ae60;
+}
+
+.segment.in-progress {
+  background: #f39c12;
+}
+
+.segment.low {
+  background: #e74c3c;
+}
+
+.segmented-label {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #222;
+}
