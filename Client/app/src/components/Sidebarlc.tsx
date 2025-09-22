@@ -14,14 +14,14 @@ interface SidebarPbProps {
   onStudentSelect: (studentId: string, studentName: string) => void;
 }
 
-const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
+const SidebarLc: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [activeStudent, setActiveStudent] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   useEffect(() => {
     axios
-      .get<Student[]>("http://localhost:5000/student")
+      .get<Student[]>("http://localhost:5000/student/all")
       .then((res) => {
         setStudents(res.data);
 
@@ -74,4 +74,4 @@ const SidebarPb: React.FC<SidebarPbProps> = ({ onStudentSelect }) => {
   );
 };
 
-export default SidebarPb;
+export default SidebarLc;

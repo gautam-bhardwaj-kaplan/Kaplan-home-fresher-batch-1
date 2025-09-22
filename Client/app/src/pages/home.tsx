@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   AppBar,
   Toolbar,
@@ -23,7 +23,6 @@ import { useNavigate } from "react-router-dom";
 import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 interface Student {
   stud_id: number;
@@ -55,27 +54,28 @@ const Home: React.FC = () => {
     window.location.href = "/";
   };
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const res = await axios.get<StudentApiResponse>(
-          "http://localhost:5000/student",
-          {
-            params: {
-              page: page,
-              limit: rowsPerPage,
-            },
-          }
-        );
-        setStudents(res.data.students);
-        setTotalStudents(res.data.total);
-      } catch (err) {
-        console.error("Failed to fetch students:", err);
-      }
-    };
-
-    fetchStudents();
+  const fetchStudents = useCallback(async () => {
+    try {
+      const res = await axios.get<StudentApiResponse>(
+        "http://localhost:5000/student",
+        {
+          params: {
+            page: page,
+            limit: rowsPerPage,
+          },
+        }
+      );
+      setStudents(res.data.students);
+      setTotalStudents(res.data.total);
+    } catch (err) {
+      console.error("Failed to fetch students:", err);
+    }
   }, [page, rowsPerPage]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -86,15 +86,6 @@ const Home: React.FC = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  const fetchStudents = () => {
-    axios
-      .get<Student[]>("http://localhost:5000/student")
-      .then((res) => setStudents(res.data))
-      .catch((err) => console.error(err));
-  };
-  useEffect(() => {
-    fetchStudents();
-  }, []);
 
   const handleEditClick = (student: Student) => {
     setCurrentStudent(student);
