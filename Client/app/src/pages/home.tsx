@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 interface Student {
   stud_id: number;
@@ -40,6 +41,7 @@ const Home: React.FC = () => {
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [openChatbot, setOpenChatbot] = useState(false);
 
   const fetchStudents = () => {
     axios
