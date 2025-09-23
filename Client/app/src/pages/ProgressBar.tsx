@@ -140,7 +140,7 @@ const ProgressBar: React.FC = () => {
 
   return (
     <>
-      <HeaderPb />
+      <HeaderPb title="Course Progress" showEnrollment />
       <div className="progressbar-container">
         <SidebarPb
           students={students}

@@ -20,7 +20,6 @@ const db = mysql.createPool({
   },
 });
 
-
 (async () => {
   try {
     const connection = await db.getConnection();
@@ -30,4 +29,5 @@ const db = mysql.createPool({
   }
 })();
 
+export default db;
 export default db;
