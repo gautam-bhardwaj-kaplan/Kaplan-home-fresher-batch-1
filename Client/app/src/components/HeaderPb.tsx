@@ -46,7 +46,7 @@ const HeaderPb: React.FC<headerProps> = ({ title, showEnrollment = false }) => {
                 className="header-enrollment-btn"
                 onClick={() => setOpenDialog(true)}
               >
-                Enrollment Chart
+                {isMobile ? "EC" : "Enrollment Chart"}
               </Button>
             </Box>
           )}

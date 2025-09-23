@@ -79,7 +79,7 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
       onClose={onClose}
       PaperProps={{ className: "custom-dialog-paper" }}
     >
-      <DialogTitle className="custom-dialog-title">
+      <DialogTitle className="custom-dialogbox-title">
         <div className="dialog-title-bar">
           Topics for {courseName}
           <StatusFilterDialog
