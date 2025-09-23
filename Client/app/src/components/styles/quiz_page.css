@@ -6,11 +6,7 @@
    margin-top: 64px;
   
 }
-.main-cont-quiz{
-    display: flex !important;
-    flex-direction: column;
-    
-}
+
 .vertical-center{
     overflow-y: hidden;
 }

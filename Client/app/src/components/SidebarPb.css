@@ -20,6 +20,7 @@
 .sidebar-list {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   gap: 8px;
   overflow-y: auto;
   text-transform: capitalize;
@@ -87,6 +88,33 @@
   margin-right: 8px;
   font-size: 20px;
   vertical-align: middle;
+}
+
+.sidebar-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 26px;
+}
+
+.sidebar-pagination button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  background: #f0f0f0;
+}
+
+.sidebar-pagination button.active {
+  background: #1976d2;
+  color: white;
+}
+
+.sidebar-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

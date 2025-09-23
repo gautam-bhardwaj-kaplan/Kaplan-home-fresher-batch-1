@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -22,206 +21,139 @@ import {
   Box,
 } from '@mui/material';
 
-import Sidebar from '../components/sidebar_quiz.tsx';
+import SidebarPb from '../components/SidebarPb.tsx';
 import Header from "../components/HeaderPb.tsx";
 import { QuizScore } from '../types.ts';
 import '../components/styles/quiz_page.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-
-
 const QuizScorePage: React.FC = () => {
-  const { studentId: paramId } = useParams<{ studentId?: string }>();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const [chartData, setChartData] = useState<ChartData<'bar'> | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<{ stud_id: number; name: string } | null>(null);
   const [allData, setAllData] = useState<QuizScore[]>([]);
-  const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [redirecting, setRedirecting] = useState<boolean>(false);
-  const [studentName, setStudentName] = useState<string>('Select a student');
+  const [chartData, setChartData] = useState<ChartData<'bar'> | null>(null);
+  const [studentName, setStudentName] = useState('Select a student');
   const [courses, setCourses] = useState<string[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-
+ 
   useEffect(() => {
-    const needsFix =
-      !paramId || paramId === ':studentId' || location.pathname.includes(':studentId');
+    if (selectedStudent) return;
 
-    if (!needsFix) return;
-
-    let cancelled = false;
-    const redirectToFirst = async () => {
+    const fetchFirstStudent = async () => {
       try {
-        setRedirecting(true);
-        setLoading(true);
-        const res = await fetch(`http://localhost:5000/students?page=0&rowsPerPage=1`);
-        if (!res.ok) {
-          
-          const text = await res.text().catch(() => '');
-          throw new Error(`Could not load students for redirect: ${text || res.status}`);
-        }
+        const res = await fetch(`http://localhost:5000/student/sidebar/all?page=1&limit=1`);
+        if (!res.ok) throw new Error('Failed to fetch first student');
         const data = await res.json();
-        const first = data?.rows?.[0];
-        if (!cancelled) {
-          if (first && first.id) {
-           
-            navigate(`/quiz/${first.id}`, { replace: true });
-          } else {
-            setError('No students available to show.');
-          }
+        const firstStudent = data?.students?.[0];
+        if (firstStudent) {
+          setSelectedStudent(firstStudent);
+        } else {
+          setError('No students available.');
         }
       } catch (err: any) {
-        console.error('redirectToFirst error', err);
-        if (!cancelled) setError(err?.message || 'Failed to redirect to first student.');
-      } finally {
-        if (!cancelled) {
-          setRedirecting(false);
-          setLoading(false);
-        }
+        console.error(err);
+        setError(err.message || 'Could not fetch students.');
       }
     };
 
-    redirectToFirst();
-    return () => {
-      cancelled = true;
-    };
-  }, [paramId, location.pathname, navigate]);
+    fetchFirstStudent();
+  }, [selectedStudent]);
 
+  
   useEffect(() => {
-    let cancelled = false;
-    const fetchScores = async () => {
-      if (!paramId || paramId === ':studentId') {
-        
-        return;
-      }
+    if (!selectedStudent) return;
 
+    const fetchScores = async () => {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch(`http://localhost:5000/quiz/${paramId}`);
-        if (!res.ok) {
-          const text = await res.text().catch(() => '');
-          let msg = `Failed to fetch scores (status ${res.status})`;
-          try {
-            const parsed = JSON.parse(text);
-            msg = parsed.message || msg;
-          } catch {}
-          throw new Error(msg);
-        }
-        const data: QuizScore[] = await res.json();
+        const res = await fetch(`http://localhost:5000/quiz/${selectedStudent.stud_id}`);
+        if (!res.ok) throw new Error('Failed to fetch quiz scores');
 
-        if (!cancelled) {
-          if (!data || data.length === 0) {
-            setAllData([]);
-            setCourses([]);
-            setSelectedCourse('');
-            setChartData(null);
-            setStudentName('Select a student');
-            setError('No scores found for this student.');
-          } else {
-            setStudentName(data[0].studentName || 'Student');
-            setAllData(data);
-            const uniqueCourses = [...new Set(data.map((item) => item.courseName))];
-            setCourses(uniqueCourses);
-            setSelectedCourse(uniqueCourses[0] || '');
-            setError('');
-          }
-        }
-      } catch (err) {
-        if (!cancelled) {
-          console.error('fetchScores error:', err);
-          setError(err instanceof Error ? err.message : 'Could not fetch quiz scores.');
+        const data: QuizScore[] = await res.json();
+        setAllData(data);
+
+        if (data.length > 0) {
+          setStudentName(data[0].studentName || selectedStudent.name);
+          const uniqueCourses = [...new Set(data.map((item) => item.courseName))];
+          setCourses(uniqueCourses);
+          setSelectedCourse(uniqueCourses[0] || '');
+        } else {
           setAllData([]);
           setCourses([]);
           setSelectedCourse('');
           setChartData(null);
+          setError('No scores found for this student.');
         }
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || 'Could not fetch quiz scores.');
+        setAllData([]);
+        setCourses([]);
+        setSelectedCourse('');
+        setChartData(null);
       } finally {
-        if (!cancelled) setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchScores();
-    return () => {
-      cancelled = true;
-    };
-  }, [paramId]);
+  }, [selectedStudent]);
 
- 
+  
   useEffect(() => {
-    if (allData.length > 0 && selectedCourse) {
-      const courseData = allData.filter((it) => it.courseName === selectedCourse);
-      const topics = [...new Set(courseData.map((it) => it.topicName))];
-      const scores = topics.map((t) => {
-        const found = courseData.find((d) => d.topicName === t);
-        return found ? found.score : null;
-      });
-
-      const colors = scores.map((score, i) =>
-        score !== null ? `hsl(${(i * 360) / Math.max(1, topics.length)}, 70%, 60%)` : 'transparent'
-      );
-
-      const cfg: ChartData<'bar'> = {
-        labels: topics,
-        datasets: [
-          {
-            label: `Quiz Scores for ${selectedCourse}`,
-            data: scores,
-            backgroundColor: colors,
-            minBarLength: 5,
-          },
-        ],
-      };
-
-      setChartData(cfg);
-    } else {
+    if (!allData.length || !selectedCourse) {
       setChartData(null);
+      return;
     }
+
+    const courseData = allData.filter((it) => it.courseName === selectedCourse);
+    const topics = [...new Set(courseData.map((it) => it.topicName))];
+    const scores = topics.map((t) => {
+      const found = courseData.find((d) => d.topicName === t);
+      return found ? found.score : null;
+    });
+
+    const colors = scores.map((score, i) =>
+      score !== null ? `hsl(${(i * 360) / Math.max(1, topics.length)}, 70%, 60%)` : 'transparent'
+    );
+
+    const cfg: ChartData<'bar'> = {
+      labels: topics,
+      datasets: [
+        {
+          label: `Quiz Scores for ${selectedCourse}`,
+          data: scores,
+          backgroundColor: colors,
+          minBarLength: 5,
+        },
+      ],
+    };
+
+    setChartData(cfg);
   }, [allData, selectedCourse]);
-
-  const handleCourseChange = (course: string) => setSelectedCourse(course);
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      title: { display: true, text: `${studentName}'s Quiz Scores for ${selectedCourse}` },
-    },
-    scales: {
-      x: { title: { display: true, text: 'Topics' }, ticks: { display: false }, grid: { display: false } },
-      y: {
-        title: { display: true, text: 'Scores' },
-        beginAtZero: true,
-        min: 0,
-        max: 10,
-        ticks: { stepSize: 1 },
-        grid: { display: false },
-      },
-    },
-  };
 
   return (
     <>
       <div className="header-bar-quiz">
-        <Header title= " Quiz Score" />
+        <Header title="Quiz Score" />
         <div className="quiz-container">
-          <Sidebar />
+          <SidebarPb
+            selectedStudent={selectedStudent}
+            onSelect={setSelectedStudent}
+          />
           <div className="main-content-quiz">
-
-            {(redirecting || loading) && !error && (
+            {loading && !error && (
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 300 }}>
                 <CircularProgress />
               </Box>
             )}
 
             {!loading && error && (
-              <Typography color="error" sx={{ mt: 2 }}>
-                {error}
-              </Typography>
+              <Typography color="error" sx={{ mt: 2 }}>{error}</Typography>
             )}
 
             {!loading && !error && courses.length > 0 && (
@@ -229,13 +161,11 @@ const QuizScorePage: React.FC = () => {
                 <InputLabel>Course</InputLabel>
                 <Select
                   value={selectedCourse}
-                  onChange={(e) => handleCourseChange(e.target.value as string)}
+                  onChange={(e) => setSelectedCourse(e.target.value)}
                   className="course-dropdown"
                 >
                   {courses.map((course) => (
-                    <MenuItem key={course} value={course}>
-                      {course}
-                    </MenuItem>
+                    <MenuItem key={course} value={course}>{course}</MenuItem>
                   ))}
                 </Select>
               </div>
@@ -244,19 +174,26 @@ const QuizScorePage: React.FC = () => {
             {!loading && !error && chartData && (
               <Card className="chart-container">
                 <CardContent sx={{ width: '100%', height: '100%' }}>
-                  <Bar options={options} data={chartData} />
+                  <Bar data={chartData} options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: { display: false },
+                      title: { display: true, text: `${studentName}'s Quiz Scores for ${selectedCourse}` },
+                    },
+                    scales: {
+                      x: { title: { display: true, text: 'Topics' }, ticks: { display: false }, grid: { display: false } },
+                      y: { title: { display: true, text: 'Scores' }, beginAtZero: true, min: 0, max: 10, ticks: { stepSize: 1 }, grid: { display: false } },
+                    },
+                  }} />
                 </CardContent>
               </Card>
             )}
 
-            {!loading && !error && !chartData && !courses.length && (
-              <Typography variant="h6" sx={{ mt: 2 }}>
-                No data available for the selected course or student.
-              </Typography>
-            )}
+            
           </div>
         </div>
-        </div>
+      </div>
     </>
   );
 };

@@ -4,6 +4,7 @@ import cors from "cors";
 import courseTopicRoutess from "./routes/coursetop.js";
 import progressRoutes from "./routes/line_chart.js";
 import studentRoutes from "./routes/students_progress.js";
+import sidebarRoutes from "./routes/Sidebar.js";
 
 import quizRoutes from './routes/quiz.js';
 import studentsRoutes from './routes/student_list.js'
@@ -20,6 +21,8 @@ app.use("/", progressRoutes);
 app.use('/quiz', quizRoutes);
 app.use('/students', studentsRoutes);
 app.use('/create', createRoutes);
+app.use("/student/sidebar", sidebarRoutes);
+
 
 app.get("/", (req, res) => res.json("Hello, this is Backend"));
 app.use("/student", studentRoutes);
