@@ -38,11 +38,10 @@ const Dashboard: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!selectedStudentId) return;
     const fetchCourses = async () => {
-      if (!selectedStudentId) return;
-
       try {
-        const courseRes = await axios.get(
+        const courseRes = await axios.get<Course[]>(
           `http://localhost:5000/students/${selectedStudentId}/courses`
         );
         setCourses(courseRes.data);
@@ -56,18 +55,17 @@ const Dashboard: React.FC = () => {
   }, [selectedStudentId]);
 
   useEffect(() => {
+    if (!selectedStudentId || !selectedCourse) {
+      setTopics([]);
+      setSelectedTopic([]);
+      return;
+    }
     const fetchTopics = async () => {
-      if (!selectedStudentId || !selectedCourse) {
-        setTopics([]);
-        setSelectedTopic([]);
-        return;
-      }
-
       try {
-        const topicRes = await axios.get(
+        const res = await axios.get<Topic[]>(
           `http://localhost:5000/students/${selectedStudentId}/courses/${selectedCourse}/topics`
         );
-        setTopics(topicRes.data);
+        setTopics(res.data);
         setSelectedTopic([]);
       } catch (err) {
         console.error("Failed to fetch topics", err);
