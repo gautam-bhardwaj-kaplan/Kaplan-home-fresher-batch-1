@@ -4,7 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import EnrollmentChartDialog from "./EnrollmentChartDialog.tsx";
 
-const HeaderPb = () => {
+interface headerProps {
+  title: string;
+  showEnrollment?: boolean;
+}
+
+const HeaderPb: React.FC<headerProps> = ({ title, showEnrollment = false }) => {
   const navigate = useNavigate();
   const handlelogo = () => {
     navigate("/");
@@ -31,24 +36,28 @@ const HeaderPb = () => {
           />
           <Box className="header-title-container">
             <Typography variant="h5" className="header-title">
-              Course Progress
+              {title}
             </Typography>
           </Box>
-          <Box className="header-btn-container">
-            <Button
-              variant="outlined"
-              className="header-enrollment-btn"
-              onClick={() => setOpenDialog(true)}
-            >
-              {isMobile ? "EC" : "Enrollment Chart"}
-            </Button>
-          </Box>
+          {showEnrollment && (
+            <Box className="header-btn-container">
+              <Button
+                variant="outlined"
+                className="header-enrollment-btn"
+                onClick={() => setOpenDialog(true)}
+              >
+                Enrollment Chart
+              </Button>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
-      <EnrollmentChartDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-      />
+      {showEnrollment && (
+        <EnrollmentChartDialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+        />
+      )}
     </>
   );
 };
