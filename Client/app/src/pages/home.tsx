@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -52,7 +52,7 @@ const Home: React.FC = () => {
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [openChatbot, setOpenChatbot] = useState(false);
+  
   const handlelogo = () => {
     window.location.href = "/";
   };
@@ -301,6 +301,8 @@ const Home: React.FC = () => {
                 key={label}
                 onClick={() => {
                   if (label === "Line Chart") navigate("/dashboard");
+                  if (label === "Bar Chart") navigate("/quiz/:studentId?");
+                  if (label === "Add Student") setDialogOpen(true);
                   if (label === "Course Progress") navigate("/progress");
                 }}
                 className="styled-button"

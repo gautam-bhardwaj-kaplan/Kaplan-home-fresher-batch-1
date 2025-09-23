@@ -23,13 +23,13 @@ import {
 } from '@mui/material';
 
 import Sidebar from '../components/sidebar_quiz.tsx';
-import Header from '../components/Header_quiz.tsx';
+import Header from "../components/HeaderPb.tsx";
 import { QuizScore } from '../types.ts';
 import '../components/styles/quiz_page.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const API_BASE = process.env.REACT_APP_API_URL ?? 'http://localhost:5000';
+
 
 const QuizScorePage: React.FC = () => {
   const { studentId: paramId } = useParams<{ studentId?: string }>();
@@ -57,7 +57,7 @@ const QuizScorePage: React.FC = () => {
       try {
         setRedirecting(true);
         setLoading(true);
-        const res = await fetch(`${API_BASE}/students?page=0&rowsPerPage=1`);
+        const res = await fetch(`http://localhost:5000/students?page=0&rowsPerPage=1`);
         if (!res.ok) {
           
           const text = await res.text().catch(() => '');
@@ -101,7 +101,7 @@ const QuizScorePage: React.FC = () => {
       setLoading(true);
       setError('');
       try {
-        const res = await fetch(`${API_BASE}/quiz/${paramId}`);
+        const res = await fetch(`http://localhost:5000/quiz/${paramId}`);
         if (!res.ok) {
           const text = await res.text().catch(() => '');
           let msg = `Failed to fetch scores (status ${res.status})`;
@@ -207,7 +207,7 @@ const QuizScorePage: React.FC = () => {
   return (
     <>
       <div className="header-bar-quiz">
-        <Header />
+        <Header title="Line Chart" />
         <div className="quiz-container">
           <Sidebar />
           <div className="main-content-quiz">
