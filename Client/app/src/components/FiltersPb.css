@@ -6,6 +6,7 @@
   padding: 0.5rem 1rem;
   border-bottom: 2px solid #e0e0e0;
   justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .filter-item {
@@ -38,4 +39,21 @@
   min-width: 180px;
   margin-left: auto !important;
   flex: 0 0 auto !important;
+}
+
+@media (max-width: 768px) {
+  .filters-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-item,
+  .search-bar {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  .search-bar {
+    margin-left: 0 !important;
+  }
 }

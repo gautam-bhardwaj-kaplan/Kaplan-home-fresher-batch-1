@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import "./HeaderPb.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EnrollmentChartDialog from "./EnrollmentChartDialog.tsx";
 
 const HeaderPb = () => {
@@ -10,6 +10,14 @@ const HeaderPb = () => {
     navigate("/");
   };
   const [openDialog, setOpenDialog] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <AppBar position="fixed" className="header-appbar">
@@ -32,7 +40,7 @@ const HeaderPb = () => {
               className="header-enrollment-btn"
               onClick={() => setOpenDialog(true)}
             >
-              Enrollment Chart
+              {isMobile ? "EC" : "Enrollment Chart"}
             </Button>
           </Box>
         </Toolbar>
