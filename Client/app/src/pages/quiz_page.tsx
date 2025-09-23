@@ -207,7 +207,7 @@ const QuizScorePage: React.FC = () => {
   return (
     <>
       <div className="header-bar-quiz">
-        <Header title="Line Chart" />
+        <Header title= " Quiz Score" />
         <div className="quiz-container">
           <Sidebar />
           <div className="main-content-quiz">
