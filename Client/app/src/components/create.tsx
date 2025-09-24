@@ -24,7 +24,8 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
   const [topics, setTopics] = useState<TopicSelection[]>([]);
   const [errors, setErrors] = useState<Record<number, Partial<Record<"quiz_score" | "hours_studied" | "completion_date", string>>>>({});
   const [openSnackbar, setOpenSnackbar] = useState(false);
-    
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [studentNameError, setStudentNameError] = useState<string | null>(null);
   useEffect(() => {
     fetch("http://localhost:5000/create/courses")
       .then((res) => res.json())
@@ -103,11 +104,32 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
     setCourse("");
     setTopics([]);
     setErrors({});
+    setStudentNameError(null);  
+    setEmailError(null);
   };
 
   const handleSubmit = () => {
     const selectedTopics = topics.filter((t) => t.selected);
     let newErrors: typeof errors = {};
+    let hasError = false;
+
+    if (!studentName.trim()) {
+    setStudentNameError("Student Name is required.");
+    hasError = true;
+  } else {
+    setStudentNameError(null);
+  }
+
+
+    if (!email.trim()) {
+    setEmailError("Email is required.");
+    hasError = true;
+  } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+    setEmailError("Invalid email format.");
+    hasError = true;
+  } else {
+    setEmailError(null);
+  }
 
     for (const t of selectedTopics) {
       const topicErrors: Partial<Record<"quiz_score" | "hours_studied" | "completion_date", string>> = {};
@@ -132,6 +154,11 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
      
       return;
     }
+    
+     if (hasError) {
+    setErrors(newErrors);
+    return;
+  }
  
 
     const payload = {
@@ -181,6 +208,8 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
           onChange={(e) => setStudentName(e.target.value)}
           fullWidth
           margin="normal"
+          error={!!studentNameError}
+          helperText={studentNameError}
         />
         <TextField
           label="Email"
@@ -188,6 +217,9 @@ const StudentDialog: React.FC<Props> = ({ open, onClose, onStudentAdded }) => {
           onChange={(e) => setEmail(e.target.value)}
           fullWidth
           margin="normal"
+          error={!!emailError}
+          helperText={emailError}
+
         />
         <TextField
           select
