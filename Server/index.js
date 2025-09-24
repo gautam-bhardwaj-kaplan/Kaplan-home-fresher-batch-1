@@ -4,6 +4,8 @@ import cors from "cors";
 import courseTopicRoutess from "./routes/coursetop.js";
 import progressRoutes from "./routes/line_chart.js";
 import studentRoutes from "./routes/students_progress.js";
+import sidebarRoutes from "./routes/Sidebar.js";
+import homeStudentsRouter from "./routes/homeStudents.js";
 
 const app = express();
 
@@ -14,7 +16,8 @@ app.use("/", courseTopicRoutess);
 app.use("/", progressRoutes);
 app.get("/", (req, res) => res.json("Hello, this is Backend"));
 app.use("/student", studentRoutes);
-  
+app.use("/student/sidebar", sidebarRoutes);
+app.use("/student", homeStudentsRouter);
 
 app.listen(5000, () => {
   console.log("Connected to backend on port 5000");

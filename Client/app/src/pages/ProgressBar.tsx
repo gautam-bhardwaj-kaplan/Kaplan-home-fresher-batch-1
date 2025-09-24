@@ -23,10 +23,10 @@ interface Course {
 }
 
 const ProgressBar: React.FC = () => {
-  const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [loadingCourses, setLoadingCourses] = useState(false);
   // filter states
   const [completionFilter, setCompletionFilter] = useState<number | null>(
@@ -61,46 +61,11 @@ const ProgressBar: React.FC = () => {
     localStorage.removeItem("sortFilter");
   };
 
-  // Fetch students
-  useEffect(() => {
-    const fetchStudentsAndCourses = async () => {
-      try {
-        const res = await axios.get<Student[]>(
-          "http://localhost:5000/student/all"
-        );
-        setStudents(res.data);
-
-        if (res.data.length > 0) {
-          const firstStudent = res.data[0];
-          setSelectedStudent(firstStudent);
-          setLoadingCourses(true);
-
-          // Fetch that student's courses
-          try {
-            const res2 = await axios.get<Course[]>(
-              `http://localhost:5000/student/${firstStudent.stud_id}/courses`
-            );
-            setCourses(res2.data);
-          } catch (err) {
-            console.error("Error fetching courses:", err);
-          } finally {
-            setLoadingCourses(false);
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching students:", err);
-      }
-    };
-    fetchStudentsAndCourses();
-  }, []);
-
-  // Fetch courses for selected student
-  const handleStudentSelect = async (student: Student) => {
-    setSelectedStudent(student);
+  const fetchCourses = async (stud_id: number) => {
     setLoadingCourses(true);
     try {
       const res = await axios.get<Course[]>(
-        `http://localhost:5000/student/${student.stud_id}/courses`
+        `http://localhost:5000/student/${stud_id}/courses`
       );
       setCourses(res.data);
     } catch (err) {
@@ -108,6 +73,12 @@ const ProgressBar: React.FC = () => {
     } finally {
       setLoadingCourses(false);
     }
+  };
+
+  // Fetch courses for selected student
+  const handleStudentSelect = async (student: Student) => {
+    setSelectedStudent(student);
+    fetchCourses(student.stud_id);
   };
 
   // apply filters
@@ -137,12 +108,18 @@ const ProgressBar: React.FC = () => {
     return result;
   }, [courses, completionFilter, sortFilter, searchQuery]);
 
+  const handleSearch = (value: string) => {
+    setSearchInput(value);
+    if (value.length >= 3 || value.length === 0) {
+      setSearchQuery(value);
+    }
+  };
+
   return (
     <>
       <HeaderPb title="Course Progress" showEnrollment />
       <div className="progressbar-container">
         <SidebarPb
-          students={students}
           onSelect={handleStudentSelect}
           selectedStudent={selectedStudent}
         />
@@ -151,12 +128,12 @@ const ProgressBar: React.FC = () => {
           <FiltersPb
             completionFilter={completionFilter}
             sortFilter={sortFilter}
-            searchQuery={searchQuery}
+            searchQuery={searchInput}
             onCompletionFilter={handleCompletionFilter}
             onSortFilter={handleSortFilter}
             onNavigate={(page) => console.log("Navigate to:", page)}
             onClearFilters={handleClearFilters}
-            onSearch={setSearchQuery}
+            onSearch={handleSearch}
           />
 
           <div className="courses-frame">

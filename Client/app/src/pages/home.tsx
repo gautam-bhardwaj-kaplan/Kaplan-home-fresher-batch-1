@@ -15,6 +15,8 @@ import {
   IconButton,
   Dialog,
   TablePagination,
+  InputAdornment,
+  TextField,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -23,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface Student {
   stud_id: number;
@@ -39,6 +42,8 @@ interface StudentApiResponse {
 }
 
 const Home: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [students, setStudents] = useState<Student[]>([]);
   const [page, setPage] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
@@ -62,6 +67,7 @@ const Home: React.FC = () => {
           params: {
             page: page,
             limit: rowsPerPage,
+            search: searchQuery || undefined,
           },
         }
       );
@@ -70,7 +76,7 @@ const Home: React.FC = () => {
     } catch (err) {
       console.error("Failed to fetch students:", err);
     }
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, searchQuery]);
 
   useEffect(() => {
     fetchStudents();
@@ -85,6 +91,16 @@ const Home: React.FC = () => {
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+
+    if (value.length >= 3 || value.length === 0) {
+      setSearchQuery(value);
+      setPage(0);
+    }
   };
 
   const handleEditClick = (student: Student) => {
@@ -309,9 +325,25 @@ const Home: React.FC = () => {
         </Box>
 
         <Box className="student-table-container">
-          <Typography variant="h6" className="student-table-title">
-            Students List
-          </Typography>
+          <Box className="student-table-header">
+            <Typography variant="h6" className="student-table-title">
+              Students List
+            </Typography>
+            <TextField
+              type="text"
+              className="student-search-input"
+              placeholder="Search students..."
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
 
           <TableContainer component={Paper} className="student-table-paper">
             <Table>

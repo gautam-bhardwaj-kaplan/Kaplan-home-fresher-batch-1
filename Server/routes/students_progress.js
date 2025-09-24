@@ -4,32 +4,6 @@ import { validateParams } from "../Validate Parameter/ValidateParameters.js";
 
 const router = express.Router();
 
-// fetch students for home
-router.get("/", async (req, res) => {
-  try {
-    let page = parseInt(req.query.page, 10);
-    let limit = parseInt(req.query.limit, 10);
-    if (isNaN(page) || page < 0) page = 0;
-    if (isNaN(limit) || limit <= 0 || limit > 100) limit = 10;
-
-    const offset = page * limit;
-    const [countRows] = await db.query("SELECT COUNT(*) AS total FROM student");
-    const total = countRows[0].total;
-
-    const [rows] = await db.query(
-      "SELECT stud_id, name, email FROM student ORDER BY stud_id LIMIT ? OFFSET ?",
-      [limit, offset]
-    );
-
-    res.json({
-      students: rows,
-      total,
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch students" });
-  }
-});
-
 // Courses with progress (with filters)
 
 router.get("/:id/courses", async (req, res) => {
@@ -142,18 +116,6 @@ router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
   } catch (err) {
     console.error("DB error (topics):", err);
     res.status(500).json({ error: "Failed to fetch topics" });
-  }
-});
-// fetch students for sidebar
-router.get("/all", async (req, res) => {
-  try {
-    const [rows] = await db.query(
-      "SELECT stud_id, name, email FROM student ORDER BY name ASC"
-    );
-    res.json(rows);
-  } catch (err) {
-    console.error("DB error (fetch students):", err);
-    res.status(500).json({ error: "Failed to fetch students" });
   }
 });
 

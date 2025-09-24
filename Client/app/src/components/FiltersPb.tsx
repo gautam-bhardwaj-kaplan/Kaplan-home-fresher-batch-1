@@ -85,7 +85,10 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
         className="search-bar"
         placeholder="Search by course"
         value={searchQuery}
-        onChange={(e) => onSearch(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          onSearch(value);
+        }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -94,7 +97,12 @@ const FiltersPb: React.FC<FiltersPbProps> = ({
           ),
           endAdornment: searchQuery && (
             <InputAdornment position="end">
-              <IconButton size="small" onClick={() => onSearch("")}>
+              <IconButton
+                size="small"
+                onClick={() => {
+                  onSearch("");
+                }}
+              >
                 <CloseIcon fontSize="small" />
               </IconButton>
             </InputAdornment>

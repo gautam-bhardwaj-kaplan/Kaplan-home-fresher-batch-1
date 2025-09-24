@@ -57,10 +57,38 @@
 }
 
 .student-table-title {
-  margin-bottom: 16px !important;
+  display: flex;
+  margin-bottom: 5px !important;
   font-weight: 700 !important;
+  font-family: "Montserrat", sans-serif !important;
   text-align: center;
-  color: #333;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  color: #222;
+}
+.student-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px !important;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.student-search-input {
+  width: 180px;
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  right: 0;
+  position: absolute;
+}
+
+.student-search-input.MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 4px 0 5px;
 }
 
 .student-table-paper {
