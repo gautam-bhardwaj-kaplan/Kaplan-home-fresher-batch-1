@@ -58,35 +58,6 @@ router.get("/:id/courses", async (req, res) => {
   }
 });
 
-// Completed / Pending topics
-
-router.get("/:id/course/:courseId/topics", async (req, res) => {
-  try {
-    const validation = validateParams(["id", "courseId"], req.params);
-    if (!validation.valid)
-      return res.status(400).json({ error: validation.message });
-
-    const { id, courseId } = req.params;
-    const [rows] = await db.query(
-      `
-      SELECT 
-          t.topic_id,
-          t.topic_name,
-          CASE WHEN a.completion_date_topic IS NOT NULL THEN 'Completed' ELSE 'Pending' END AS status
-      FROM topic t
-      LEFT JOIN activity a 
-          ON t.topic_id = a.topic_id AND a.student_id = ?
-      WHERE t.course_id = ?;
-    `,
-      [id, courseId]
-    );
-
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch topics" });
-  }
-});
-
 // Completed / Pending topics with quiz score
 router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
   try {
@@ -116,6 +87,24 @@ router.get("/:studentId/course/:courseId/topics/details", async (req, res) => {
   } catch (err) {
     console.error("DB error (topics):", err);
     res.status(500).json({ error: "Failed to fetch topics" });
+  }
+});
+
+router.get("/course/:courseId/topics/names", async (req, res) => {
+  try {
+    const { courseId } = req.params;
+
+    const [rows] = await db.query(
+      `SELECT topic_id, topic_name 
+       FROM topic 
+       WHERE course_id = ?`,
+      [courseId]
+    );
+
+    res.json(rows);
+  } catch (err) {
+    console.error("DB error (topic names):", err);
+    res.status(500).json({ error: "Failed to fetch topic names" });
   }
 });
 

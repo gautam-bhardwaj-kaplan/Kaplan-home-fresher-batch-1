@@ -110,7 +110,7 @@ const ProgressBar: React.FC = () => {
 
   const handleSearch = (value: string) => {
     setSearchInput(value);
-    if (value.length >= 3 || value.length === 0) {
+    if (value.length >= 2 || value.length === 0) {
       setSearchQuery(value);
     }
   };

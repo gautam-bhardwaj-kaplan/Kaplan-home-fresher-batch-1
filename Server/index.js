@@ -17,7 +17,7 @@ app.use("/", progressRoutes);
 app.get("/", (req, res) => res.json("Hello, this is Backend"));
 app.use("/student", studentRoutes);
 app.use("/student/sidebar", sidebarRoutes);
-app.use("/student", homeStudentsRouter);
+app.use("/student/home", homeStudentsRouter);
 
 app.listen(5000, () => {
   console.log("Connected to backend on port 5000");

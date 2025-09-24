@@ -11,9 +11,11 @@ import {
   TableCell,
   TableBody,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
 import "./CourseTopicsDialog.css";
+import CloseIcon from "@mui/icons-material/Close";
 import StatusFilterDialog from "./StatusFilter.tsx";
 
 interface Topic {

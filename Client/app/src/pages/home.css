@@ -91,6 +91,12 @@
   padding: 4px 0 5px;
 }
 
+.sort-icon-btn {
+  padding: 2px;
+  margin-left: 4px;
+  color: #1976d2;
+}
+
 .student-table-paper {
   border-radius: 8px !important;
   max-height: 400px;
@@ -162,4 +168,18 @@
 .home {
   overflow: hidden;
   height: 100vh;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+}
+
+.no-users {
+  text-align: center;
+  padding: 20px;
+  color: #555;
+  font-style: italic;
 }

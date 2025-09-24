@@ -17,6 +17,7 @@ import {
   TablePagination,
   InputAdornment,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -48,6 +49,7 @@ const Home: React.FC = () => {
   const [page, setPage] = useState(0);
   const [totalStudents, setTotalStudents] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
@@ -60,9 +62,10 @@ const Home: React.FC = () => {
   };
 
   const fetchStudents = useCallback(async () => {
+    setLoading(true);
     try {
       const res = await axios.get<StudentApiResponse>(
-        "http://localhost:5000/student",
+        "http://localhost:5000/student/home",
         {
           params: {
             page: page,
@@ -75,6 +78,8 @@ const Home: React.FC = () => {
       setTotalStudents(res.data.total);
     } catch (err) {
       console.error("Failed to fetch students:", err);
+    } finally {
+      setLoading(false);
     }
   }, [page, rowsPerPage, searchQuery]);
 
@@ -362,13 +367,17 @@ const Home: React.FC = () => {
               </TableHead>
 
               <TableBody>
-                {students.length === 0 ? (
+                {loading ? (
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      align="center"
-                      style={{ padding: "20px" }}
-                    >
+                    <TableCell colSpan={5}>
+                      <div className="loader-container">
+                        <CircularProgress />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : students.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="no-users">
                       No users found
                     </TableCell>
                   </TableRow>
