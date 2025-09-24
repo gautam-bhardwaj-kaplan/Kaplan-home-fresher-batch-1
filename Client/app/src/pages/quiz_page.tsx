@@ -135,6 +135,16 @@ const QuizScorePage: React.FC = () => {
 
     setChartData(cfg);
   }, [allData, selectedCourse]);
+   const handleSidebarToggle = (isOpen: boolean) => {
+    const container = document.querySelector(".quiz-container");
+    if (!container) return;
+
+    if (isOpen && window.innerWidth <= 768) {
+      container.classList.add("sidebar-open");
+    } else {
+      container.classList.remove("sidebar-open");
+    }
+  };
 
   return (
     <>
@@ -144,6 +154,7 @@ const QuizScorePage: React.FC = () => {
           <SidebarPb
             selectedStudent={selectedStudent}
             onSelect={setSelectedStudent}
+            onToggle={handleSidebarToggle}
           />
           <div className="main-content-quiz">
             {loading && !error && (

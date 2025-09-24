@@ -1,10 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/HeaderPb.tsx";
-import Sidebar from "../components/Sidebarlc.tsx";
+import SidebarPb from "../components/SidebarPb.tsx";
 import Filters from "../components/Filters.tsx";
 import LineChartView from "../components/LineChartView.tsx";
 import "./dashboard.css";
 import axios from "axios";
+
+interface Student {
+  stud_id: number;
+  name: string;
+}
 
 interface Course {
   course_id: string;
@@ -17,33 +22,25 @@ interface Topic {
 }
 
 const Dashboard: React.FC = () => {
-  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
-    null
-  );
-  const [selectedStudentName, setSelectedStudentName] = useState<string | null>(
-    null
-  );
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
   const [timeframe, setTimeframe] = useState<"daily" | "weekly">("daily");
   const [courses, setCourses] = useState<Course[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
 
-  const handleStudentSelect = useCallback(
-    (studentId: string, studentName: string) => {
-      setSelectedStudentId(studentId);
-      setSelectedStudentName(studentName);
-    },
-    []
-  );
+  const handleStudentSelect = (student: Student) => {
+    setSelectedStudent(student);
+    setSelectedCourse(null);
+    setSelectedTopic([]);
+  };
 
   useEffect(() => {
+    if (!selectedStudent) return;
     const fetchCourses = async () => {
-      if (!selectedStudentId) return;
-
       try {
-        const courseRes = await axios.get(
-          `http://localhost:5000/students/${selectedStudentId}/courses`
+        const courseRes = await axios.get<Course[]>(
+          `http://localhost:5000/students/${selectedStudent.stud_id}/courses`
         );
         setCourses(courseRes.data);
         setSelectedCourse(null);
@@ -53,28 +50,38 @@ const Dashboard: React.FC = () => {
       }
     };
     fetchCourses();
-  }, [selectedStudentId]);
+  }, [selectedStudent]);
 
   useEffect(() => {
+    if (!selectedStudent || !selectedCourse) {
+      setTopics([]);
+      setSelectedTopic([]);
+      return;
+    }
     const fetchTopics = async () => {
-      if (!selectedStudentId || !selectedCourse) {
-        setTopics([]);
-        setSelectedTopic([]);
-        return;
-      }
-
       try {
-        const topicRes = await axios.get(
-          `http://localhost:5000/students/${selectedStudentId}/courses/${selectedCourse}/topics`
+        const res = await axios.get<Topic[]>(
+          `http://localhost:5000/students/${selectedStudent.stud_id}/courses/${selectedCourse}/topics`
         );
-        setTopics(topicRes.data);
+        setTopics(res.data);
         setSelectedTopic([]);
       } catch (err) {
         console.error("Failed to fetch topics", err);
       }
     };
     fetchTopics();
-  }, [selectedCourse, selectedStudentId]);
+  }, [selectedCourse, selectedStudent]);
+
+  const handleSidebarToggle = (isOpen: boolean) => {
+    const container = document.querySelector(".dashboard-container");
+    if (!container) return;
+
+    if (isOpen && window.innerWidth <= 768) {
+      container.classList.add("sidebar-open");
+    } else {
+      container.classList.remove("sidebar-open");
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -82,7 +89,11 @@ const Dashboard: React.FC = () => {
 
       <div className="dashboard-main">
         <div className="sidebar-wrapper">
-          <Sidebar onStudentSelect={handleStudentSelect} />
+          <SidebarPb
+            selectedStudent={selectedStudent}
+            onSelect={handleStudentSelect}
+            onToggle={handleSidebarToggle}
+          />
         </div>
         <div className="dashboard-content">
           <div className="filters-section">
@@ -100,8 +111,8 @@ const Dashboard: React.FC = () => {
 
           <div className="linechart-container">
             <LineChartView
-              studentId={selectedStudentId}
-              studentName={selectedStudentName}
+              studentId={selectedStudent?.stud_id.toString() ?? null}
+              studentName={selectedStudent?.name ?? null}
               courseId={selectedCourse}
               TopicId={selectedTopic}
               timeframe={timeframe}

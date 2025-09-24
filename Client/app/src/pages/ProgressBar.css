@@ -38,3 +38,23 @@
   font-size: x-large;
   color: #0033a0;
 }
+@media (max-width: 400px) {
+  .progressbar-container.sidebar-open .progressbar-content {
+    filter: blur(2px) brightness(0.95);
+    transition: filter 0.3s ease, background-color 0.3s ease;
+  }
+
+  .progressbar-container.sidebar-open::after {
+    content: "";
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+  }
+
+  .sidebar {
+    z-index: 10;
+  }
+}

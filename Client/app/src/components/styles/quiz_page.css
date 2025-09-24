@@ -41,7 +41,7 @@
 
 .chart-container {
   border-radius: 16px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 50%;
   max-width: 900px;
   height: 450px;
@@ -82,5 +82,26 @@ body.no-scroll {
 
   .line {
     margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .quiz-container.sidebar-open .main-content-quiz {
+    filter: blur(2px) brightness(0.95);
+    transition: filter 0.3s ease, background-color 0.3s ease;
+  }
+
+  .quiz-container.sidebar-open::after {
+    content: "";
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+  }
+
+  .sidebar {
+    z-index: 10;
   }
 }

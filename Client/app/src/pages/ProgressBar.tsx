@@ -114,7 +114,16 @@ const ProgressBar: React.FC = () => {
       setSearchQuery(value);
     }
   };
+ const handleSidebarToggle = (isOpen: boolean) => {
+    const container = document.querySelector(".progressbar-container");
+    if (!container) return;
 
+    if (isOpen && window.innerWidth <= 768) {
+      container.classList.add("sidebar-open");
+    } else {
+      container.classList.remove("sidebar-open");
+    }
+  };
   return (
     <>
       <HeaderPb title="Course Progress" showEnrollment />
@@ -122,6 +131,7 @@ const ProgressBar: React.FC = () => {
         <SidebarPb
           onSelect={handleStudentSelect}
           selectedStudent={selectedStudent}
+          onToggle={handleSidebarToggle}
         />
 
         <div className="progressbar-content">
