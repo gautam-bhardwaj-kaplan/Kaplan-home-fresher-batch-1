@@ -24,7 +24,6 @@ import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
 import StudentDialog from "../components/create.tsx";
-
 import { useMediaQuery } from "@mui/material";
 
 interface Student {

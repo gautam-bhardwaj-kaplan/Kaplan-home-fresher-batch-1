@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import axios from "axios";
 import "./SidebarPb.css";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import PersonIcon from "@mui/icons-material/Person";
@@ -19,19 +18,9 @@ interface SidebarResponse {
   totalPages: number;
 }
 
-interface SidebarResponse {
-  students: Student[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
 interface SidebarPbProps {
   onSelect: (student: Student) => void;
   selectedStudent: Student | null;
-  pageSize?: number;
-  onToggle?: (isOpen: boolean) => void;
   pageSize?: number;
   onToggle?: (isOpen: boolean) => void;
 }
@@ -41,14 +30,9 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
   selectedStudent,
   pageSize = 10,
   onToggle,
-  pageSize = 10,
-  onToggle,
 }) => {
   const [students, setStudents] = useState<Student[]>([]);
-  const [students, setStudents] = useState<Student[]>([]);
   const [open, setOpen] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalStudents, setTotalStudents] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalStudents, setTotalStudents] = useState(0);
 
@@ -57,10 +41,8 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
       if (window.innerWidth <= 768) {
         setOpen(false);
         onToggle?.(false);
-        onToggle?.(false);
       } else {
         setOpen(true);
-        onToggle?.(true);
         onToggle?.(true);
       }
     };
@@ -79,7 +61,6 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
       setStudents(res.data.students);
       setTotalStudents(res.data.total);
 
-      
       if (res.data.students.length > 0) {
         onSelect(res.data.students[0]);
       }
@@ -88,11 +69,9 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
     }
   };
 
- 
   useEffect(() => {
     fetchStudents(currentPage);
   }, [currentPage]);
-
 
   const handleToggle = () => {
     const newState = !open;
@@ -100,13 +79,10 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
     onToggle?.(newState);
   };
 
-
   return (
     <div className={`sidebar ${open ? "open" : "closed"}`}>
       <div className="sidebar-header">
         {open && <h3 className="sidebar-title">Students</h3>}
-
-        <div className="menu-btn" onClick={handleToggle}>
         <div className="menu-btn" onClick={handleToggle}>
           {open ? <CloseRoundedIcon /> : <MenuRoundedIcon />}
         </div>
@@ -126,45 +102,6 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
           </div>
         ))}
       </div>
-      {open && totalPages > 1 && (
-        <div className="sidebar-pagination">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(1)}
-          >
-            &lt;&lt;
-          </button>
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          >
-            &lt;
-          </button>
-
-          {[...Array(totalPages)].map((_, idx) => (
-            <button
-              key={idx}
-              className={currentPage === idx + 1 ? "active" : ""}
-              onClick={() => setCurrentPage(idx + 1)}
-            >
-              {idx + 1}
-            </button>
-          ))}
-
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-          >
-            &gt;
-          </button>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(totalPages)}
-          >
-            &gt;&gt;
-          </button>
-        </div>
-      )}
       {open && totalPages > 1 && (
         <div className="sidebar-pagination">
           <button
