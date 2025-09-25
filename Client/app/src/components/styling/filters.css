@@ -76,3 +76,41 @@
 .clear-filters-btn:active {
   background-color: #e0e0e0;
 }
+@media (max-width: 768px) {
+  .filters-container {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    margin-top: 8px;
+  }
+  .filters-formcontrol {
+    margin: 0;
+    width: 100%;
+  }
+  .filters-formcontrol .MuiOutlinedInput-root {
+    height: 36px;
+    font-size: 0.8rem;
+  }
+  .filters-formcontrol .MuiSelect-select {
+    padding: 6px 12px;
+  }
+  .filters-formcontrol .MuiInputLabel-root {
+    font-size: 0.75rem;
+  }
+  .filters-actions {
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px;
+  }
+  .clear-filters-btn {
+    height: 32px;
+    font-size: 0.75rem;
+  }
+}
+
+
+
+
+
+
+

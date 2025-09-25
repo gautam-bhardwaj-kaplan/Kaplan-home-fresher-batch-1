@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import HeaderPb from "../components/HeaderPb.tsx";
 import SidebarPb from "../components/SidebarPb.tsx";
 import FiltersPb from "../components/FiltersPb.tsx";
@@ -81,6 +81,12 @@ const ProgressBar: React.FC = () => {
     fetchCourses(student.stud_id);
   };
 
+  // Fetch courses for selected student
+  const handleStudentSelect = async (student: Student) => {
+    setSelectedStudent(student);
+    fetchCourses(student.stud_id);
+  };
+
   // apply filters
   const filteredCourses = useMemo(() => {
     let result = [...courses];
@@ -115,6 +121,22 @@ const ProgressBar: React.FC = () => {
     }
   };
 
+  const handleSearch = (value: string) => {
+    setSearchInput(value);
+    if (value.length >= 3 || value.length === 0) {
+      setSearchQuery(value);
+    }
+  };
+  const handleSidebarToggle = (isOpen: boolean) => {
+    const container = document.querySelector(".progressbar-container");
+    if (!container) return;
+
+    if (isOpen && window.innerWidth <= 768) {
+      container.classList.add("sidebar-open");
+    } else {
+      container.classList.remove("sidebar-open");
+    }
+  };
   return (
     <>
       <HeaderPb title="Course Progress" showEnrollment />
@@ -122,6 +144,7 @@ const ProgressBar: React.FC = () => {
         <SidebarPb
           onSelect={handleStudentSelect}
           selectedStudent={selectedStudent}
+          onToggle={handleSidebarToggle}
         />
 
         <div className="progressbar-content">

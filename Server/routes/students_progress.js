@@ -32,7 +32,7 @@ router.get("/:id/courses", async (req, res) => {
 
     let params = [id];
 
-    // Apply filters
+  
     if (progress_gt) {
       query += " HAVING progress_percentage > ?";
       params.push(progress_gt);

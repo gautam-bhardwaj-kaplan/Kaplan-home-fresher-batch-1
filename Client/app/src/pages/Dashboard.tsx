@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/HeaderPb.tsx";
 import SidebarPb from "../components/SidebarPb.tsx";
 import Filters from "../components/Filters.tsx";
@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
     const fetchCourses = async () => {
       try {
         const courseRes = await axios.get<Course[]>(
-          `http://localhost:5000/students/${selectedStudent}/courses`
+          `http://localhost:5000/students/${selectedStudent.stud_id}/courses`
         );
         setCourses(courseRes.data);
         setSelectedCourse(null);
@@ -61,7 +61,7 @@ const Dashboard: React.FC = () => {
     const fetchTopics = async () => {
       try {
         const res = await axios.get<Topic[]>(
-          `http://localhost:5000/students/${selectedStudent}/courses/${selectedCourse}/topics`
+          `http://localhost:5000/students/${selectedStudent.stud_id}/courses/${selectedCourse}/topics`
         );
         setTopics(res.data);
         setSelectedTopic([]);
@@ -72,6 +72,17 @@ const Dashboard: React.FC = () => {
     fetchTopics();
   }, [selectedCourse, selectedStudent]);
 
+  const handleSidebarToggle = (isOpen: boolean) => {
+    const container = document.querySelector(".dashboard-container");
+    if (!container) return;
+
+    if (isOpen && window.innerWidth <= 768) {
+      container.classList.add("sidebar-open");
+    } else {
+      container.classList.remove("sidebar-open");
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <Header title="Line Chart" />
@@ -81,6 +92,7 @@ const Dashboard: React.FC = () => {
           <SidebarPb
             selectedStudent={selectedStudent}
             onSelect={handleStudentSelect}
+            onToggle={handleSidebarToggle}
           />
         </div>
         <div className="dashboard-content">

@@ -27,6 +27,7 @@ import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import StudentDialog from "../components/create.tsx";
 
 interface Student {
   stud_id: number;
@@ -51,12 +52,13 @@ const Home: React.FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loading, setLoading] = useState(false);
 
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [openChatbot, setOpenChatbot] = useState(false);
+
   const handlelogo = () => {
     window.location.href = "/";
   };
@@ -85,8 +87,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [fetchStudents]);
-
+  }, [page, rowsPerPage]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -319,6 +320,8 @@ const Home: React.FC = () => {
                 key={label}
                 onClick={() => {
                   if (label === "Line Chart") navigate("/dashboard");
+                  if (label === "Bar Chart") navigate("/quiz/:studentId?");
+                  if (label === "Add Student") setDialogOpen(true);
                   if (label === "Course Progress") navigate("/progress");
                 }}
                 className="styled-button"
@@ -409,6 +412,7 @@ const Home: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
           <TablePagination
             component="div"
             count={totalStudents}
@@ -484,6 +488,11 @@ const Home: React.FC = () => {
           </Alert>
         </Snackbar>
       </div>
+      <StudentDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onStudentAdded={fetchStudents}
+      />
     </div>
   );
 };

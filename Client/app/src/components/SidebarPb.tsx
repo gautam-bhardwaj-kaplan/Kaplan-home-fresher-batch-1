@@ -22,12 +22,14 @@ interface SidebarPbProps {
   onSelect: (student: Student) => void;
   selectedStudent: Student | null;
   pageSize?: number;
+  onToggle?: (isOpen: boolean) => void;
 }
 
 const SidebarPb: React.FC<SidebarPbProps> = ({
   onSelect,
   selectedStudent,
   pageSize = 10,
+  onToggle,
 }) => {
   const [students, setStudents] = useState<Student[]>([]);
   const [open, setOpen] = useState(true);
@@ -38,14 +40,16 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         setOpen(false);
+        onToggle?.(false);
       } else {
         setOpen(true);
+        onToggle?.(true);
       }
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [onToggle]);
 
   const totalPages = Math.ceil(totalStudents / pageSize);
 
@@ -69,12 +73,18 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
     fetchStudents(currentPage);
   }, [currentPage]);
 
+  const handleToggle = () => {
+    const newState = !open;
+    setOpen(newState);
+    onToggle?.(newState);
+  };
+
   return (
     <div className={`sidebar ${open ? "open" : "closed"}`}>
       <div className="sidebar-header">
         {open && <h3 className="sidebar-title">Students</h3>}
 
-        <div className="menu-btn" onClick={() => setOpen(!open)}>
+        <div className="menu-btn" onClick={handleToggle}>
           {open ? <CloseRoundedIcon /> : <MenuRoundedIcon />}
         </div>
       </div>
