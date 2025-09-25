@@ -26,8 +26,6 @@ app.use("/create", createRoutes);
 app.use("/student/sidebar", sidebarRoutes);
 
 app.get("/", (req, res) => res.json("Hello, this is Backend"));
-app.use("/student", studentRoutes);
-app.use("/student/sidebar", sidebarRoutes);
 app.use("/student/home", homeStudentsRouter);
 
 app.listen(5000, () => {});

@@ -81,12 +81,6 @@ const ProgressBar: React.FC = () => {
     fetchCourses(student.stud_id);
   };
 
-  // Fetch courses for selected student
-  const handleStudentSelect = async (student: Student) => {
-    setSelectedStudent(student);
-    fetchCourses(student.stud_id);
-  };
-
   // apply filters
   const filteredCourses = useMemo(() => {
     let result = [...courses];
@@ -121,12 +115,6 @@ const ProgressBar: React.FC = () => {
     }
   };
 
-  const handleSearch = (value: string) => {
-    setSearchInput(value);
-    if (value.length >= 3 || value.length === 0) {
-      setSearchQuery(value);
-    }
-  };
   const handleSidebarToggle = (isOpen: boolean) => {
     const container = document.querySelector(".progressbar-container");
     if (!container) return;
