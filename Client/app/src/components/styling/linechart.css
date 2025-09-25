@@ -2,14 +2,16 @@
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
-  padding: 10px;
+  padding: 16px;
   background-color: #ffffff;
+  transition: all 0.3s ease;
 }
 
 .linechart-title {
   font-weight: 600;
   color: #333333;
   margin-bottom: 15px;
+  font-size: clamp(16px, 2vw, 20px);
 }
 
 .recharts-tooltip-wrapper {
@@ -17,5 +19,30 @@
   border: 1px solid #ddd !important;
   border-radius: 6px !important;
   padding: 6px !important;
-  font-size: 13px;
+  font-size: clamp(12px, 1.5vw, 14px) !important;
+}
+
+@media (max-width: 600px) {
+  .linechart-card {
+    padding: 12px;
+    margin-top: 16px;
+  }
+
+  .linechart-title {
+    font-weight: 200;
+    margin-bottom: 10px;
+  }
+
+  .recharts-tooltip-wrapper {
+    font-size: 12px !important;
+    padding: 4px !important;
+  }
+
+  .linechart-card .recharts-wrapper {
+    height: 280px !important;
+  }
+
+  .recharts-cartesian-axis-tick-value {
+    font-size: 10px;
+  }
 }

@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 
 interface Student {
   stud_id: number;
@@ -49,7 +50,6 @@ const Home: React.FC = () => {
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [openChatbot, setOpenChatbot] = useState(false);
   const handlelogo = () => {
     window.location.href = "/";
   };
@@ -271,6 +271,8 @@ const Home: React.FC = () => {
     setStudentToDelete(null);
   };
 
+  const isMobile = useMediaQuery("(max-width:768px)");
+
   return (
     <div className="home">
       <AppBar position="fixed" className="header">
@@ -282,7 +284,7 @@ const Home: React.FC = () => {
             onClick={handlelogo}
             style={{ cursor: "pointer" }}
           />
-          <Typography variant="h5" className="header-title">
+          <Typography variant={isMobile ? "h6" : "h5"} className="header-title">
             Student Progress Tracker
           </Typography>
           <Button color="inherit" className="login-btn">
