@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -23,6 +23,8 @@ import { useNavigate } from "react-router-dom";
 import EditStudent from "../components/editstudent.tsx";
 import "./home.css";
 import { Snackbar, Alert } from "@mui/material";
+import StudentDialog from "../components/create.tsx";
+
 import { useMediaQuery } from "@mui/material";
 
 interface Student {
@@ -45,16 +47,18 @@ const Home: React.FC = () => {
   const [totalStudents, setTotalStudents] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const [currentStudent, setCurrentStudent] = useState<Student | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+
   const handlelogo = () => {
     window.location.href = "/";
   };
 
-  const fetchStudents = useCallback(async () => {
+  const fetchStudents = async () => {
     try {
       const res = await axios.get<StudentApiResponse>(
         "http://localhost:5000/student",
@@ -70,12 +74,11 @@ const Home: React.FC = () => {
     } catch (err) {
       console.error("Failed to fetch students:", err);
     }
-  }, [page, rowsPerPage]);
+  };
 
   useEffect(() => {
     fetchStudents();
-  }, [fetchStudents]);
-
+  }, [page, rowsPerPage]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -300,6 +303,8 @@ const Home: React.FC = () => {
                 key={label}
                 onClick={() => {
                   if (label === "Line Chart") navigate("/dashboard");
+                  if (label === "Bar Chart") navigate("/quiz/:studentId?");
+                  if (label === "Add Student") setDialogOpen(true);
                   if (label === "Course Progress") navigate("/progress");
                 }}
                 className="styled-button"
@@ -370,6 +375,7 @@ const Home: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
           <TablePagination
             component="div"
             count={totalStudents}
@@ -445,6 +451,11 @@ const Home: React.FC = () => {
           </Alert>
         </Snackbar>
       </div>
+      <StudentDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onStudentAdded={fetchStudents}
+      />
     </div>
   );
 };

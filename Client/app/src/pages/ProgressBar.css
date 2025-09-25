@@ -38,36 +38,23 @@
   font-size: x-large;
   color: #0033a0;
 }
-
-@media (max-width: 768px) {
-  .progressbar-container {
-    flex-direction: row;
-    height: auto;
-    margin-top: 56px;
-    overflow-y: auto;
-  }
-
-  .progressbar-content {
-    height: auto;
-    padding: 0 8px;
-    transition: filter 0.3s ease;
-  }
-
+@media (max-width: 400px) {
   .progressbar-container.sidebar-open .progressbar-content {
     filter: blur(2px) brightness(0.95);
+    transition: filter 0.3s ease, background-color 0.3s ease;
   }
 
-  .courses-frame {
-    gap: 12px;
-    margin-top: 12px;
-    margin-bottom: 12px;
-    padding: 0 5px;
+  .progressbar-container.sidebar-open::after {
+    content: "";
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 1000;
   }
 
-  .no-courses-container {
-    height: auto;
-    min-height: 250px;
-    font-size: 1rem;
-    padding: 0 10px;
+  .sidebar {
+    z-index: 10;
   }
 }

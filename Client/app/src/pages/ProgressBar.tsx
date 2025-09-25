@@ -53,6 +53,7 @@ const ProgressBar: React.FC = () => {
     localStorage.removeItem("completionFilter");
     localStorage.removeItem("sortFilter");
   };
+
   const fetchCourses = async (stud_id: number) => {
     setLoadingCourses(true);
     try {
@@ -66,11 +67,13 @@ const ProgressBar: React.FC = () => {
       setLoadingCourses(false);
     }
   };
+
   // Fetch courses for selected student
   const handleStudentSelect = async (student: Student) => {
     setSelectedStudent(student);
     fetchCourses(student.stud_id);
   };
+
   // apply filters
   const filteredCourses = useMemo(() => {
     let result = [...courses];
