@@ -63,14 +63,16 @@
   font-family: "Montserrat", sans-serif !important;
   text-align: center;
   align-items: center;
-  left: 50%;
-  transform: translateX(-50%);
-  position: absolute;
+  left: 0;
+  transform: translateX(250%);
+  position: static;
   color: #222;
 }
 .student-table-header {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
   align-items: center;
   padding: 8px 16px !important;
   margin-bottom: 14px;
@@ -78,17 +80,25 @@
 }
 
 .student-search-input {
-  width: 180px;
+  width: 100%;
   padding: 4px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
   right: 0;
-  position: absolute;
+  position: static;
 }
 
 .student-search-input.MuiInputBase-input-MuiOutlinedInput-input {
   padding: 4px 0 5px;
+}
+.student-search-input .MuiOutlinedInput-root {
+  height: 42px;
+  font-size: 14px;
+}
+
+.student-search-input .MuiOutlinedInput-input {
+  padding: 4px 8px;
 }
 
 .sort-icon-btn {
@@ -182,4 +192,102 @@
   padding: 20px;
   color: #555;
   font-style: italic;
+}
+
+.restore-icon {
+  color: #007bff;
+  margin-left: auto;
+}
+.archived-dialog .MuiPaper-root {
+  border-radius: 12px !important;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  padding-left: 4px;
+  padding-right: 8px;
+}
+.recycle-bin-icon {
+  margin-left: auto;
+}
+.close-icon {
+  margin-left: auto;
+  transform: translateY(0%);
+  color: black;
+}
+.student-table-title-arch {
+  flex: 1;
+  margin-bottom: 14px !important;
+  margin-top: 14px !important;
+  font-weight: 700 !important;
+  text-align: center;
+  color: #333;
+}
+
+.title-with-icon-arch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+@media (max-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 8px 12px;
+  }
+  .logo {
+    width: 36px;
+    margin-right: 8px;
+  }
+  .header-title {
+    font-size: 1rem;
+    letter-spacing: 0.8px;
+  }
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .styled-button {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 18px !important;
+    font-size: 14px !important;
+  }
+  .student-table-container {
+    padding: 12px;
+    margin-top: 20px;
+    max-width: 100%;
+    flex-direction: column;
+  }
+  .student-table-title {
+    font-size: 18px !important;
+    text-align: center;
+    margin-left: 0;
+    transform: translateX(80%);
+  }
+  .student-table-header {
+    flex-direction: row;
+    margin-left: 0;
+  }
+  .student-table-paper {
+    max-height: 300px;
+    overflow-x: auto;
+  }
+  .main-content {
+    padding-top: 56px;
+  }
+  .home {
+    height: auto;
+    overflow-y: auto;
+  }
+  .archived-dialog .MuiPaper-root {
+    overflow-x: auto;
+  }
+  .css-1miy0lu-MuiTypography-root {
+    display: flex-end;
+    margin-left: 0;
+  }
 }

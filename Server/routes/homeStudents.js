@@ -15,8 +15,9 @@ router.get("/", async (req, res) => {
     let countQuery = "SELECT COUNT(*) AS total FROM student";
     const countParams = [];
     if (search) {
-      countQuery += " WHERE name LIKE ? OR email LIKE ?";
-      countParams.push(`%${search}%`, `%${search}%`);
+      countQuery +=
+        " WHERE CAST(stud_id AS CHAR) LIKE ? OR name LIKE ? OR email LIKE ?";
+      countParams.push(`%${search}%`, `%${search}%`, `%${search}%`);
     }
     const [countRows] = await db.query(countQuery, countParams);
     const total = countRows[0].total;
@@ -24,8 +25,9 @@ router.get("/", async (req, res) => {
     let fetchQuery = "SELECT stud_id, name, email FROM student";
     const fetchParams = [];
     if (search) {
-      fetchQuery += " WHERE name LIKE ? OR email LIKE ?";
-      fetchParams.push(`%${search}%`, `%${search}%`);
+      fetchQuery +=
+        "  WHERE CAST(stud_id AS CHAR) LIKE ? OR name  LIKE ? OR email LIKE ?";
+      fetchParams.push(`%${search}%`, `%${search}%`, `%${search}%`);
     }
     fetchQuery += " ORDER BY stud_id LIMIT ? OFFSET ?";
     fetchParams.push(limit, offset);
