@@ -105,7 +105,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [page, rowsPerPage]);
   }, [page, rowsPerPage, searchQuery]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -260,7 +259,7 @@ const Home: React.FC = () => {
             onClick={handlelogo}
             style={{ cursor: "pointer" }}
           />
-          <Typography variant={isMobile ? "h6" : "h5"} className="header-title">
+          <Typography variant="h5" className="header-title">
             Student Progress Tracker
           </Typography>
           <Button color="inherit" className="login-btn">

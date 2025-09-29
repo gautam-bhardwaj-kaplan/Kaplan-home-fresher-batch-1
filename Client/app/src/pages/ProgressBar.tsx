@@ -112,7 +112,7 @@ const ProgressBar: React.FC = () => {
     } else {
       container.classList.remove("sidebar-open");
     }
-  }, []);
+  };
   return (
     <>
       <HeaderPb title="Course Progress" showEnrollment />
