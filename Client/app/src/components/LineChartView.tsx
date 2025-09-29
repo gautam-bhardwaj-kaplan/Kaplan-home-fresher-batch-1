@@ -50,7 +50,7 @@ const LineChartView: React.FC<LineChartViewProps> = ({
 
         const endpoint = `http://localhost:5000/${timeframe}`;
 
-        const res = await axios.get(endpoint, { params });
+        const res = await axios.get<ChartData[]>(endpoint, { params });
 
         setData(res.data);
       } catch (err) {

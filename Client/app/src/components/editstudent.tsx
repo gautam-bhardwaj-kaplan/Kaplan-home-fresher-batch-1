@@ -14,7 +14,6 @@ import {
 import axios from "axios";
 import { SelectChangeEvent } from "@mui/material";
 import "./styling/editstudent.css";
-
 interface Student {
   stud_id: number;
   name: string;
@@ -25,70 +24,60 @@ interface Student {
   quiz_score?: number;
   completion_date_topic?: string;
 }
-
 interface Course {
   course_id: string;
   course_name: string;
 }
-
 interface Topic {
   topic_id: string;
   topic_name: string;
 }
-
 interface EditStudentProps {
   open: boolean;
   onClose: () => void;
   student: Student | null;
   onSave: (updatedStudent: Student) => void;
-  errors: { [key: string]: string };
+  errors?: { [key: string]: string };
   formMessage: { type: "success" | "error" | null; text: string };
 }
-
 const EditStudent: React.FC<EditStudentProps> = ({
   open,
   onClose,
   student,
   onSave,
-  errors,
   formMessage,
 }) => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [formData, setFormData] = useState<Student | null>(student);
-
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   useEffect(() => {
     setFormData(student);
   }, [student]);
-
   useEffect(() => {
     axios
       .get<Course[]>("http://localhost:5000/courses")
       .then((res) => setCourses(res.data))
       .catch((err) => console.error(err));
   }, []);
-
   useEffect(() => {
-    if (formData?.course) {
-      axios
-        .get<Topic[]>(`http://localhost:5000/topics/${formData.course}`)
-        .then((res) => setTopics(res.data))
-        .catch((err) => console.error(err));
-    } else {
+    if (!formData?.course) {
       setTopics([]);
-    }
-  }, [formData?.course]);
-
-  useEffect(() => {
-    if (!formData?.topic || !student?.stud_id) {
-      updateFormData({
-        hours_studied: undefined,
-        quiz_score: undefined,
-        completion_date_topic: "",
-      });
+      clearActivityFields();
       return;
     }
-
+    axios
+      .get<Topic[]>(`http://localhost:5000/topics/${formData.course}`)
+      .then((res) => setTopics(res.data))
+      .catch(console.error);
+    updateFormData({ topic: "" });
+    clearActivityFields();
+  }, [formData?.course]);
+  useEffect(() => {
+    if (!formData?.topic || !student?.stud_id) {
+      clearActivityFields();
+      return;
+    }
     axios
       .get<{
         hours_studied: number;
@@ -98,20 +87,91 @@ const EditStudent: React.FC<EditStudentProps> = ({
       .then((res) => {
         const { hours_studied, quiz_score, completion_date_topic } = res.data;
         updateFormData({
-          hours_studied: hours_studied ?? "",
-          quiz_score: quiz_score ?? "",
+          hours_studied: hours_studied ?? undefined,
+          quiz_score: quiz_score ?? undefined,
           completion_date_topic: completion_date_topic
             ? completion_date_topic.split("T")[0]
             : "",
         });
+        setErrors({
+          hours_studied:
+            hours_studied === undefined || hours_studied === null
+              ? "Hours is required."
+              : "",
+          quiz_score:
+            quiz_score === undefined || quiz_score === null
+              ? "Score is required."
+              : "",
+          completion_date_topic: completion_date_topic
+            ? ""
+            : "Date can't be empty",
+        });
       })
-      .catch(console.error);
+      .catch(() => {
+        updateFormData({
+          hours_studied: undefined,
+          quiz_score: undefined,
+          completion_date_topic: "",
+        });
+        setErrors({
+          hours_studied: "Hours is required.",
+          quiz_score: "Score is required.",
+          completion_date_topic: "Date can't be empty",
+        });
+      });
   }, [formData?.topic, student]);
-
   const updateFormData = (updates: Partial<Student>) => {
     setFormData((prev) => (prev ? { ...prev, ...updates } : prev));
   };
-
+  const clearActivityFields = () => {
+    updateFormData({
+      hours_studied: undefined,
+      quiz_score: undefined,
+      completion_date_topic: "",
+    });
+    setErrors({
+      hours_studied: "",
+      quiz_score: "",
+      completion_date_topic: "",
+    });
+  };
+  const validateField = (name: string, value: any) => {
+    if (
+      !formData?.topic &&
+      ["hours_studied", "quiz_score", "completion_date_topic"].includes(name)
+    ) {
+      return "";
+    }
+    switch (name) {
+      case "name":
+        if (!value?.trim()) return "Name is required.";
+        if (!/^[A-Za-z ]+$/.test(value))
+          return "Name must only contain letters.";
+        return "";
+      case "email":
+        if (!value?.trim()) return "Email is required.";
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(value)) {
+          return "Invalid email format.";
+        }
+        return "";
+      case "hours_studied":
+        if (value === null || value === undefined) return "Hours is required";
+        if (value < 0 || value > 24) return "Hours must be between 0–24.";
+        return "";
+      case "quiz_score":
+        if (value === null || value === undefined)
+          return "Quiz score is required";
+        if (value < 0 || value > 10) return "Score must be between 0–10.";
+        return "";
+      case "completion_date_topic":
+        if (!value) return "Date can't be empty";
+        if (new Date(value) > new Date())
+          return "Date cannot be in the future.";
+        return "";
+      default:
+        return "";
+    }
+  };
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -119,22 +179,39 @@ const EditStudent: React.FC<EditStudentProps> = ({
   ) => {
     const { name, value } = e.target;
     const numericFields = ["hours_studied", "quiz_score"];
-
-    updateFormData({
-      [name]: numericFields.includes(name)
-        ? value === ""
-          ? ""
-          : parseFloat(value)
-        : value,
-    } as Partial<Student>);
+    const parsedValue = numericFields.includes(name)
+      ? value === ""
+        ? undefined
+        : parseFloat(value)
+      : value;
+    updateFormData({ [name]: parsedValue } as Partial<Student>);
+    const error = validateField(name, parsedValue);
+    setErrors((prev) => ({ ...prev, [name]: error }));
   };
-
   const handleSave = () => {
-    if (formData) {
-      onSave(formData);
+    if (!formData) return;
+    const newErrors: { [key: string]: string } = {};
+    Object.keys(formData).forEach((key) => {
+      const err = validateField(key, (formData as any)[key]);
+      if (err) newErrors[key] = err;
+    });
+    if (formData.topic) {
+      if (
+        formData.hours_studied === undefined ||
+        formData.hours_studied === null
+      ) {
+        newErrors.hours_studied = "Hours is required";
+      }
+      if (formData.quiz_score === undefined || formData.quiz_score === null) {
+        newErrors.quiz_score = "Score is required";
+      }
     }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    onSave(formData);
   };
-
   return (
     <Dialog
       open={open}
@@ -155,7 +232,6 @@ const EditStudent: React.FC<EditStudentProps> = ({
           error={!!errors.name}
           helperText={errors.name}
         />
-
         <TextField
           margin="dense"
           label="Email"
@@ -166,7 +242,6 @@ const EditStudent: React.FC<EditStudentProps> = ({
           error={!!errors.email}
           helperText={errors.email}
         />
-
         {/*  Course dropdown */}
         <FormControl fullWidth margin="dense" variant="outlined">
           <InputLabel>Course</InputLabel>
@@ -183,7 +258,6 @@ const EditStudent: React.FC<EditStudentProps> = ({
             ))}
           </Select>
         </FormControl>
-
         {/*  Topic dropdown */}
         <FormControl
           fullWidth
@@ -205,7 +279,6 @@ const EditStudent: React.FC<EditStudentProps> = ({
             ))}
           </Select>
         </FormControl>
-
         <TextField
           margin="dense"
           label="Hours Studied"
@@ -218,8 +291,8 @@ const EditStudent: React.FC<EditStudentProps> = ({
           disabled={!formData?.topic}
           error={!!errors.hours_studied}
           helperText={errors.hours_studied}
+          placeholder="Upto 24hrs"
         />
-
         <TextField
           margin="dense"
           label="Quiz Score"
@@ -232,8 +305,8 @@ const EditStudent: React.FC<EditStudentProps> = ({
           disabled={!formData?.topic}
           error={!!errors.quiz_score}
           helperText={errors.quiz_score}
+          placeholder="Upto 10"
         />
-
         <TextField
           margin="dense"
           label="Completion Date"
@@ -265,5 +338,4 @@ const EditStudent: React.FC<EditStudentProps> = ({
     </Dialog>
   );
 };
-
 export default EditStudent;

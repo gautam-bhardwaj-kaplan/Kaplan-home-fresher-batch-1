@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo } from "react";
 import HeaderPb from "../components/HeaderPb.tsx";
 import SidebarPb from "../components/SidebarPb.tsx";
 import FiltersPb from "../components/FiltersPb.tsx";
@@ -98,12 +98,12 @@ const ProgressBar: React.FC = () => {
   }, [courses, completionFilter, sortFilter, searchQuery]);
   const handleSearch = (value: string) => {
     setSearchInput(value);
-    if (value.length >= 3 || value.length === 0) {
+    if (value.length >= 2 || value.length === 0) {
       setSearchQuery(value);
     }
   };
 
-  const handleSidebarToggle = useCallback((isOpen: boolean) => {
+  const handleSidebarToggle = (isOpen: boolean) => {
     const container = document.querySelector(".progressbar-container");
     if (!container) return;
 

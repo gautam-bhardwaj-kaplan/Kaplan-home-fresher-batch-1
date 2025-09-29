@@ -141,24 +141,133 @@ router.post("/activity", async (req, res) => {
       .json({ error: "Failed to save activity", details: err.message });
   }
 });
-
 router.delete("/student/:stud_id", async (req, res) => {
+  const connection = await db.getConnection();
   try {
     const { stud_id } = req.params;
-    const [student] = await db.query(
+    await connection.beginTransaction();
+    const [studentRows] = await connection.query(
       "SELECT * FROM student WHERE stud_id = ?",
       [stud_id]
     );
-    if (student.length === 0) {
+    if (studentRows.length === 0) {
+      await connection.release();
       return res.status(404).json({ error: "Student not found" });
     }
-    await db.query("DELETE FROM activity WHERE student_id = ?", [stud_id]);
-    await db.query("DELETE FROM student WHERE stud_id = ?", [stud_id]);
-    res.json({ message: "Student deleted successfully" });
+    const student = studentRows[0];
+    const today = new Date();
+    const archived_at = `${today.getFullYear()}-${
+      today.getMonth() + 1
+    }-${today.getDate()}`;
+    await connection.query(
+      `INSERT INTO archived_students (stud_id, name, email, course_id, archived_at)
+       VALUES (?, ?, ?, ?, ?)`,
+      [
+        student.stud_id,
+        student.name,
+        student.email,
+        student.course_id,
+        archived_at,
+      ]
+    );
+    console.log("Student archived");
+    const [activities] = await connection.query(
+      "SELECT * FROM activity WHERE student_id = ?",
+      [stud_id]
+    );
+    for (const activity of activities) {
+      await connection.query(
+        `INSERT INTO archived_activities
+          (activity_id, student_id, topic_id, hours_studied, quiz_score, completion_date_topic, archived_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          activity.activity_id,
+          activity.student_id,
+          activity.topic_id,
+          activity.hours_studied,
+          activity.quiz_score,
+          activity.completion_date_topic,
+          archived_at,
+        ]
+      );
+    }
+    await connection.query("DELETE FROM activity WHERE student_id = ?", [
+      stud_id,
+    ]);
+    await connection.query("DELETE FROM student WHERE stud_id = ?", [stud_id]);
+    await connection.commit();
+    await connection.release();
+    res.json({ message: "Student deleted and archived successfully" });
   } catch (err) {
+    await connection.rollback();
+    await connection.release();
     res
       .status(500)
       .json({ error: "Failed to delete student", details: err.message });
+  }
+});
+router.get("/archived-students", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT stud_id, name, email, archived_at FROM archived_students ORDER BY archived_at DESC"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch archived students" });
+  }
+});
+router.post("/restore-student/:stud_id", async (req, res) => {
+  const connection = await db.getConnection();
+  try {
+    const { stud_id } = req.params;
+    await connection.beginTransaction();
+    const [studentRows] = await connection.query(
+      "SELECT * FROM archived_students WHERE stud_id = ?",
+      [stud_id]
+    );
+    if (studentRows.length === 0) {
+      await connection.release();
+      return res.status(404).json({ error: "Archived student not found" });
+    }
+    const student = studentRows[0];
+    await connection.query(
+      "INSERT INTO student (stud_id, name, email, course_id) VALUES (?, ?, ?, ?)",
+      [student.stud_id, student.name, student.email, student.course_id]
+    );
+    const [activities] = await connection.query(
+      "SELECT * FROM archived_activities WHERE student_id = ?",
+      [stud_id]
+    );
+    for (const act of activities) {
+      await connection.query(
+        `INSERT INTO activity (activity_id, student_id, topic_id, hours_studied, quiz_score, completion_date_topic)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          act.activity_id,
+          act.student_id,
+          act.topic_id,
+          act.hours_studied,
+          act.quiz_score,
+          act.completion_date_topic,
+        ]
+      );
+    }
+    await connection.query(
+      "DELETE FROM archived_activities WHERE student_id = ?",
+      [stud_id]
+    );
+    await connection.query("DELETE FROM archived_students WHERE stud_id = ?", [
+      stud_id,
+    ]);
+    await connection.commit();
+    await connection.release();
+    res.json({ message: "Student restored successfully" });
+  } catch (err) {
+    await connection.rollback();
+    await connection.release();
+    console.error(err);
+    res.status(500).json({ error: "Failed to restore student" });
   }
 });
 
