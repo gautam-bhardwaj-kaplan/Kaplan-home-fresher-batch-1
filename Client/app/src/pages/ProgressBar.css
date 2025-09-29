@@ -38,7 +38,13 @@
   font-size: x-large;
   color: #0033a0;
 }
-@media (max-width: 400px) {
+
+@media (max-width: 600px) {
+  .progressbar-container {
+    height: calc(100vh - 56px);
+    margin-top: 56px;
+  }
+
   .progressbar-container.sidebar-open .progressbar-content {
     filter: blur(2px) brightness(0.95);
     transition: filter 0.3s ease, background-color 0.3s ease;
@@ -46,6 +52,7 @@
 
   .progressbar-container.sidebar-open::after {
     content: "";
+    position: fixed;
     top: 56px;
     left: 0;
     right: 0;
@@ -56,5 +63,7 @@
 
   .sidebar {
     z-index: 10;
+    top: 56px;
+    height: calc(100vh - 56px);
   }
 }

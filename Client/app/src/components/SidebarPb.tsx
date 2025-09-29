@@ -61,7 +61,6 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
       setStudents(res.data.students);
       setTotalStudents(res.data.total);
 
-      
       if (res.data.students.length > 0) {
         onSelect(res.data.students[0]);
       }
@@ -70,18 +69,15 @@ const SidebarPb: React.FC<SidebarPbProps> = ({
     }
   };
 
- 
   useEffect(() => {
     fetchStudents(currentPage);
   }, [currentPage]);
-
 
   const handleToggle = () => {
     const newState = !open;
     setOpen(newState);
     onToggle?.(newState);
   };
-
 
   return (
     <div className={`sidebar ${open ? "open" : "closed"}`}>

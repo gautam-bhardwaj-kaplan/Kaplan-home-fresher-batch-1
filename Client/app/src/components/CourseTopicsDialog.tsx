@@ -11,9 +11,11 @@ import {
   TableCell,
   TableBody,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
 import "./CourseTopicsDialog.css";
+import CloseIcon from "@mui/icons-material/Close";
 import StatusFilterDialog from "./StatusFilter.tsx";
 
 interface Topic {
@@ -79,7 +81,7 @@ const CourseTopicsDialog: React.FC<CourseTopicsDialogProps> = ({
       onClose={onClose}
       PaperProps={{ className: "custom-dialog-paper" }}
     >
-      <DialogTitle className="custom-dialog-title">
+      <DialogTitle className="custom-dialogbox-title">
         <div className="dialog-title-bar">
           Topics for {courseName}
           <StatusFilterDialog
